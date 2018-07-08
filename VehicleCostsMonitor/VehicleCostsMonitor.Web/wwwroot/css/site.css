@@ -5,6 +5,22 @@ body {
     padding-bottom: 20px;
 }
 
+.navbar-inverse {
+    background-color: #c1c5cc !important;
+    border-bottom-color: #84888e !important;
+}
+
+.nav.navbar-nav li a {
+    color: #fff !important;
+}
+
+.nav.navbar-nav li button {
+    color: #fff !important;
+}
+
+.navbar-header a {
+    color: #fff !important;
+}
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {

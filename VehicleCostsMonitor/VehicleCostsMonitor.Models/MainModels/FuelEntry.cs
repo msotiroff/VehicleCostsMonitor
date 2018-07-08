@@ -8,15 +8,15 @@ namespace VehicleCostsMonitor.Models
 {
     public class FuelEntry : IEntry
     {
+        #region Fields
+        private int tripOdometer;
+        #endregion
+
         public FuelEntry()
         {
             this.Routes = new HashSet<FuelEntryRouteType>();
             this.ExtraFuelConsumers = new HashSet<FuelEntryExtraFuelConsumer>();
         }
-
-        #region Fields
-        private int tripOdometer;
-        #endregion
 
         #region Properties
         [Key]
@@ -50,6 +50,7 @@ namespace VehicleCostsMonitor.Models
         
         public double Average => (this.FuelQuantity / this.TripOdometer) * 100;
 
+        [Required]
         public int VehicleId { get; set; }
 
         public Vehicle Vehicle { get; set; }

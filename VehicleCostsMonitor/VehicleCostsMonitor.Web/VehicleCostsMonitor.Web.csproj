@@ -37,4 +37,8 @@
     <ProjectReference Include="..\VehicleCostsMonitor.Models\VehicleCostsMonitor.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+
 </Project>
