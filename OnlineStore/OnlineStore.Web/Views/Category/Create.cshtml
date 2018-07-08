@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "Create";
+}
+
+<h2 class="text-center">Create</h2>
+
+<h4 class="text-center">Create new category:</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label class="control-label">Name</label>
+                <input name="categoryName" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="file" name="image" class="grey-text text-lighten"/>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

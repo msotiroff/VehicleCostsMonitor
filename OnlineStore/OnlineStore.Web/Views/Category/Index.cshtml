@@ -1,0 +1,39 @@
+﻿@model IEnumerable<CategoryViewModel>
+
+@{
+    ViewData["Title"] = "Categories";
+}
+
+<h2 class="text-center">Sale of welding equipment and consumables</h2>
+
+@if (User.IsInRole(WebConstants.AdministratorRole))
+{
+    <div class="text-center">
+        <div class="btn btn-default">
+            @Html.ActionLink("Create new", "Create", "Category")
+        </div>
+    </div>
+}
+<hr />
+<div class="row text-center">
+    @foreach (var category in Model)
+    {
+        <div class="col-md-3 mb-4 m-5">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">@category.Name</h4>
+                </div>
+                <img class="card-img-top align-content-center" height="150" src=@category.Thumbnail alt=@category.Name />
+                <br />
+                <br />
+                <div class="card-footer">
+                    @Html.ActionLink("Products", "Details", new { id = category.Id }, new { @class = "btn btn-primary" })
+                    @if (User.IsInRole(WebConstants.AdministratorRole))
+                    {
+                        @Html.ActionLink("Delete", "Delete", new { id = category.Id }, new { @class = "btn btn-danger" })
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
