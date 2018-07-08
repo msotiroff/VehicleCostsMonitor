@@ -1,0 +1,17 @@
+﻿[
+  {
+    "name": "Automatic"
+  },
+  {
+    "name": "Manual"
+  },
+  {
+    "name": "Continuously variable"
+  },
+  {
+    "name": "Direct shift gearbox"
+  },
+  {
+    "name": "Semi-automatic"
+  }
+]

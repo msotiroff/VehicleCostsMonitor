@@ -2,16 +2,34 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <UserSecretsId>aspnet-VehicleCostsMonitor.Web-E83DE436-ED2F-4738-8A48-6A46981B8746</UserSecretsId>
+    <UserSecretsId>aspnet-VehicleCostsMonitor.Web-F039A0BB-A84C-494F-AC6D-AE9A30DB6A07</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\seedfiles\cost-entry-types.json" />
+    <Content Remove="wwwroot\seedfiles\extra-fuel-consumers.json" />
+    <Content Remove="wwwroot\seedfiles\fuel-entry-types.json" />
+    <Content Remove="wwwroot\seedfiles\fuel-types.json" />
+    <Content Remove="wwwroot\seedfiles\gearing-types.json" />
+    <Content Remove="wwwroot\seedfiles\route-types.json" />
+    <Content Remove="wwwroot\seedfiles\vehicle-types.json" />
+    <Content Remove="wwwroot\seedfiles\vehicles-list.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\seedfiles\cost-entry-types.json" />
+    <None Include="wwwroot\seedfiles\extra-fuel-consumers.json" />
+    <None Include="wwwroot\seedfiles\fuel-entry-types.json" />
+    <None Include="wwwroot\seedfiles\fuel-types.json" />
+    <None Include="wwwroot\seedfiles\gearing-types.json" />
+    <None Include="wwwroot\seedfiles\route-types.json" />
+    <None Include="wwwroot\seedfiles\vehicle-types.json" />
+    <None Include="wwwroot\seedfiles\vehicles-list.json" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" PrivateAssets="All" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Areas\" />
   </ItemGroup>
 
 </Project>
