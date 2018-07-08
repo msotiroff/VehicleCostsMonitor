@@ -10,8 +10,8 @@ namespace VehicleCostsMonitor.Models
     {
         public FuelEntry()
         {
-            this.Routes = new HashSet<RouteType>();
-            this.ExtraFuelConsumers = new HashSet<ExtraFuelConsumer>();
+            this.Routes = new HashSet<FuelEntryRouteType>();
+            this.ExtraFuelConsumers = new HashSet<FuelEntryExtraFuelConsumer>();
         }
 
         #region Fields
@@ -54,9 +54,9 @@ namespace VehicleCostsMonitor.Models
 
         public Vehicle Vehicle { get; set; }
 
-        public IEnumerable<RouteType> Routes { get; set; }
+        public IEnumerable<FuelEntryRouteType> Routes { get; set; }
         
-        public IEnumerable<ExtraFuelConsumer> ExtraFuelConsumers { get; set; }
+        public IEnumerable<FuelEntryExtraFuelConsumer> ExtraFuelConsumers { get; set; }
         #endregion
 
         #region Methods
