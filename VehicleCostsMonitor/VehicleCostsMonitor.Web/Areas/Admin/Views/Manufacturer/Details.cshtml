@@ -1,0 +1,75 @@
+﻿@model ManufacturerDetailsServiceModel
+
+<h2>Details</h2>
+
+<div>
+    <h3>@Model.Name</h3>
+    <hr />
+    <div class="well">
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Id)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Id)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+        </dl>
+    </div>
+    <hr />
+    <h4>Models</h4>
+    <div class="container">
+        <div class="col-md-4"></div>
+        <div class="col-md-4 form-inline">
+            <form asp-controller="model" asp-action="create" method="post">
+                <input class="form-control" name="name" type="text" placeholder="Model name" />
+                <input type="submit" value="Create new" class="btn btn-primary" />
+            </form>
+        </div>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>
+                    Manufacturer
+                </th>
+                <th>
+                    Model
+                </th>
+                <th>
+                    Id
+                </th>
+                <th>
+                    Actions
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var vehicleModel in Model.Models)
+            {
+                <tr>
+                    <td>
+                        @Model.Name
+                    </td>
+                    <td>
+                        @vehicleModel.Name
+                    </td>
+                    <td>
+                        @vehicleModel.Id
+                    </td>
+                    <td>
+                        <a asp-controller="model" asp-action="delete" asp-route-id="@vehicleModel.Id" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div>
+    <a asp-action="Index" class="btn btn-default">Back to List</a>
+</div>

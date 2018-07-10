@@ -5,8 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Implementations\" />
-    <Folder Include="Models\" />
+    <ProjectReference Include="..\VehicleCostsMonitor.Common\VehicleCostsMonitor.Common.csproj" />
+    <ProjectReference Include="..\VehicleCostsMonitor.Data\VehicleCostsMonitor.Data.csproj" />
+    <ProjectReference Include="..\VehicleCostsMonitor.Models\VehicleCostsMonitor.Models.csproj" />
   </ItemGroup>
 
 </Project>
