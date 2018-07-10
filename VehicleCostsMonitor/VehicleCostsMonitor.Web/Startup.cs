@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VehicleCostsMonitor.Data;
 using VehicleCostsMonitor.Models;
+using VehicleCostsMonitor.Web.Infrastructure.Extensions;
 
 namespace VehicleCostsMonitor.Web
 {
@@ -43,6 +44,7 @@ namespace VehicleCostsMonitor.Web
                     options.Password.RequireUppercase = false;
                     options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequiredLength = 6;
+					options.User.RequireUniqueEmail = true;
                 })
                 .AddEntityFrameworkStores<JustMonitorDbContext>()
                 .AddDefaultUI()
@@ -52,7 +54,10 @@ namespace VehicleCostsMonitor.Web
                 .AddRouting(options => options.LowercaseUrls = true);
 
             services
-                .AddMvc()
+                .AddMvc(optiions => 
+                {
+                    optiions.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
+                })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
@@ -81,6 +86,8 @@ namespace VehicleCostsMonitor.Web
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            app.SeedData();
         }
     }
 }
