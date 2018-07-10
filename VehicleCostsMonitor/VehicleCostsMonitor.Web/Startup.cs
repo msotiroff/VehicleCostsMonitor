@@ -44,7 +44,7 @@ namespace VehicleCostsMonitor.Web
                     options.Password.RequireUppercase = false;
                     options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequiredLength = 6;
-					options.User.RequireUniqueEmail = true;
+                    options.User.RequireUniqueEmail = true;
                 })
                 .AddEntityFrameworkStores<JustMonitorDbContext>()
                 .AddDefaultUI()
@@ -54,7 +54,7 @@ namespace VehicleCostsMonitor.Web
                 .AddRouting(options => options.LowercaseUrls = true);
 
             services
-                .AddMvc(optiions => 
+                .AddMvc(optiions =>
                 {
                     optiions.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
                 })
@@ -82,6 +82,16 @@ namespace VehicleCostsMonitor.Web
 
             app.UseMvc(routes =>
             {
+                //routes.MapAreaRoute(
+                //        name: "areas",
+                //        areaName: "admin",
+                //        template: "admin/{controller=Home}/{action=Index}/{id?}"
+                //    );
+
+                routes.MapRoute(
+                         name: "areaRoute",
+                         template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
