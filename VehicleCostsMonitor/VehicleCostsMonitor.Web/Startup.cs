@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -59,6 +60,11 @@ namespace VehicleCostsMonitor.Web
                     optiions.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddApplicationServices();
+            services.AddDomainServices();
+
+            services.AddAutoMapper();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -82,12 +88,6 @@ namespace VehicleCostsMonitor.Web
 
             app.UseMvc(routes =>
             {
-                //routes.MapAreaRoute(
-                //        name: "areas",
-                //        areaName: "admin",
-                //        template: "admin/{controller=Home}/{action=Index}/{id?}"
-                //    );
-
                 routes.MapRoute(
                          name: "areaRoute",
                          template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
@@ -96,7 +96,7 @@ namespace VehicleCostsMonitor.Web
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-
+            
             app.SeedData();
         }
     }

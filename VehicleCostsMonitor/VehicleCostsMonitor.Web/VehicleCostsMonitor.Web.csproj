@@ -28,13 +28,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="4.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\VehicleCostsMonitor.Common\VehicleCostsMonitor.Common.csproj" />
     <ProjectReference Include="..\VehicleCostsMonitor.Data\VehicleCostsMonitor.Data.csproj" />
     <ProjectReference Include="..\VehicleCostsMonitor.Models\VehicleCostsMonitor.Models.csproj" />
+    <ProjectReference Include="..\VehicleCostsMonitor.Services\VehicleCostsMonitor.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>
