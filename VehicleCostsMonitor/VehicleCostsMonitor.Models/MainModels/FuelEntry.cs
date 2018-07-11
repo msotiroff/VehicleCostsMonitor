@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using VehicleCostsMonitor.Models.Contracts;
-
-namespace VehicleCostsMonitor.Models
+﻿namespace VehicleCostsMonitor.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
+    using VehicleCostsMonitor.Models.Contracts;
+
     public class FuelEntry : IEntry
     {
         #region Fields

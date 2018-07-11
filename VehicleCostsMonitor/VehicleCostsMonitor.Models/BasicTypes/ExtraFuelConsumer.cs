@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace VehicleCostsMonitor.Models
+﻿namespace VehicleCostsMonitor.Models
 {
+    using System.Collections.Generic;
+
     public class ExtraFuelConsumer : BaseType
     {
         public ExtraFuelConsumer()

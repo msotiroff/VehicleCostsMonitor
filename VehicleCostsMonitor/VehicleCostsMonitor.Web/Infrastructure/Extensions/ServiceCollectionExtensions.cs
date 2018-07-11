@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
-using System.Reflection;
-using VehicleCostsMonitor.Services.Interfaces;
-
-namespace VehicleCostsMonitor.Web.Infrastructure.Extensions
+﻿namespace VehicleCostsMonitor.Web.Infrastructure.Extensions
 {
+    using Microsoft.Extensions.DependencyInjection;
+    using System.Linq;
+    using System.Reflection;
+    using Services.Interfaces;
+
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddDomainServices(this IServiceCollection services)

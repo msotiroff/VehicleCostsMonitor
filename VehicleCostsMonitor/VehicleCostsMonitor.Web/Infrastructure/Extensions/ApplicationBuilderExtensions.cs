@@ -1,22 +1,22 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using VehicleCostsMonitor.Data;
-using VehicleCostsMonitor.Models;
-using VehicleCostsMonitor.Web.Models.Dtos;
-
-namespace VehicleCostsMonitor.Web.Infrastructure.Extensions
+﻿namespace VehicleCostsMonitor.Web.Infrastructure.Extensions
 {
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.DependencyInjection;
+    using Models.Dtos;
+    using Newtonsoft.Json;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using VehicleCostsMonitor.Data;
+    using VehicleCostsMonitor.Models;
+
     public static class ApplicationBuilderExtensions
     {
         /// <summary>
-        /// This is a workaround for missing seed functionality in EF-7
+        /// This is a workaround for missing seed data functionality in EF-7
         /// </summary>
         /// <param name="app">
         /// An instance that provides the mechanisms to get instance of the database context.

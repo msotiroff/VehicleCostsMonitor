@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using VehicleCostsMonitor.Data.Configurations;
-using VehicleCostsMonitor.Models;
-
-namespace VehicleCostsMonitor.Data
+﻿namespace VehicleCostsMonitor.Data
 {
+    using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore;
+    using VehicleCostsMonitor.Data.Configurations;
+    using VehicleCostsMonitor.Models;
+
     public class JustMonitorDbContext : IdentityDbContext<User>
     {
         public JustMonitorDbContext(DbContextOptions<JustMonitorDbContext> options)
@@ -12,8 +12,8 @@ namespace VehicleCostsMonitor.Data
 
         public DbSet<Vehicle> Vehicles { get; set; }
         public DbSet<Picture> Pictures { get; set; }
-        public DbSet<Model> Models { get; set; }
         public DbSet<Manufacturer> Manufacturers { get; set; }
+        public DbSet<Model> Models { get; set; }
         public DbSet<FuelEntry> FuelEntries { get; set; }
         public DbSet<CostEntry> CostEntries { get; set; }
 

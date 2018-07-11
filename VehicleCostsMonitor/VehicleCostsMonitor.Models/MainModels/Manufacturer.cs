@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-
-namespace VehicleCostsMonitor.Models
+﻿namespace VehicleCostsMonitor.Models
 {
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+
     public class Manufacturer
     {
         public Manufacturer()

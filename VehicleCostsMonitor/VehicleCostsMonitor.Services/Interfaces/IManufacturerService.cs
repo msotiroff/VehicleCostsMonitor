@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using VehicleCostsMonitor.Services.Models.Manufacturer;
-
-namespace VehicleCostsMonitor.Services.Interfaces
+﻿namespace VehicleCostsMonitor.Services.Interfaces
 {
+    using Models.Manufacturer;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+
     public interface IManufacturerService
     {
         Task<ManufacturerUpdateServiceModel> GetAsync(int id);

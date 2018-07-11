@@ -1,11 +1,11 @@
 ﻿namespace VehicleCostsMonitor.Web.Areas.Admin.Controllers
 {
+    using Common.Notifications;
+    using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
+    using Services.Interfaces;
+    using Services.Models.Manufacturer;
     using System.Threading.Tasks;
-    using VehicleCostsMonitor.Common.Notifications;
-    using VehicleCostsMonitor.Services.Interfaces;
-    using VehicleCostsMonitor.Services.Models.Manufacturer;
-    using VehicleCostsMonitor.Web.Infrastructure.Filters;
 
     public class ManufacturerController : BaseAdminController
     {

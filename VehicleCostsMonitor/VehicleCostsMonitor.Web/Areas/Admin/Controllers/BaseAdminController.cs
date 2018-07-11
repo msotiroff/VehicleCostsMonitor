@@ -5,7 +5,7 @@
     using VehicleCostsMonitor.Web.Controllers;
     using static WebConstants;
 
-    [Area(AdministratorRole)]
+    [Area(AdministratorArea)]
     [Authorize(Roles = AdministratorRole)]
     public abstract class BaseAdminController : BaseController
     {

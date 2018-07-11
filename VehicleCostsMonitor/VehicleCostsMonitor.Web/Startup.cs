@@ -1,18 +1,18 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using VehicleCostsMonitor.Data;
-using VehicleCostsMonitor.Models;
-using VehicleCostsMonitor.Web.Infrastructure.Extensions;
-
-namespace VehicleCostsMonitor.Web
+﻿namespace VehicleCostsMonitor.Web
 {
+    using AutoMapper;
+    using Infrastructure.Extensions;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using VehicleCostsMonitor.Data;
+    using VehicleCostsMonitor.Models;
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -33,8 +33,8 @@ namespace VehicleCostsMonitor.Web
 
             services
                 .AddDbContext<JustMonitorDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    options.UseSqlServer(
+                        Configuration.GetConnectionString("DefaultConnection")));
 
             services
                 .AddIdentity<User, IdentityRole>(options =>

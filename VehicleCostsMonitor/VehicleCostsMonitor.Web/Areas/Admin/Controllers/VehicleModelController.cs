@@ -1,11 +1,11 @@
 ﻿namespace VehicleCostsMonitor.Web.Areas.Admin.Controllers
 {
+    using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
+    using Services.Interfaces;
+    using Services.Models.VehicleModel;
     using System.Threading.Tasks;
     using VehicleCostsMonitor.Common.Notifications;
-    using VehicleCostsMonitor.Services.Interfaces;
-    using VehicleCostsMonitor.Services.Models.VehicleModel;
-    using VehicleCostsMonitor.Web.Infrastructure.Filters;
 
     public class VehicleModelController : BaseAdminController
     {
@@ -19,7 +19,7 @@
         [HttpPost]
         public async Task<IActionResult> Create(string name, int manufacturerId)
         {
-            var success = await this.vehicleModels.Create(name, manufacturerId);
+            var success = await this.vehicleModels.CreateAsync(name, manufacturerId);
             if (!success)
             {
                 this.ShowNotification(NotificationMessages.InvalidOperation);
@@ -37,7 +37,7 @@
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            var model = await this.vehicleModels.Get(id);
+            var model = await this.vehicleModels.GetAsync(id);
             if (model == null)
             {
                 this.ShowNotification(NotificationMessages.InvalidOperation);
@@ -51,7 +51,7 @@
         [ValidateModelState]
         public async Task<IActionResult> Delete(ModelConciseServiceModel model)
         {
-            var success = await this.vehicleModels.Delete(model.Id);
+            var success = await this.vehicleModels.DeleteAsync(model.Id);
             if (success)
             {
                 this.ShowNotification(

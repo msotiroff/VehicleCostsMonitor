@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace VehicleCostsMonitor.Web.Models.Dtos
+﻿namespace VehicleCostsMonitor.Web.Models.Dtos
 {
+    using System.Collections.Generic;
+
     public class ManufacturerDto
     {
         public string Name { get; set; }

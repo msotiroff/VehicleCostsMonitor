@@ -1,10 +1,10 @@
-﻿using System;
-using System.Linq;
-using AutoMapper;
-using VehicleCostsMonitor.Common.AutoMapping;
-
-namespace VehicleCostsMonitor.Web.Infrastructure.AutoMapperProfiles
+﻿namespace VehicleCostsMonitor.Web.Infrastructure.AutoMapperProfiles
 {
+    using System;
+    using System.Linq;
+    using AutoMapper;
+    using VehicleCostsMonitor.Common.AutoMapping;
+
     public class DefaultProfile : Profile
     {
         public DefaultProfile()

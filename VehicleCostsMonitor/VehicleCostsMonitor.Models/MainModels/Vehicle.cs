@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-
-using static VehicleCostsMonitor.Models.Common.ModelConstants;
-
-namespace VehicleCostsMonitor.Models
+﻿namespace VehicleCostsMonitor.Models
 {
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using static Common.ModelConstants;
+
     public class Vehicle
     {
         public Vehicle()

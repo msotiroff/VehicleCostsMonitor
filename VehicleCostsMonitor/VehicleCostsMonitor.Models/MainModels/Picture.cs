@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace VehicleCostsMonitor.Models
+﻿namespace VehicleCostsMonitor.Models
 {
+    using System.ComponentModel.DataAnnotations;
+
     public class Picture
     {
         [Key]

@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using VehicleCostsMonitor.Models;
-
-namespace VehicleCostsMonitor.Data.Configurations
+﻿namespace VehicleCostsMonitor.Data.Configurations
 {
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Builders;
+    using VehicleCostsMonitor.Models;
+
     public class VehicleConfig : IEntityTypeConfiguration<Vehicle>
     {
         public void Configure(EntityTypeBuilder<Vehicle> builder)

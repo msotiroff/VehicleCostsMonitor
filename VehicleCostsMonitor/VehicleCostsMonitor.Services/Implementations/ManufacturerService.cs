@@ -1,16 +1,16 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using VehicleCostsMonitor.Data;
-using VehicleCostsMonitor.Models;
-using VehicleCostsMonitor.Services.Interfaces;
-using VehicleCostsMonitor.Services.Models.Manufacturer;
-
-namespace VehicleCostsMonitor.Services.Implementations
+﻿namespace VehicleCostsMonitor.Services.Implementations
 {
+    using AutoMapper;
+    using AutoMapper.QueryableExtensions;
+    using Data;
+    using Interfaces;
+    using Microsoft.EntityFrameworkCore;
+    using Models.Manufacturer;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using VehicleCostsMonitor.Models;
+
     public class ManufacturerService : DataAccessService, IManufacturerService
     {
         public ManufacturerService(JustMonitorDbContext db) 

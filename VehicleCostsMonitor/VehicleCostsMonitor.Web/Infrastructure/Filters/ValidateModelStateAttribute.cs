@@ -1,13 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.Routing;
-using System.Collections.Generic;
-using System.Linq;
-using VehicleCostsMonitor.Web.Controllers;
-
-namespace VehicleCostsMonitor.Web.Infrastructure.Filters
+﻿namespace VehicleCostsMonitor.Web.Infrastructure.Filters
 {
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Filters;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Microsoft.AspNetCore.Mvc.Routing;
+    using System.Linq;
+    using Web.Controllers;
+
     /// <summary>
     /// Validates the ModelState and, if there are any errors, returns the GET method with its arguments
     /// </summary>

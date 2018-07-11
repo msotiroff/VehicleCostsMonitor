@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace VehicleCostsMonitor.Models.Contracts
+﻿namespace VehicleCostsMonitor.Models.Contracts
 {
+    using System;
+
     public interface IEntry
     {
         int Id { get; }

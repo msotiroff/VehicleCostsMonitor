@@ -7,7 +7,8 @@
     public class ManufacturerConciseListModel : IAutoMapWith<Manufacturer>
     {
         public int Id { get; set; }
-        
+
+        [Required]
         public string Name { get; set; }
 
         [Display(Name = "Models count")]

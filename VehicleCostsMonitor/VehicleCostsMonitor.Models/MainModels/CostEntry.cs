@@ -1,9 +1,9 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using VehicleCostsMonitor.Models.Contracts;
-
-namespace VehicleCostsMonitor.Models
+﻿namespace VehicleCostsMonitor.Models
 {
+    using System;
+    using System.ComponentModel.DataAnnotations;
+    using VehicleCostsMonitor.Models.Contracts;
+
     public class CostEntry : IEntry
     {
         [Key]

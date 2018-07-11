@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System.Collections.Generic;
-
-namespace VehicleCostsMonitor.Models
+﻿namespace VehicleCostsMonitor.Models
 {
+    using Microsoft.AspNetCore.Identity;
+    using System.Collections.Generic;
+
     public class User : IdentityUser
     {
         public User()
