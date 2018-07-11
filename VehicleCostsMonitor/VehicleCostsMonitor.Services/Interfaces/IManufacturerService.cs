@@ -6,9 +6,9 @@ namespace VehicleCostsMonitor.Services.Interfaces
 {
     public interface IManufacturerService
     {
-        Task<ManufacturerUpdateServiceModel> Get(int id);
+        Task<ManufacturerUpdateServiceModel> GetAsync(int id);
 
-        Task<IEnumerable<ManufacturerConciseListModel>> All();
+        Task<IEnumerable<ManufacturerConciseListModel>> AllAsync();
 
         Task<bool> CreateAsync(string name);
 
@@ -16,6 +16,6 @@ namespace VehicleCostsMonitor.Services.Interfaces
 
         Task<bool> DeleteAsync(int id);
 
-        Task<ManufacturerDetailsServiceModel> GetDetailed(int id);
+        Task<ManufacturerDetailsServiceModel> GetDetailedAsync(int id);
     }
 }

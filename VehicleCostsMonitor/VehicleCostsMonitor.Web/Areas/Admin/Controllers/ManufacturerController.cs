@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using VehicleCostsMonitor.Services.Interfaces;
-using VehicleCostsMonitor.Services.Models.Manufacturer;
-
-namespace VehicleCostsMonitor.Web.Areas.Admin.Controllers
+﻿namespace VehicleCostsMonitor.Web.Areas.Admin.Controllers
 {
+    using Microsoft.AspNetCore.Mvc;
+    using System.Threading.Tasks;
+    using VehicleCostsMonitor.Common.Notifications;
+    using VehicleCostsMonitor.Services.Interfaces;
+    using VehicleCostsMonitor.Services.Models.Manufacturer;
+    using VehicleCostsMonitor.Web.Infrastructure.Filters;
+
     public class ManufacturerController : BaseAdminController
     {
         private readonly IManufacturerService manufacturers;
@@ -17,7 +19,7 @@ namespace VehicleCostsMonitor.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var model = await this.manufacturers.All();
+            var model = await this.manufacturers.AllAsync();
 
             return View(model);
         }
@@ -25,7 +27,13 @@ namespace VehicleCostsMonitor.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            var model = await this.manufacturers.GetDetailed(id);
+            var model = await this.manufacturers.GetDetailedAsync(id);
+            if (model == null)
+            {
+                this.ShowNotification(string.Format(NotificationMessages.ManufacturerDoesNotExist, id));
+
+                return RedirectToAction(nameof(Index));
+            }
 
             return View(model);
         }
@@ -36,7 +44,9 @@ namespace VehicleCostsMonitor.Web.Areas.Admin.Controllers
             var success = await this.manufacturers.CreateAsync(name);
             if (!success)
             {
-                return BadRequest();
+                this.ShowNotification(NotificationMessages.InvalidOperation);
+
+                return RedirectToAction(nameof(Index));
             }
 
             return RedirectToAction(nameof(Index));
@@ -45,22 +55,27 @@ namespace VehicleCostsMonitor.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var model = await this.manufacturers.Get(id);
+            var model = await this.manufacturers.GetAsync(id);
             if (model == null)
             {
-                return BadRequest(id);
+                this.ShowNotification(string.Format(NotificationMessages.ManufacturerDoesNotExist, id));
+
+                return RedirectToAction(nameof(Index));
             }
 
             return View(model);
         }
 
         [HttpPost]
+        [ValidateModelState]
         public async Task<IActionResult> Edit(ManufacturerUpdateServiceModel model)
         {
             var success = await this.manufacturers.UpdateAsync(model.Id, model.Name);
             if (!success)
             {
-                return BadRequest();
+                this.ShowNotification(NotificationMessages.InvalidOperation);
+
+                return RedirectToAction(nameof(Index));
             }
 
             return RedirectToAction(nameof(Index));
@@ -69,22 +84,27 @@ namespace VehicleCostsMonitor.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            var model = await this.manufacturers.Get(id);
+            var model = await this.manufacturers.GetAsync(id);
             if (model == null)
             {
-                return BadRequest(id);
+                this.ShowNotification(string.Format(NotificationMessages.ManufacturerDoesNotExist, id));
+
+                return RedirectToAction(nameof(Index));
             }
 
             return View(model);
         }
 
         [HttpPost]
+        [ValidateModelState]
         public async Task<IActionResult> Delete(ManufacturerUpdateServiceModel model)
         {
             var success = await this.manufacturers.DeleteAsync(model.Id);
             if (!success)
             {
-                return BadRequest();
+                this.ShowNotification(NotificationMessages.InvalidOperation);
+
+                return RedirectToAction(nameof(Index));
             }
 
             return RedirectToAction(nameof(Index));

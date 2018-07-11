@@ -4,7 +4,7 @@ using VehicleCostsMonitor.Web.Models;
 
 namespace VehicleCostsMonitor.Web.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         public IActionResult Index() => View();
 

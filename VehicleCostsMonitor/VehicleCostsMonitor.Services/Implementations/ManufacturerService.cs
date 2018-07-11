@@ -16,7 +16,7 @@ namespace VehicleCostsMonitor.Services.Implementations
         public ManufacturerService(JustMonitorDbContext db) 
             : base(db) { }
 
-        public async Task<IEnumerable<ManufacturerConciseListModel>> All()
+        public async Task<IEnumerable<ManufacturerConciseListModel>> AllAsync()
         {
             var all = await this.db
             .Manufacturers
@@ -62,7 +62,7 @@ namespace VehicleCostsMonitor.Services.Implementations
             return true;
         }
 
-        public async Task<ManufacturerUpdateServiceModel> Get(int id)
+        public async Task<ManufacturerUpdateServiceModel> GetAsync(int id)
         {
             var manufacturer = await this.db.Manufacturers.FindAsync(id);
             if (manufacturer == null)
@@ -73,7 +73,7 @@ namespace VehicleCostsMonitor.Services.Implementations
             return Mapper.Map<ManufacturerUpdateServiceModel>(manufacturer);
         }
 
-        public async Task<ManufacturerDetailsServiceModel> GetDetailed(int id)
+        public async Task<ManufacturerDetailsServiceModel> GetDetailedAsync(int id)
             => await this.db
                 .Manufacturers
                 .Where(m => m.Id == id)

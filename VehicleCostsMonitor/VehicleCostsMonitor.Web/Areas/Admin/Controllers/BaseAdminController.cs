@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-
-
-namespace VehicleCostsMonitor.Web.Areas.Admin.Controllers
+﻿namespace VehicleCostsMonitor.Web.Areas.Admin.Controllers
 {
-    [Area(WebConstants.AdministratorRole)]
-    [Authorize(Roles = WebConstants.AdministratorRole)]
-    public abstract class BaseAdminController : Controller
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+    using VehicleCostsMonitor.Web.Controllers;
+    using static WebConstants;
+
+    [Area(AdministratorRole)]
+    [Authorize(Roles = AdministratorRole)]
+    public abstract class BaseAdminController : BaseController
     {
     }
 }
