@@ -45,8 +45,12 @@
             if (!success)
             {
                 this.ShowNotification(NotificationMessages.InvalidOperation);
-
-                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                this.ShowNotification(string.Format(
+                    NotificationMessages.ManufacturerCreatedSuccessfull, name),
+                    NotificationType.Success);
             }
 
             return RedirectToAction(nameof(Index));
@@ -74,8 +78,12 @@
             if (!success)
             {
                 this.ShowNotification(NotificationMessages.InvalidOperation);
-
-                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                this.ShowNotification(string.Format(
+                    NotificationMessages.ManufacturerUpdatedSuccessfull, model.Name),
+                    NotificationType.Success);
             }
 
             return RedirectToAction(nameof(Index));
@@ -103,10 +111,14 @@
             if (!success)
             {
                 this.ShowNotification(NotificationMessages.InvalidOperation);
-
-                return RedirectToAction(nameof(Index));
             }
-
+            else
+            {
+                this.ShowNotification(string.Format(
+                    NotificationMessages.ManufacturerDeletedSuccessfull, model.Name),
+                    NotificationType.Success);
+            }
+            
             return RedirectToAction(nameof(Index));
         }
     }

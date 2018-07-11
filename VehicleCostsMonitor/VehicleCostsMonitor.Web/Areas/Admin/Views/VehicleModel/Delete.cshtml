@@ -1,6 +1,6 @@
-﻿@model ManufacturerUpdateServiceModel
+﻿@model ModelConciseServiceModel
 
-<h2>Delete @Model.Name</h2>
+<h2>Delete "@Model.Name"</h2>
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
@@ -23,6 +23,6 @@
     <form asp-action="Delete">
         <input type="text" name="name" value="@Model.Name" hidden="hidden" />
         <input type="submit" value="Delete" class="btn btn-danger" />
-        <a asp-action="Index" class="btn btn-default">Back to List</a>
+        <a asp-controller="manufacturer" asp-action="Index" class="btn btn-default">Back to List</a>
     </form>
 </div>

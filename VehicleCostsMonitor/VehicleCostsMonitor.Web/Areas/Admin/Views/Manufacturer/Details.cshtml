@@ -26,7 +26,8 @@
     <div class="container">
         <div class="col-md-4"></div>
         <div class="col-md-4 form-inline">
-            <form asp-controller="model" asp-action="create" method="post">
+            <form asp-controller="VehicleModel" asp-action="Create" method="post">
+                <input type="text" hidden="hidden" name="manufacturerId" value="@Model.Id" />
                 <input class="form-control" name="name" type="text" placeholder="Add new model" />
                 <input type="submit" value="Create new" class="btn btn-primary" />
             </form>
@@ -63,7 +64,7 @@
                         @vehicleModel.Id
                     </td>
                     <td>
-                        <a asp-controller="model" asp-action="delete" asp-route-id="@vehicleModel.Id" class="btn btn-danger">Delete</a>
+                        <a asp-controller="vehiclemodel" asp-action="delete" asp-route-id="@vehicleModel.Id" class="btn btn-danger">Delete</a>
                     </td>
                 </tr>
             }
