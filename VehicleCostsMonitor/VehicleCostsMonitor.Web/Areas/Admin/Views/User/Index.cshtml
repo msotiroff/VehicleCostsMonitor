@@ -1,0 +1,88 @@
+﻿@model UserListingViewModel
+
+<h2>All users</h2>
+
+<div class="form-inline">
+    <form asp-action="index" method="get">
+        <input type="text" name="searchTerm" class="form-control" />
+        <input type="submit" class="btn btn-default" />
+    </form>
+</div>
+
+<table class="table table-responsive table-striped">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Vehicles Count</th>
+            <th>Add to role</th>
+            <th>Remove from role</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => user.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => user.VehiclesCount)
+                </td>
+                <td>
+                    <div class="form-inline">
+                        <form asp-action="addtorole" method="get">
+                            <input type="submit" class="btn btn-warning" value="Add to role" />
+                            <input type="text" hidden="hidden" name="userEmail" value="@user.Email" />
+                            <select name="role" asp-items="Model.Roles" class="form-control"></select>
+                        </form>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-inline">
+                        <form asp-action="removefromrole" method="get">
+                            <input type="submit" class="btn btn-warning" value="Remove from role" />
+                            <input type="text" hidden="hidden" name="userEmail" value="@user.Email" />
+                            <select name="role" asp-items="Model.Roles" class="form-control"></select>
+                        </form>
+                    </div>
+                </td>
+                <td>
+                    <a asp-area="identity" asp-controller="user" asp-action="details" asp-route-id="@user.Id" class="btn btn-primary">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.Users.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Users.HasNextPage ? "disabled" : "";
+    var firstDisabled = Model.Users.PageIndex == 1 ? "disabled" : "";
+    var lastDisabled = Model.Users.TotalPages == Model.Users.PageIndex ? "disabled" : "";
+}
+<div class="text-center">
+    <a asp-route-page="1"
+       asp-route-searchTerm="@Model.SearchTerm"
+       class="btn btn-default @firstDisabled">
+        First page
+    </a>
+    <a asp-route-page="@(Model.Users.PageIndex - 1)"
+       asp-route-searchTerm="@Model.SearchTerm"
+       class="btn btn-default @prevDisabled">
+        Previous
+    </a>
+    <span class="btn btn-group">
+        @Model.Users.PageIndex
+    </span>
+    <a asp-route-page="@(Model.Users.PageIndex + 1)"
+       asp-route-searchTerm="@Model.SearchTerm"
+       class="btn btn-default @nextDisabled">
+        Next
+    </a>
+    <a asp-route-page="@(Model.Users.TotalPages)"
+       asp-route-searchTerm="@Model.SearchTerm"
+       class="btn btn-default @lastDisabled">
+        Last page
+    </a>
+</div>

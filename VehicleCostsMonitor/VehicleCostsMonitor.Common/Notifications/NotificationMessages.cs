@@ -4,6 +4,9 @@
     {
         public const string InvalidOperation = "Invalid operation!";
 
+        public const string UserAddedToRole = "User \"{0}\" successfully added to role \"{1}\"";
+        public const string UserRemovedFromRole = "User \"{0}\" successfully removed from role \"{1}\"";
+
         public const string ManufacturerDoesNotExist = "Manufacturer with id \"{0}\" does not exist!";
         public const string ManufacturerCreatedSuccessfull = "Manufacturer \"{0}\" created successfully";
         public const string ManufacturerUpdatedSuccessfull = "Manufacturer \"{0}\" updated successfully";

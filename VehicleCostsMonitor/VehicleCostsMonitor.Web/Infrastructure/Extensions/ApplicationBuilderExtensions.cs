@@ -176,7 +176,7 @@
         {
             var userManager = serviceScope.ServiceProvider.GetService<UserManager<User>>();
             var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
-
+            
             Task
                 .Run(async () =>
                 {

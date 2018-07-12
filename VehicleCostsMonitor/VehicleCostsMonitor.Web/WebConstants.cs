@@ -16,5 +16,7 @@
         public const string GearingTypesListPath = @"wwwroot\seedfiles\gearing-types.json";
         public const string RouteTypesListPath = @"wwwroot\seedfiles\route-types.json";
         public const string VehicleTypesListPath = @"wwwroot\seedfiles\vehicle-types.json";
+
+        public const int UsersListPageSize = 20;
     }
 }

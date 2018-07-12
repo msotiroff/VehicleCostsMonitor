@@ -75,7 +75,7 @@
     </environment>
 
     @RenderSection("Scripts", required: false)
-    {
+    @{
         @if (TempData[NotificationConstants.NotificationMessageKey] != null)
         {
             <script>
