@@ -16,6 +16,7 @@
         public DbSet<Model> Models { get; set; }
         public DbSet<FuelEntry> FuelEntries { get; set; }
         public DbSet<CostEntry> CostEntries { get; set; }
+        public DbSet<UserActivityLog> UserActivityLogs { get; set; }
 
         public DbSet<FuelEntryRouteType> FuelEntryRouteTypes { get; set; }
         public DbSet<FuelEntryExtraFuelConsumer> FuelEntryExtraFuelConsumers { get; set; }
@@ -37,6 +38,7 @@
             builder.ApplyConfiguration(new ManufacturerConfig());
             builder.ApplyConfiguration(new ModelConfig());
             builder.ApplyConfiguration(new VehicleConfig());
+            builder.ApplyConfiguration(new UserActivityLogConfig());
 
             base.OnModelCreating(builder);
         }

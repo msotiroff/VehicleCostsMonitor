@@ -18,5 +18,6 @@
         public const string VehicleTypesListPath = @"wwwroot\seedfiles\vehicle-types.json";
 
         public const int UsersListPageSize = 20;
+        public const int LogsListPageSize = 30;
     }
 }

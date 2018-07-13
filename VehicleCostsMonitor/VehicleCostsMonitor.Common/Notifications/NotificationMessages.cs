@@ -15,5 +15,6 @@
         public const string ModelCreatedSuccessfull = "Model \"{0}\" created successfully";
         public const string ModelDeletedSuccessfull = "Model \"{0}\" deleted successfully";
 
+        public const string LogDoesNotExist = "Log with id \"{0}\" does not exist!";
     }
 }

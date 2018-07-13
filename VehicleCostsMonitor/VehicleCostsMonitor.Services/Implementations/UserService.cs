@@ -11,10 +11,10 @@
         public UserService(JustMonitorDbContext db) 
             : base(db) { }
 
-        public IQueryable<UserConciseListingModel> GetAll()
+        public IQueryable<UserListingServiceModel> GetAll()
             => this.db
             .Users
             .OrderBy(u => u.Email)
-            .ProjectTo<UserConciseListingModel>();
+            .ProjectTo<UserListingServiceModel>();
     }
 }

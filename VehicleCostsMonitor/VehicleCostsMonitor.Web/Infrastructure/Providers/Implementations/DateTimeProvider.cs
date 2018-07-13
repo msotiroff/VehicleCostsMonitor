@@ -5,9 +5,6 @@
 
     public class DateTimeProvider : IDateTimeProvider
     {
-        public DateTime GetDateTime()
-        {
-            throw new NotImplementedException();
-        }
+        public DateTime GetCurrentDateTime() => DateTime.UtcNow;
     }
 }

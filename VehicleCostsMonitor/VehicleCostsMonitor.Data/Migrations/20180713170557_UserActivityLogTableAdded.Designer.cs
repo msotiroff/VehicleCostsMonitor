@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VehicleCostsMonitor.Data;
 
 namespace VehicleCostsMonitor.Data.Migrations
 {
     [DbContext(typeof(JustMonitorDbContext))]
-    partial class JustMonitorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180713170557_UserActivityLogTableAdded")]
+    partial class UserActivityLogTableAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -418,8 +420,6 @@ namespace VehicleCostsMonitor.Data.Migrations
 
                     b.Property<string>("ControllerName")
                         .IsRequired();
-
-                    b.Property<DateTime>("DateTime");
 
                     b.Property<string>("HttpMethod")
                         .IsRequired();

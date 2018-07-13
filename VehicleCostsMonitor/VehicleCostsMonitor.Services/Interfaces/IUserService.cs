@@ -5,6 +5,6 @@
 
     public interface IUserService
     {
-        IQueryable<UserConciseListingModel> GetAll();
+        IQueryable<UserListingServiceModel> GetAll();
     }
 }

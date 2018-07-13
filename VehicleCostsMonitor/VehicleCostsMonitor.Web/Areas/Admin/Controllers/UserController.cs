@@ -4,7 +4,6 @@
     using Infrastructure.Collections;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Rendering;
     using Models.User;
     using Services.Interfaces;
     using Services.Models.User;
@@ -30,7 +29,7 @@
             this.userService = userService;
         }
 
-        public IActionResult Index(string searchTerm, int page = 1)
+        public async Task<IActionResult> Index(string searchTerm, int page = 1)
         {
             page = Math.Max(1, page);
             var allUsers = this.userService.GetAll();
@@ -48,18 +47,27 @@
                 .Take(UsersListPageSize)
                 .ToList();
 
-            var allRoles = this.roleManager.Roles.Select(r => new SelectListItem(r.Name, r.Name)).ToList();
+            var allRoles = this.roleManager.Roles.Select(r => r.Name).ToList();
+
+            foreach (var userModel in usersToShow)
+            {
+                var dbUser = await this.userManager.FindByEmailAsync(userModel.Email);
+                var userRoles = await this.userManager.GetRolesAsync(dbUser);
+
+                userModel.CurrentRoles = userRoles;
+                userModel.NonCurrentRoles = allRoles.Except(userRoles).ToList();
+            }
 
             var model = new UserListingViewModel
             {
-                Roles = allRoles,
-                Users = new PaginatedList<UserConciseListingModel>(usersToShow, page, totalPages),
+                SearchTerm = searchTerm,
+                Users = new PaginatedList<UserListingServiceModel>(usersToShow, page, totalPages),
             };
 
             return View(model);
         }
         
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> AddToRole(string userEmail, string role)
         {
             var user = await this.userManager.FindByEmailAsync(userEmail);
@@ -80,7 +88,7 @@
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> RemoveFromRole(string userEmail, string role)
         {
             var user = await this.userManager.FindByEmailAsync(userEmail);
