@@ -16,7 +16,7 @@
         public int Id { get; set; }
 
         [Required]
-        public int ManufactureId { get; set; }
+        public int ManufacturerId { get; set; }
 
         public Manufacturer Manufacturer { get; set; }
 
@@ -35,12 +35,17 @@
         public int EngineHorsePower { get; set; }
 
         [Required]
+        public int VehicleTypeId { get; set; }
+
         public VehicleType VehicleType { get; set; }
 
         [Required]
+        public int FuelTypeId { get; set; }
+
         public FuelType FuelType { get; set; }
 
         [Required]
+        public int GearingTypeId { get; set; }
         public GearingType GearingType { get; set; }
 
         [Required]

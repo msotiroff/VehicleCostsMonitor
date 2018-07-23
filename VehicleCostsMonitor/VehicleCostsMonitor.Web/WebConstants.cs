@@ -8,6 +8,9 @@
         public const string AdminUserName = "admin@justmonitor.com";
         public const string AdminPassword = "admin123";
 
+        public const string UserArea = "User";
+        public const string VehicleArea = "Vehicle";
+
         public const string ManufacturersListPath = @"wwwroot\seedfiles\vehicles-list.json";
         public const string CostEntryTypesListPath = @"wwwroot\seedfiles\cost-entry-types.json";
         public const string ExtraFuelConsumersListPath = @"wwwroot\seedfiles\extra-fuel-consumers.json";
@@ -18,6 +21,6 @@
         public const string VehicleTypesListPath = @"wwwroot\seedfiles\vehicle-types.json";
 
         public const int UsersListPageSize = 20;
-        public const int LogsListPageSize = 30;
+        public const int LogsListPageSize = 20;
     }
 }

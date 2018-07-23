@@ -1,0 +1,31 @@
+﻿@model UserProfileServiceModel
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<h2 class="text-center">User: "<span class="text-primary">@Model.Email</span>"</h2>
+
+<h3 class="text-center">Vehicles:</h3>
+<hr />
+
+<div class="text-center">
+    <a class="btn btn-success" asp-area="vehicle" asp-controller="home" asp-action="create">Create new vehicle</a>
+</div>
+
+<table class="table table-responsive table-striped">
+    <thead>
+        <tr>
+            <th>Picture</th>
+            <th>Model</th>
+            <th>Consumption</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var vehicle in Model.Vehicles)
+        {
+            @await Html.PartialAsync("_UserProfileVehicleView.cshtml", vehicle);
+        }
+    </tbody>
+</table>

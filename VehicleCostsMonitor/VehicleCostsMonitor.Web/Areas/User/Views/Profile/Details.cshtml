@@ -1,0 +1,27 @@
+﻿@model UserProfileServiceModel
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<h2 class="text-center">@Model.Email profile</h2>
+
+<h4 class="text-center">Vehicles:</h4>
+<hr />
+
+<table class="table table-responsive table-striped">
+    <thead>
+        <tr>
+            <th>Picture</th>
+            <th>Model</th>
+            <th>Consumption</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var vehicle in Model.Vehicles)
+        {
+            @await Html.PartialAsync("_UserProfileVehicleView.cshtml", vehicle);
+        }
+    </tbody>
+</table>

@@ -15,6 +15,8 @@
         public int? Odometer { get; set; }
 
         [Required]
+        public int CostEntryTypeId { get; set; }
+
         public CostEntryType CostEntryType { get; set; }
 
         public decimal Price { get; set; }

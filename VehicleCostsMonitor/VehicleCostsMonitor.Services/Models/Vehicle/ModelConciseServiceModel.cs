@@ -1,4 +1,4 @@
-﻿namespace VehicleCostsMonitor.Services.Models.VehicleModel
+﻿namespace VehicleCostsMonitor.Services.Models.Vehicle
 {
     using Common.AutoMapping;
     using System.ComponentModel.DataAnnotations;

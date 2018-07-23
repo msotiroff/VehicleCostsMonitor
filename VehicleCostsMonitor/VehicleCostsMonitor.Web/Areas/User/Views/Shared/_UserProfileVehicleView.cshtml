@@ -1,0 +1,12 @@
+﻿@model VehicleConciseServiceModel
+
+<tr>
+    <td><img src="@Model.PicturePath" alt="@Model.MakeModel"></td>
+    <td>
+        <a asp-area="vehicle" asp-controller="home" asp-action="details">@Model.MakeModel</a>
+    </td>
+    <td>@Model.FuelConsumption.ToString("f2")</td>
+    <td>
+        <a class="btn btn-info" asp-area="vehicle" asp-controller="home" asp-action="details" asp-route-id="@Model.Id">Details</a>
+    </td>
+</tr>

@@ -13,7 +13,7 @@
             this.db = db;
         }
 
-        protected bool ValidateModelState(object model)
+        protected bool ValidateEntityState(object model)
         {
             var validationContext = new ValidationContext(model);
             var validationResults = new List<ValidationResult>();

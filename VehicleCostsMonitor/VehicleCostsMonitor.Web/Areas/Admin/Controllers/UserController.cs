@@ -39,8 +39,8 @@
                 allUsers = allUsers.Where(u => u.Email.ToLower().Contains(searchTerm.ToLower()));
             }
 
-            var totalPages = (int)Math.Ceiling(allUsers.Count() / (double)UsersListPageSize);
-            page = Math.Min(page, totalPages);
+            var totalPages = (int)(Math.Ceiling(allUsers.Count() / (double)UsersListPageSize));
+            page = Math.Min(page, Math.Max(1, totalPages));
 
             var usersToShow = allUsers
                 .Skip((page - 1) * UsersListPageSize)

@@ -31,7 +31,6 @@
             if (model == null)
             {
                 this.ShowNotification(string.Format(NotificationMessages.ManufacturerDoesNotExist, id));
-
                 return RedirectToAction(nameof(Index));
             }
 
@@ -63,7 +62,6 @@
             if (model == null)
             {
                 this.ShowNotification(string.Format(NotificationMessages.ManufacturerDoesNotExist, id));
-
                 return RedirectToAction(nameof(Index));
             }
 
@@ -96,7 +94,6 @@
             if (model == null)
             {
                 this.ShowNotification(string.Format(NotificationMessages.ManufacturerDoesNotExist, id));
-
                 return RedirectToAction(nameof(Index));
             }
 

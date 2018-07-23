@@ -4,7 +4,7 @@
     using System.ComponentModel.DataAnnotations;
     using VehicleCostsMonitor.Common.AutoMapping;
     using VehicleCostsMonitor.Models;
-    using VehicleModel;
+    using Vehicle;
 
     public class ManufacturerDetailsServiceModel : IAutoMapWith<Manufacturer>
     {

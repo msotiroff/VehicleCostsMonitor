@@ -7,10 +7,11 @@
     using VehicleCostsMonitor.Common.Notifications;
     using VehicleCostsMonitor.Services.Interfaces;
     using VehicleCostsMonitor.Services.Models.Log;
+    using VehicleCostsMonitor.Web.Areas.Admin.Models.Enums;
     using VehicleCostsMonitor.Web.Areas.Admin.Models.Log;
     using VehicleCostsMonitor.Web.Infrastructure.Collections;
     using static WebConstants;
-
+    
     public class LogController : BaseAdminController
     {
         private readonly ILogService logService;
@@ -20,23 +21,46 @@
             this.logService = logService;
         }
 
-        public IActionResult Index(string searchTerm, int page = 1)
+        public IActionResult Index(string searchTerm, string criteria, int page = 1)
         {
             page = Math.Max(1, page);
             var allLogs = this.logService.GetAll();
 
+            Enum.TryParse(criteria, out LogSearchCriteria logCriteria);
+
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                allLogs = allLogs.Where(l => l.UserEmail.ToLower().Contains(searchTerm.ToLower()));
+                switch (logCriteria)
+                {
+                    case LogSearchCriteria.Email:
+                        allLogs = allLogs.Where(l => l.UserEmail.ToLower().Contains(searchTerm.ToLower()));
+                        break;
+                    case LogSearchCriteria.Controller:
+                        allLogs = allLogs.Where(l => l.ControllerName.ToLower().Contains(searchTerm.ToLower()));
+                        break;
+                    case LogSearchCriteria.Action:
+                        allLogs = allLogs.Where(l => l.ActionName.ToLower().Contains(searchTerm.ToLower()));
+                        break;
+                    case LogSearchCriteria.HttpMethod:
+                        allLogs = allLogs.Where(l => l.HttpMethod.ToLower().Contains(searchTerm.ToLower()));
+                        break;
+                    default:
+                        break;
+                }
             }
 
-            var totalPages = (int)Math.Ceiling(allLogs.Count() / (double)LogsListPageSize);
-            page = Math.Min(page, totalPages);
+            var totalPages = (int)(Math.Ceiling(allLogs.Count() / (double)LogsListPageSize));
+            page = Math.Min(page, Math.Max(1, totalPages));
+
+            var logsToShow = allLogs
+                .Skip((page - 1) * LogsListPageSize)
+                .Take(LogsListPageSize)
+                .ToList();
 
             var model = new UserActivityLogListViewModel
             {
                 SearchTerm = searchTerm,
-                Logs = new PaginatedList<UserActivityLogConciseServiceModel>(allLogs, page, totalPages)
+                Logs = new PaginatedList<UserActivityLogConciseServiceModel>(logsToShow, page, totalPages)
             };
 
             return View(model);

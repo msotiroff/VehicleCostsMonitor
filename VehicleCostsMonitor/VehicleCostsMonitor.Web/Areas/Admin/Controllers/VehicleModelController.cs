@@ -3,7 +3,7 @@
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
     using Services.Interfaces;
-    using Services.Models.VehicleModel;
+    using Services.Models.Vehicle;
     using System.Threading.Tasks;
     using VehicleCostsMonitor.Common.Notifications;
 

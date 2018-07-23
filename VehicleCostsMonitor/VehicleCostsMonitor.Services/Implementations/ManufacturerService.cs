@@ -30,7 +30,7 @@
         public async Task<bool> CreateAsync(string name)
         {
             var manufacturer = new Manufacturer { Name = name };
-            if (!this.ValidateModelState(manufacturer))
+            if (!this.ValidateEntityState(manufacturer))
             {
                 return false;
             }
@@ -89,7 +89,7 @@
             }
 
             manufacturer.Name = name;
-            if (!this.ValidateModelState(manufacturer))
+            if (!this.ValidateEntityState(manufacturer))
             {
                 return false;
             }

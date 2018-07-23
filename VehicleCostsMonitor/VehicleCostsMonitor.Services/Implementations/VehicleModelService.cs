@@ -4,7 +4,8 @@
     using Data;
     using Interfaces;
     using Microsoft.EntityFrameworkCore;
-    using Models.VehicleModel;
+    using Models.Vehicle;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using VehicleCostsMonitor.Models;
@@ -22,7 +23,7 @@
                 ManufactureId = manufacturerId
             };
 
-            if (!this.ValidateModelState(model))
+            if (!this.ValidateEntityState(model))
             {
                 return false;
             }
@@ -59,6 +60,11 @@
                 .Where(m => m.Id == id)
                 .ProjectTo<ModelConciseServiceModel>()
                 .FirstOrDefaultAsync();
-        
+
+        public async Task<IEnumerable<string>> GetByManufacturerIdAsync(int manufactureId)
+            => await this.db.Models
+            .Where(mod => mod.ManufactureId == manufactureId)
+            .Select(mod => mod.Name)
+            .ToListAsync();
     }
 }
