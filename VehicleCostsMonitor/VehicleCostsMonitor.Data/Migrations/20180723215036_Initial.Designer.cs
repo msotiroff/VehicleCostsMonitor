@@ -10,8 +10,8 @@ using VehicleCostsMonitor.Data;
 namespace VehicleCostsMonitor.Data.Migrations
 {
     [DbContext(typeof(JustMonitorDbContext))]
-    [Migration("20180713170557_UserActivityLogTableAdded")]
-    partial class UserActivityLogTableAdded
+    [Migration("20180723215036_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -312,14 +312,14 @@ namespace VehicleCostsMonitor.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ManufactureId");
+                    b.Property<int>("ManufacturerId");
 
                     b.Property<string>("Name")
                         .IsRequired();
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ManufactureId");
+                    b.HasIndex("ManufacturerId");
 
                     b.ToTable("Models");
                 });
@@ -421,6 +421,8 @@ namespace VehicleCostsMonitor.Data.Migrations
                     b.Property<string>("ControllerName")
                         .IsRequired();
 
+                    b.Property<DateTime>("DateTime");
+
                     b.Property<string>("HttpMethod")
                         .IsRequired();
 
@@ -454,9 +456,7 @@ namespace VehicleCostsMonitor.Data.Migrations
 
                     b.Property<bool>("IsDeleted");
 
-                    b.Property<int>("ManufactureId");
-
-                    b.Property<int?>("ManufacturerId");
+                    b.Property<int>("ManufacturerId");
 
                     b.Property<int>("ModelId");
 
@@ -605,7 +605,7 @@ namespace VehicleCostsMonitor.Data.Migrations
                 {
                     b.HasOne("VehicleCostsMonitor.Models.Manufacturer", "Manufacturer")
                         .WithMany("Models")
-                        .HasForeignKey("ManufactureId")
+                        .HasForeignKey("ManufacturerId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -623,7 +623,8 @@ namespace VehicleCostsMonitor.Data.Migrations
 
                     b.HasOne("VehicleCostsMonitor.Models.Manufacturer", "Manufacturer")
                         .WithMany()
-                        .HasForeignKey("ManufacturerId");
+                        .HasForeignKey("ManufacturerId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("VehicleCostsMonitor.Models.Model", "Model")
                         .WithMany()

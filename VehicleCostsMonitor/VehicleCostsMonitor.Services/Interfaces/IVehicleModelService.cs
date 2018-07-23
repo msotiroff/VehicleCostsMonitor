@@ -12,6 +12,6 @@
 
         Task<ModelConciseServiceModel> GetAsync(int id);
 
-        Task<IEnumerable<string>> GetByManufacturerIdAsync(int manufactureId);
+        Task<IEnumerable<string>> GetByManufacturerIdAsync(int manufacturerId);
     }
 }

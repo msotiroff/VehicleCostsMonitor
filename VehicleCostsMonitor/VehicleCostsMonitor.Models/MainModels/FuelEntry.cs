@@ -4,9 +4,8 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
-    using VehicleCostsMonitor.Models.Contracts;
 
-    public class FuelEntry : IEntry
+    public class FuelEntry
     {
         #region Fields
         private int tripOdometer;

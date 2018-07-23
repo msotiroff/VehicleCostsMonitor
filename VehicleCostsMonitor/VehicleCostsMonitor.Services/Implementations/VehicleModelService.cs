@@ -20,7 +20,7 @@
             var model = new Model
             {
                 Name = modelName,
-                ManufactureId = manufacturerId
+                ManufacturerId = manufacturerId
             };
 
             if (!this.ValidateEntityState(model))
@@ -61,9 +61,9 @@
                 .ProjectTo<ModelConciseServiceModel>()
                 .FirstOrDefaultAsync();
 
-        public async Task<IEnumerable<string>> GetByManufacturerIdAsync(int manufactureId)
+        public async Task<IEnumerable<string>> GetByManufacturerIdAsync(int manufacturerId)
             => await this.db.Models
-            .Where(mod => mod.ManufactureId == manufactureId)
+            .Where(mod => mod.ManufacturerId == manufacturerId)
             .Select(mod => mod.Name)
             .ToListAsync();
     }

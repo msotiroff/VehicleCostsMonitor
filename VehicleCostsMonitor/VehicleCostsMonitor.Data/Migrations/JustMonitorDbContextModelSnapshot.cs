@@ -310,14 +310,14 @@ namespace VehicleCostsMonitor.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ManufactureId");
+                    b.Property<int>("ManufacturerId");
 
                     b.Property<string>("Name")
                         .IsRequired();
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ManufactureId");
+                    b.HasIndex("ManufacturerId");
 
                     b.ToTable("Models");
                 });
@@ -603,7 +603,7 @@ namespace VehicleCostsMonitor.Data.Migrations
                 {
                     b.HasOne("VehicleCostsMonitor.Models.Manufacturer", "Manufacturer")
                         .WithMany("Models")
-                        .HasForeignKey("ManufactureId")
+                        .HasForeignKey("ManufacturerId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -11,7 +11,7 @@
             builder
                 .HasOne(m => m.Manufacturer)
                 .WithMany(man => man.Models)
-                .HasForeignKey(m => m.ManufactureId);
+                .HasForeignKey(m => m.ManufacturerId);
         }
     }
 }

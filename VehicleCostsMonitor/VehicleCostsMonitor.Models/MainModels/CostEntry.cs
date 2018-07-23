@@ -2,9 +2,8 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
-    using VehicleCostsMonitor.Models.Contracts;
 
-    public class CostEntry : IEntry
+    public class CostEntry
     {
         [Key]
         public int Id { get; set; }

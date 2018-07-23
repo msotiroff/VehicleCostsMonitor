@@ -11,7 +11,7 @@
         public string Name { get; set; }
 
         [Required]
-        public int ManufactureId { get; set; }
+        public int ManufacturerId { get; set; }
 
         public Manufacturer Manufacturer { get; set; }
     }

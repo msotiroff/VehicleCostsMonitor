@@ -1,9 +1,9 @@
-﻿namespace VehicleCostsMonitor.Data.Migrations
-{
-    using System;
-    using Microsoft.EntityFrameworkCore.Metadata;
-    using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 
+namespace VehicleCostsMonitor.Data.Migrations
+{
     public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,21 +26,21 @@
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    AccessFailedCount = table.Column<int>(nullable: false),
-                    EmailConfirmed = table.Column<bool>(nullable: false),
-                    LockoutEnabled = table.Column<bool>(nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(nullable: false),
                     Id = table.Column<string>(nullable: false),
                     UserName = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
                     Email = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(nullable: false),
                     PasswordHash = table.Column<string>(nullable: true),
                     SecurityStamp = table.Column<string>(nullable: true),
                     ConcurrencyStamp = table.Column<string>(nullable: true),
-                    PhoneNumber = table.Column<string>(nullable: true)
+                    PhoneNumber = table.Column<string>(nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
+                    LockoutEnabled = table.Column<bool>(nullable: false),
+                    AccessFailedCount = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -150,6 +150,27 @@
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RouteTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserActivityLogs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    DateTime = table.Column<DateTime>(nullable: false),
+                    UserEmail = table.Column<string>(nullable: false),
+                    HttpMethod = table.Column<string>(nullable: false),
+                    ControllerName = table.Column<string>(nullable: false),
+                    ActionName = table.Column<string>(nullable: false),
+                    AreaName = table.Column<string>(nullable: true),
+                    Url = table.Column<string>(nullable: true),
+                    QueryString = table.Column<string>(nullable: true),
+                    ActionArguments = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserActivityLogs", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -278,14 +299,14 @@
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: false),
-                    ManufactureId = table.Column<int>(nullable: false)
+                    ManufacturerId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Models", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Models_Manufacturers_ManufactureId",
-                        column: x => x.ManufactureId,
+                        name: "FK_Models_Manufacturers_ManufacturerId",
+                        column: x => x.ManufacturerId,
                         principalTable: "Manufacturers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -297,8 +318,7 @@
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ManufactureId = table.Column<int>(nullable: false),
-                    ManufacturerId = table.Column<int>(nullable: true),
+                    ManufacturerId = table.Column<int>(nullable: false),
                     ModelId = table.Column<int>(nullable: false),
                     ExactModelname = table.Column<string>(nullable: true),
                     YearOfManufacture = table.Column<int>(nullable: false),
@@ -318,13 +338,13 @@
                         column: x => x.FuelTypeId,
                         principalTable: "FuelTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Vehicles_GearingTypes_GearingTypeId",
                         column: x => x.GearingTypeId,
                         principalTable: "GearingTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Vehicles_Manufacturers_ManufacturerId",
                         column: x => x.ManufacturerId,
@@ -336,7 +356,7 @@
                         column: x => x.ModelId,
                         principalTable: "Models",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Vehicles_Pictures_PictureId",
                         column: x => x.PictureId,
@@ -348,13 +368,13 @@
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Vehicles_VehicleTypes_VehicleTypeId",
                         column: x => x.VehicleTypeId,
                         principalTable: "VehicleTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -543,9 +563,14 @@
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Models_ManufactureId",
+                name: "IX_Models_ManufacturerId",
                 table: "Models",
-                column: "ManufactureId");
+                column: "ManufacturerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserActivityLogs_UserEmail",
+                table: "UserActivityLogs",
+                column: "UserEmail");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Vehicles_FuelTypeId",
@@ -610,6 +635,9 @@
 
             migrationBuilder.DropTable(
                 name: "FuelEntryRouteTypes");
+
+            migrationBuilder.DropTable(
+                name: "UserActivityLogs");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
