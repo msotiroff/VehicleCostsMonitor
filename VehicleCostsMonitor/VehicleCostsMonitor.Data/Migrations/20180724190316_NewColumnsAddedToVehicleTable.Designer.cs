@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VehicleCostsMonitor.Data;
 
 namespace VehicleCostsMonitor.Data.Migrations
 {
     [DbContext(typeof(JustMonitorDbContext))]
-    partial class JustMonitorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180724190316_NewColumnsAddedToVehicleTable")]
+    partial class NewColumnsAddedToVehicleTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

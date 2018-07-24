@@ -59,7 +59,7 @@
     var prevDisabled = !Model.Users.HasPreviousPage ? "disabled" : "";
     var nextDisabled = !Model.Users.HasNextPage ? "disabled" : "";
     var firstDisabled = Model.Users.PageIndex == 1 ? "disabled" : "";
-    var lastDisabled = Model.Users.TotalPages == Model.Users.PageIndex ? "disabled" : "";
+    var lastDisabled = Model.Users.TotalPages <= Model.Users.PageIndex ? "disabled" : "";
 }
 <div class="text-center">
     <a asp-route-page="1"

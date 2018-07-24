@@ -11,7 +11,7 @@
         public int ManufacturerId { get; set; }
 
         [Required]
-        public int ModelId { get; set; }
+        public string ModelName { get; set; }
 
         public string ExactModelname { get; set; }
 
@@ -33,7 +33,7 @@
 
         [Required]
         public string UserId { get; set; }
-
+        
         public int? PictureId { get; set; }
     }
 }

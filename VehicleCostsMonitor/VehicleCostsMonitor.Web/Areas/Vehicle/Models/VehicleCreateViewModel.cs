@@ -17,7 +17,7 @@
 
         [Required]
         [Display(Name = "Model")]
-        public int ModelId { get; set; }
+        public string ModelName { get; set; }
 
         public IEnumerable<SelectListItem> AllModels { get; set; }
 

@@ -30,10 +30,8 @@
         public async Task<bool> CreateAsync(string name)
         {
             var manufacturer = new Manufacturer { Name = name };
-            if (!this.ValidateEntityState(manufacturer))
-            {
-                return false;
-            }
+
+            this.ValidateEntityState(manufacturer);
 
             try
             {
@@ -89,10 +87,8 @@
             }
 
             manufacturer.Name = name;
-            if (!this.ValidateEntityState(manufacturer))
-            {
-                return false;
-            }
+
+            this.ValidateEntityState(manufacturer);
 
             this.db.Manufacturers.Update(manufacturer);
             await this.db.SaveChangesAsync();

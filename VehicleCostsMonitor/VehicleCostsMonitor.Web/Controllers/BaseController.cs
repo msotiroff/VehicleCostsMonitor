@@ -11,5 +11,7 @@
             this.TempData[NotificationMessageKey] = message;
             this.TempData[NotificationTypeKey] = notificationType.ToString();
         }
+
+        protected IActionResult RedirectToHome() => new RedirectResult("/");
     }
 }

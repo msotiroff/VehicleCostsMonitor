@@ -11,6 +11,11 @@
         public const string UserArea = "User";
         public const string VehicleArea = "Vehicle";
 
+        public const string PaginationPartial = "~/Views/Shared/_PaginationElementsPartial.cshtml";
+
+        public const string VehicleImagePathBase = @"\images\vehicles\{0}";
+        public const string DefaultVehicleImagePath = @"\images\vehicles\default.jpg";
+
         public const string ManufacturersListPath = @"wwwroot\seedfiles\vehicles-list.json";
         public const string CostEntryTypesListPath = @"wwwroot\seedfiles\cost-entry-types.json";
         public const string ExtraFuelConsumersListPath = @"wwwroot\seedfiles\extra-fuel-consumers.json";
@@ -22,5 +27,6 @@
 
         public const int UsersListPageSize = 20;
         public const int LogsListPageSize = 20;
+        public const int EntriesListPageSize = 30;
     }
 }

@@ -23,10 +23,7 @@
                 ManufacturerId = manufacturerId
             };
 
-            if (!this.ValidateEntityState(model))
-            {
-                return false;
-            }
+            this.ValidateEntityState(model);
 
             try
             {

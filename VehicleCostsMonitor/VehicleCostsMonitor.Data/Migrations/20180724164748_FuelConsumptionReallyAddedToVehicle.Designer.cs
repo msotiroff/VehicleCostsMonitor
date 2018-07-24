@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VehicleCostsMonitor.Data;
 
 namespace VehicleCostsMonitor.Data.Migrations
 {
     [DbContext(typeof(JustMonitorDbContext))]
-    partial class JustMonitorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180724164748_FuelConsumptionReallyAddedToVehicle")]
+    partial class FuelConsumptionReallyAddedToVehicle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -463,14 +465,6 @@ namespace VehicleCostsMonitor.Data.Migrations
                     b.Property<int>("ModelId");
 
                     b.Property<int?>("PictureId");
-
-                    b.Property<int>("TotalDistance");
-
-                    b.Property<double>("TotalFuelAmount");
-
-                    b.Property<decimal>("TotalFuelCosts");
-
-                    b.Property<decimal>("TotalOtherCosts");
 
                     b.Property<string>("UserId")
                         .IsRequired();

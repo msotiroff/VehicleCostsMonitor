@@ -9,6 +9,7 @@
     {
         #region Fields
         private int tripOdometer;
+        private double average;
         #endregion
 
         public FuelEntry()
@@ -47,7 +48,21 @@
 
         public FuelEntryType FuelEntryType { get; set; }
         
-        public double Average => (this.FuelQuantity / this.TripOdometer) * 100;
+        public double? Average
+        {
+            get => this.average;
+            set
+            {
+                if (this.tripOdometer == 0)
+                {
+                    this.average = 0;
+                }
+                else
+                {
+                    this.average = (this.FuelQuantity / this.tripOdometer) * 100.0;
+                }
+            }
+        }
 
         [Required]
         public int VehicleId { get; set; }

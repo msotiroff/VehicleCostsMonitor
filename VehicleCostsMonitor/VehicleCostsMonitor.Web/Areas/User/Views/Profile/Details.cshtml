@@ -21,7 +21,7 @@
     <tbody>
         @foreach (var vehicle in Model.Vehicles)
         {
-            @await Html.PartialAsync("_UserProfileVehicleView.cshtml", vehicle);
+            @await Html.PartialAsync("../Shared/_UserProfileVehicleView.cshtml", vehicle);
         }
     </tbody>
 </table>

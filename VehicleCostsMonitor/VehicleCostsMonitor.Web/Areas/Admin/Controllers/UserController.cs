@@ -70,6 +70,12 @@
         [HttpPost]
         public async Task<IActionResult> AddToRole(string userEmail, string role)
         {
+            if (string.IsNullOrWhiteSpace(role) || string.IsNullOrWhiteSpace(userEmail))
+            {
+                this.ShowNotification(NotificationMessages.InvalidOperation);
+                return RedirectToAction(nameof(Index));
+            }
+
             var user = await this.userManager.FindByEmailAsync(userEmail);
             var identityResult = await this.userManager.AddToRoleAsync(user, role);
 
@@ -91,7 +97,19 @@
         [HttpPost]
         public async Task<IActionResult> RemoveFromRole(string userEmail, string role)
         {
+            if (string.IsNullOrWhiteSpace(role) || string.IsNullOrWhiteSpace(userEmail))
+            {
+                this.ShowNotification(NotificationMessages.InvalidOperation);
+                return RedirectToAction(nameof(Index));
+            }
+
             var user = await this.userManager.FindByEmailAsync(userEmail);
+            if (user.Email == userEmail)
+            {
+                this.ShowNotification(string.Format(NotificationMessages.UnableToRemoveSelf, role), NotificationType.Warning);
+                return RedirectToAction(nameof(Index));
+            }
+
             var identityResult = await this.userManager.RemoveFromRoleAsync(user, role);
 
             var success = identityResult.Succeeded;

@@ -2,16 +2,12 @@
 {
     using System.Collections;
     using System.Collections.Generic;
+    using Interfaces;
 
-    public class PaginatedList<T> : IEnumerable<T>
+    public class PaginatedList<T> : IPaginatedList, IEnumerable<T>
     {
         private IEnumerable<T> data;
-
-        public PaginatedList()
-        {
-            this.data = new List<T>();
-        }
-
+        
         public PaginatedList(IEnumerable<T> items, int pageIndex, int totalPages)
         {
             this.PageIndex = pageIndex;

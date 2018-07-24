@@ -1,20 +1,24 @@
 ﻿namespace VehicleCostsMonitor.Web.Areas.Vehicle.Controllers
 {
+    using Areas.Vehicle.Models;
     using AutoMapper;
+    using Infrastructure.Filters;
+    using Infrastructure.Providers.Interfaces;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
+    using Services.Interfaces;
+    using Services.Models.Vehicle;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
+    using VehicleCostsMonitor.Common.Notifications;
     using VehicleCostsMonitor.Models;
-    using VehicleCostsMonitor.Services.Interfaces;
-    using VehicleCostsMonitor.Services.Models.Vehicle;
-    using VehicleCostsMonitor.Web.Areas.Vehicle.Models;
-    using VehicleCostsMonitor.Web.Infrastructure.Filters;
-    using VehicleCostsMonitor.Web.Infrastructure.Providers.Interfaces;
+    using VehicleCostsMonitor.Services.Models.Entries.Interfaces;
+    using VehicleCostsMonitor.Web.Infrastructure.Collections;
     using static VehicleCostsMonitor.Models.Common.ModelConstants;
+    using static WebConstants;
 
     [Authorize]
     public class HomeController : BaseVehicleController
@@ -71,9 +75,30 @@
             return RedirectToAction(nameof(Details), new { id = newVehicleId });
         }
 
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id, int pageIndex = 1)
         {
-            throw new NotImplementedException();
+            var vehicle = await this.vehicles.GetAsync(id);
+            if (vehicle == null)
+            {
+                this.ShowNotification(NotificationMessages.VehicleDoesNotExist);
+                return RedirectToHome();
+            }
+
+            var model = Mapper.Map<VehicleDetailsViewModel>(vehicle);
+            var entriesQuery = this.vehicles.GetEntries(id);
+
+            pageIndex = Math.Max(1, pageIndex);
+            var totalPages = (int)(Math.Ceiling(entriesQuery.Count() / (double)EntriesListPageSize));
+            pageIndex = Math.Min(pageIndex, Math.Max(1, totalPages));
+
+            var entriesToShow = entriesQuery
+                .Skip((pageIndex - 1) * EntriesListPageSize)
+                .Take(EntriesListPageSize)
+                .ToList();
+
+            model.Entries = new PaginatedList<IEntryModel>(entriesToShow, pageIndex, totalPages);
+
+            return View(model);
         }
 
         [ResponseCache(Duration = 3600)]
