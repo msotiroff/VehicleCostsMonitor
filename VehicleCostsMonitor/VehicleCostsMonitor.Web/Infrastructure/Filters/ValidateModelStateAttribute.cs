@@ -22,7 +22,9 @@
                 routeValues.TryGetValue("controller", out string controllerName);
                 routeValues.TryGetValue("area", out string areaName);
 
-                var model = context.ActionArguments.Values.FirstOrDefault();
+                var actionArguments = context.ActionArguments.Values;
+
+                var model = actionArguments.FirstOrDefault(aa => !aa.GetType().IsPrimitive && aa.GetType() != typeof(string));
                 var modelProperties = model.GetType().GetProperties();
 
                 var getMethod = context.Controller
