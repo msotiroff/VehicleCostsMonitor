@@ -1,7 +1,7 @@
 ﻿@model VehicleConciseServiceModel
 
 <tr>
-    <td><img src="@Model.PicturePath" alt="@Model.FullModelName"></td>
+    <td><img class="img-icon" src="@Model.PicturePath" alt="@Model.FullModelName"></td>
     <td>
         <a asp-area="vehicle" asp-controller="home" asp-action="details" asp-route-id="@Model.Id">@Model.FullModelName</a>
     </td>

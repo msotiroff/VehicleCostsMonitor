@@ -5,16 +5,16 @@ body {
     padding-bottom: 20px;
 }
 
-img .img-tiny {
+.img-tiny{
     max-height: 250px !important;
     max-width: 250px !important;
-    margin: 5px !important;
+    margin: 2px !important;
 }
 
-img .img-icon {
+.img-icon{
     max-height: 50px !important;
     max-width: 50px !important;
-    margin: 5px !important;
+    margin: 2px !important;
 }
 
 .btn {

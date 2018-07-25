@@ -12,5 +12,11 @@
         Task<VehicleDetailsServiceModel> GetAsync(int id);
 
         IQueryable<IEntryModel> GetEntries(int vehicleId);
+
+        Task<VehicleUpdateServiceModel> GetForUpdateAsync(int id);
+
+        Task<bool> UpdateAsync(VehicleUpdateServiceModel model);
+
+        Task<bool> DeleteAsync(int id);
     }
 }

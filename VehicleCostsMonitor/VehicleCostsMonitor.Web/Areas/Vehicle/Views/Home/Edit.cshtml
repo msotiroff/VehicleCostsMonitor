@@ -1,23 +1,23 @@
-﻿@model VehicleCreateViewModel
+﻿@model VehicleUpdateViewModel
 
 @{
-    ViewData["Title"] = "Create vehicle";
+    ViewData["Title"] = "Edit vehicle";
 }
 
-<h2 class="text-center">Create new vehicle</h2>
+<h2>Edit vehicle</h2>
 
 <hr />
 <div class="row">
     <div class="col-md-2"></div>
     <div class="col-md-8">
-        <form asp-action="Create">
+        <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="Id" hidden="hidden" value="@Model.Id" />
+            <input asp-for="UserId" hidden="hidden" value="@Model.UserId" />
             <div class="col-md-6">
                 <div class="form-group">
                     <label asp-for="ManufacturerId" class="control-label"></label>
-                    <select asp-for="ManufacturerId" asp-items="@Model.AllManufacturers" class="form-control">
-                        <option disabled selected>--- SELECT ---</option>
-                    </select>
+                    <select asp-for="ManufacturerId" asp-items="@Model.AllManufacturers" class="form-control"></select>
                     <span asp-validation-for="ManufacturerId" class="text-danger"></span>
                 </div>
                 <div class="form-group">
@@ -60,18 +60,25 @@
             </div>
             <br />
             <div class="form-group text-center">
-                <input type="submit" value="Create" class="btn btn-success" />
-                <a class="btn btn-default" href="/">Cancel</a>
+                <input type="submit" value="Update" class="btn btn-warning" />
+                <a asp-action="details" asp-route-id="@Model.Id" class="btn btn-default">Cancel</a>
             </div>
         </form>
     </div>
-    <div class="col-md-2"></div>
 </div>
 
 <script type="text/javascript">
     $(document).ready(function () {
-        var items = "<option>--- SELECT ---</option>";
-        $('#ModelName').html(items);
+        var url = '@Url.Content("/")' + "Vehicle/GetModelsByManufacturerId";
+            var ddlSourse = "#ManufacturerId";
+            $.getJSON(url, { manufacturerId: $(ddlSourse).val() }, function (data) {
+                var items = '';
+                $('#ModelName').empty();
+                $.each(data, function (i, vehModel) {
+                    items += "<option>" + vehModel.text + "</option>"
+                });
+                $('#ModelName').html(items);
+            });
     });
 </script>
 
@@ -91,3 +98,4 @@
         });
     });
 </script>
+

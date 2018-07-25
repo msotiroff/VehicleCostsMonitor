@@ -9,6 +9,8 @@
         public const string UnableToRemoveSelf = "You can not remove yourself from role {0}!";
 
         public const string VehicleDoesNotExist = "Vehicle you've searched does not exist!";
+        public const string VehicleUpdatedSuccessfull = "Vehicle edited successfully";
+        public const string VehicleDeletedSuccessfull = "Vehicle deleted successfully";
 
         public const string ManufacturerDoesNotExist = "Manufacturer with id \"{0}\" does not exist!";
         public const string ManufacturerCreatedSuccessfull = "Manufacturer \"{0}\" created successfully";
