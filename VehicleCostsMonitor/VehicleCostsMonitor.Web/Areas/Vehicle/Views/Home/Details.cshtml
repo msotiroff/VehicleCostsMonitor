@@ -11,7 +11,7 @@
         <img class="img-tiny pull-right" src="@Model.PicturePath" />
         @if (Model.OwnerUserName == User.Identity.Name)
         {
-            <a asp-area="vehicle" asp-controller="picture" asp-action="change" class="btn btn-default pull-right">Change picture</a>
+            <a asp-area="vehicle" asp-controller="picture" asp-action="update" asp-route-vehicleId="@Model.Id" class="btn btn-default pull-right">Change picture</a>
         }
     </div>
     <div class="pull-left">

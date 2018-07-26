@@ -40,26 +40,11 @@
                 SeedGearingTypes(dbContext);
                 SeedRouteTypes(dbContext);
                 SeedVehicleTypes(dbContext);
-                SeedPictures(dbContext);
             }
 
             return app;
         }
-
-        private static void SeedPictures(JustMonitorDbContext dbContext)
-        {
-            if (!dbContext.Pictures.Any())
-            {
-                var picture = new Picture
-                {
-                    Path = WebConstants.DefaultVehicleImagePath
-                };
-
-                dbContext.Pictures.Add(picture);
-                dbContext.SaveChanges();
-            }
-        }
-
+        
         private static void SeedVehicleTypes(JustMonitorDbContext dbContext)
         {
             if (!dbContext.VehicleTypes.Any())

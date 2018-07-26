@@ -3,6 +3,7 @@
     using AutoMapper;
     using Common.AutoMapping;
     using System.ComponentModel.DataAnnotations;
+    using VehicleCostsMonitor.Common;
     using VehicleCostsMonitor.Models;
 
     public class VehicleDetailsServiceModel : IAutoMapWith<Vehicle>, ICustomMappingConfiguration
@@ -60,7 +61,9 @@
                 .ForMember(dest => dest.OwnerUserName, 
                     opt => opt.MapFrom(src => src.User.UserName))
                 .ForMember(dest => dest.TotalFuelCostsPerHundredKm,
-                    opt => opt.MapFrom(src => src.TotalFuelCosts / (src.TotalDistance != 0 ? src.TotalDistance : 100) * 100));
+                    opt => opt.MapFrom(src => src.TotalFuelCosts / (src.TotalDistance != 0 ? src.TotalDistance : 100) * 100))
+                .ForMember(dest => dest.PicturePath,
+                    opt => opt.MapFrom(src => src.Picture != null ? src.Picture.Path : GlobalConstants.DefaultPicturePath));
         }
     }
 }

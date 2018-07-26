@@ -1,7 +1,10 @@
 ﻿namespace VehicleCostsMonitor.Web.Controllers
 {
     using Common.Notifications;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using VehicleCostsMonitor.Models;
     using static VehicleCostsMonitor.Common.Notifications.NotificationConstants;
 
     public abstract class BaseController : Controller

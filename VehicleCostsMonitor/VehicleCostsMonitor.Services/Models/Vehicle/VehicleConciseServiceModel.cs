@@ -2,6 +2,7 @@
 {
     using AutoMapper;
     using Common.AutoMapping;
+    using VehicleCostsMonitor.Common;
     using VehicleCostsMonitor.Models;
 
     public class VehicleConciseServiceModel : IAutoMapWith<Vehicle>, ICustomMappingConfiguration
@@ -19,7 +20,9 @@
             mapper
                 .CreateMap<Vehicle, VehicleConciseServiceModel>()
                 .ForMember(dest => dest.FullModelName,
-                    opt => opt.MapFrom(src => $"{src.Manufacturer.Name} {src.Model.Name} {src.ExactModelname}"));
+                    opt => opt.MapFrom(src => $"{src.Manufacturer.Name} {src.Model.Name} {src.ExactModelname}"))
+                .ForMember(dest => dest.PicturePath, 
+                    opt => opt.MapFrom(src => src.Picture != null ? src.Picture.Path : GlobalConstants.DefaultPicturePath));
         }
     }
 }

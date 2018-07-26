@@ -6,7 +6,6 @@
     using Microsoft.EntityFrameworkCore;
     using Models.Entries.Interfaces;
     using Models.Vehicle;
-    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using VehicleCostsMonitor.Data;
@@ -22,7 +21,6 @@
             var newVehicle = Mapper.Map<Vehicle>(model);
             newVehicle.Model = await this.db.Models
                 .FirstOrDefaultAsync(m => m.ManufacturerId == model.ManufacturerId && m.Name == model.ModelName);
-            newVehicle.Picture = await this.db.Pictures.FirstOrDefaultAsync();
 
             this.ValidateEntityState(newVehicle);
 
