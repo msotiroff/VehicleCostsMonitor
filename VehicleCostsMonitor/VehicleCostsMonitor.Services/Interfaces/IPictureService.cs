@@ -10,5 +10,7 @@
         Task<bool> DeleteAsync(int id);
 
         Task<PictureUpdateServiceModel> GetByVehicleId(int vehicleId);
+
+        Task<string> GetPath(int id);
     }
 }

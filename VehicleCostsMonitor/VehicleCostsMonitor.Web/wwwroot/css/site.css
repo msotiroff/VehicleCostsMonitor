@@ -5,16 +5,18 @@ body {
     padding-bottom: 20px;
 }
 
-.img-tiny{
+.img-tiny {
     max-height: 250px !important;
     max-width: 250px !important;
     margin: 2px !important;
+    border-radius: 10px !important;
 }
 
-.img-icon{
+.img-icon {
     max-height: 50px !important;
     max-width: 50px !important;
     margin: 2px !important;
+    border-radius: 5px !important;
 }
 
 .btn {

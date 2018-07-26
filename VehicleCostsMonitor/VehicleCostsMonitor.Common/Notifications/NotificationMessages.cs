@@ -23,6 +23,7 @@
         public const string NoFileChosen = "No file chosen! Please, select a file!";
         public const string PictureUpdatedSuccessfull = "Vehicle picture updated successfully!";
         public const string PictureUploadFailed = "Picture uploading failed";
+        public const string InvalidFileFormat = "Invalid file format!";
 
         public const string LogDoesNotExist = "Log with id \"{0}\" does not exist!";
     }

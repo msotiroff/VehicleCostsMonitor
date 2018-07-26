@@ -25,7 +25,15 @@
 
             try
             {
+                var vehicle = await this.db.Vehicles.FirstOrDefaultAsync(v => v.Id == vehicleId);
+                if (vehicle == null)
+                {
+                    return false;
+                }
+
                 await this.db.Pictures.AddAsync(picture);
+                vehicle.PictureId = picture.Id;
+                                
                 await this.db.SaveChangesAsync();
 
                 return true;
@@ -56,5 +64,12 @@
                 .Where(p => p.VehicleId == vehicleId)
                 .ProjectTo<PictureUpdateServiceModel>()
                 .FirstOrDefaultAsync();
+
+        public async Task<string> GetPath(int id)
+        {
+            var picture = await this.db.Pictures.FindAsync(id);
+
+            return picture?.Path;
+        }
     }
 }
