@@ -1,10 +1,12 @@
-﻿namespace VehicleCostsMonitor.Web.Areas.Admin.Models.Enums
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace VehicleCostsMonitor.Web.Areas.Admin.Models.Enums
 {
     public enum LogSearchCriteria
     {
         Email,
         Controller,
         Action,
-        HttpMethod
+        Http_Method
     }
 }

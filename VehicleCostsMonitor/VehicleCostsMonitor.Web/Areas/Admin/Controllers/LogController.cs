@@ -1,6 +1,7 @@
 ﻿namespace VehicleCostsMonitor.Web.Areas.Admin.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Rendering;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
@@ -41,7 +42,7 @@
                     case LogSearchCriteria.Action:
                         allLogs = allLogs.Where(l => l.ActionName.ToLower().Contains(searchTerm.ToLower()));
                         break;
-                    case LogSearchCriteria.HttpMethod:
+                    case LogSearchCriteria.Http_Method:
                         allLogs = allLogs.Where(l => l.HttpMethod.ToLower().Contains(searchTerm.ToLower()));
                         break;
                     default:
@@ -60,6 +61,8 @@
             var model = new UserActivityLogListViewModel
             {
                 SearchTerm = searchTerm,
+                AllSearchCriterias = Enum.GetNames(typeof(LogSearchCriteria)).Select(c => new SelectListItem(c, c)),
+                SearchCriteria = criteria,
                 Logs = new PaginatedList<UserActivityLogConciseServiceModel>(logsToShow, page, totalPages)
             };
 
