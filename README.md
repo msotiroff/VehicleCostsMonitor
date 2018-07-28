@@ -23,6 +23,10 @@ Some features:
 - Admin users can add/remove users to roles
 - All Admin actions are logged
 
+#### Getting started:
+Just change the name of your local server name in the ConnectionStrings at appsettings.json and run! There is a seed method, which will insert all manufacturers, models, vehicle elements and about 100 sample users, 500 vehicles with many fuel/cost entries.
+#### Enjoy :)
+
 ### 2. [OnlineStore](https://github.com/msotiroff/Asp.Net-Core-Projects/tree/master/OnlineStore "OnlineStore")
 E-Commerce system, made using ASP.NET Web API. The Asp.Net MVC application in this solution has made only to demonstrate how WEB API can be consumed by another Asp.Net Core application. The API is absolutely decoupled by the MVC project and it can be consumed by any client-side application.
 
