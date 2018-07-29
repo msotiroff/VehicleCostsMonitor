@@ -7,5 +7,7 @@
     [Area(VehicleArea)]
     public class BaseVehicleController : BaseController
     {
+        protected IActionResult RedirectToVehicle(int id)
+            => RedirectToAction("details", "vehicle", new { id = id, area = "vehicle" });
     }
 }

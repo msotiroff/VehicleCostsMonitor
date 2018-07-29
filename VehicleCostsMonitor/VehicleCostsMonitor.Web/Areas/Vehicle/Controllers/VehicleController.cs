@@ -21,8 +21,9 @@
     using static WebConstants;
 
     [Authorize]
+    // TODO: Implement [Authorize(Roles = "Owner")]
     [Route("[area]/[action]/{id?}")]
-    public class HomeController : BaseVehicleController
+    public class VehicleController : BaseVehicleController
     {
         private readonly UserManager<User> userManager;
         private readonly IVehicleService vehicles;
@@ -31,7 +32,7 @@
         private readonly IVehicleElementService vehicleElements;
         private readonly IDateTimeProvider dateTimeProvider;
 
-        public HomeController(
+        public VehicleController(
             UserManager<User> userManager,
             IVehicleService vehicles,
             IManufacturerService manufacturers,
@@ -105,7 +106,6 @@
         }
 
         [HttpGet]
-        [AuthorizeOwner]
         public async Task<IActionResult> Edit(int id)
         {
             var vehicle = await this.vehicles.GetForUpdateAsync(id);
@@ -121,7 +121,6 @@
         }
 
         [HttpPost]
-        [AuthorizeOwner]
         [ValidateModelState]
         public async Task<IActionResult> Edit(VehicleUpdateViewModel model)
         {
@@ -139,7 +138,6 @@
         }
 
         [HttpGet]
-        [AuthorizeOwner]
         public async Task<IActionResult> Delete(int id)
         {
             var model = await this.vehicles.GetAsync(id);
@@ -153,7 +151,6 @@
         }
 
         [HttpPost]
-        [AuthorizeOwner]
         [ActionName(nameof(Delete))]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -179,13 +176,14 @@
                 .Range(YearOfManufactureMinValue, this.dateTimeProvider.GetCurrentDateTime().Year - YearOfManufactureMinValue + 1)
                 .Select(y => y.ToString());
 
-            var model = new VehicleCreateViewModel();
-
-            model.AllManufacturers = allManufacturers.Select(m => new SelectListItem(m.Name, m.Id.ToString()));
-            model.AllVehicleTypes = allVehicleTypes.Select(m => new SelectListItem(m.Name, m.Id.ToString()));
-            model.AllFuelTypes = allFuelTypes.Select(m => new SelectListItem(m.Name, m.Id.ToString()));
-            model.AllGearingTypes = allGearingTypes.Select(m => new SelectListItem(m.Name, m.Id.ToString()));
-            model.AvailableYears = allAvailableYears.Select(y => new SelectListItem(y, y));
+            var model = new VehicleCreateViewModel
+            {
+                AllManufacturers = allManufacturers.Select(m => new SelectListItem(m.Name, m.Id.ToString())),
+                AllVehicleTypes = allVehicleTypes.Select(m => new SelectListItem(m.Name, m.Id.ToString())),
+                AllFuelTypes = allFuelTypes.Select(m => new SelectListItem(m.Name, m.Id.ToString())),
+                AllGearingTypes = allGearingTypes.Select(m => new SelectListItem(m.Name, m.Id.ToString())),
+                AvailableYears = allAvailableYears.Select(y => new SelectListItem(y, y))
+            };
 
             return model;
         }

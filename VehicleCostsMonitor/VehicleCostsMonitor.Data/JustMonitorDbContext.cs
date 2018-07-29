@@ -2,6 +2,7 @@
 {
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
+    using System.Threading.Tasks;
     using VehicleCostsMonitor.Data.Configurations;
     using VehicleCostsMonitor.Models;
 

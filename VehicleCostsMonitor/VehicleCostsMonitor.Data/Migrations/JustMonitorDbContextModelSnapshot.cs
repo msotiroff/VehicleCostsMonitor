@@ -194,7 +194,7 @@ namespace VehicleCostsMonitor.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<double?>("Average");
+                    b.Property<double>("Average");
 
                     b.Property<DateTime>("DateCreated");
 
@@ -632,14 +632,14 @@ namespace VehicleCostsMonitor.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("VehicleCostsMonitor.Models.Manufacturer", "Manufacturer")
-                        .WithMany()
+                        .WithMany("Vehicles")
                         .HasForeignKey("ManufacturerId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("VehicleCostsMonitor.Models.Model", "Model")
-                        .WithMany()
+                        .WithMany("Vehicles")
                         .HasForeignKey("ModelId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("VehicleCostsMonitor.Models.Picture", "Picture")
                         .WithOne("Vehicle")

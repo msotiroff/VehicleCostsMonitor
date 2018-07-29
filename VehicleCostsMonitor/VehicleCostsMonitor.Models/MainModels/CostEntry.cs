@@ -5,6 +5,21 @@
 
     public class CostEntry
     {
+        public CostEntry(DateTime dateCreated, int costEntryTypeId, int vehicleId, decimal price, string note, int? odometer = null)
+            : this(dateCreated, costEntryTypeId, vehicleId)
+        {
+            this.Price = price;
+            this.Note = note;
+            this.Odometer = odometer;
+        }
+        
+        public CostEntry(DateTime dateCreated, int costEntryTypeId, int vehicleId)
+        {
+            this.DateCreated = dateCreated;
+            this.CostEntryTypeId = costEntryTypeId;
+            this.VehicleId = vehicleId;
+        }
+        
         [Key]
         public int Id { get; set; }
 

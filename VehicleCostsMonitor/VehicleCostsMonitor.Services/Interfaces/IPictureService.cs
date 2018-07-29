@@ -11,6 +11,6 @@
 
         Task<PictureUpdateServiceModel> GetByVehicleId(int vehicleId);
 
-        Task<string> GetPath(int id);
+        Task<string> GetPathAsync(int id);
     }
 }

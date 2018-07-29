@@ -5,11 +5,11 @@
 }
 
 <h2 class="text-center">Details</h2>
-
+<hr />
 <div class="container">
     <div class="container">
-        <div class="pull-left">
-            <dl class="dl-horizontal">
+        <div class="row">
+            <dl class="dl-horizontal col-md-6">
                 <dt>
                     @Html.DisplayNameFor(model => model.FullModelName)
                 </dt>
@@ -47,9 +47,12 @@
                     @Html.DisplayFor(model => model.OwnerUserName)
                 </dd>
             </dl>
-        </div>
-        <div class="pull-right">
-            <img class="img-tiny" src="@Model.PicturePath" />
+            <div class="col-md-2">
+                <a asp-controller="picture" asp-action="update" asp-route-vehicleId="@Model.Id" class="btn btn-primary">Change picture</a>
+            </div>
+            <div class="col-md-4">
+                <img class="img-tiny" src="@Model.PicturePath" />
+            </div>
         </div>
     </div>
     <hr />
@@ -67,11 +70,11 @@
                             <img class="btn btn-default" alt="Add Cost Entry" title="Add Cost entry" src="@Url.Content("~/images/AddCost.jpg")" />
                         </a>
 
-                        <a asp-area="vehicle" asp-controller="home" asp-action="edit" asp-route-id="@Model.Id">
+                        <a asp-area="vehicle" asp-controller="vehicle" asp-action="edit" asp-route-id="@Model.Id">
                             <img class="btn btn-default" alt="Edit Vehicle" title="Edit vehicle info" src="@Url.Content("~/images/Edit.jpg")" />
                         </a>
 
-                        <a asp-area="vehicle" asp-controller="home" asp-action="delete" asp-route-id="@Model.Id">
+                        <a asp-area="vehicle" asp-controller="vehicle" asp-action="delete" asp-route-id="@Model.Id">
                             <img class="btn btn-default" alt="Delete vehicle" title="Delete vehicle" src="@Url.Content("~/images/Delete.jpg")" />
                         </a>
                     }

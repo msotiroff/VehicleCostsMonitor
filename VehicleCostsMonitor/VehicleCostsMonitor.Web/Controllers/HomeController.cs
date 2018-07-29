@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using VehicleCostsMonitor.Web.Models;
-
-namespace VehicleCostsMonitor.Web.Controllers
+﻿namespace VehicleCostsMonitor.Web.Controllers
 {
+    using Microsoft.AspNetCore.Mvc;
+    using System.Diagnostics;
+    using VehicleCostsMonitor.Web.Models;
+
     public class HomeController : BaseController
     {
         public IActionResult Index() => View();

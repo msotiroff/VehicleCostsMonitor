@@ -65,7 +65,7 @@
                 .ProjectTo<PictureUpdateServiceModel>()
                 .FirstOrDefaultAsync();
 
-        public async Task<string> GetPath(int id)
+        public async Task<string> GetPathAsync(int id)
         {
             var picture = await this.db.Pictures.FindAsync(id);
 

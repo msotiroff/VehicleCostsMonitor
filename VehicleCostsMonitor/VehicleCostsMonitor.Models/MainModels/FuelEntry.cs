@@ -3,22 +3,29 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Linq;
 
     public class FuelEntry
     {
-        #region Fields
-        private int tripOdometer;
-        private double average;
-        #endregion
-
-        public FuelEntry()
+        public FuelEntry(DateTime dateCreated, int odometer, double fuelQuantity, decimal price, int fuelEntryTypeId, int vehicleId)
         {
+            this.DateCreated = dateCreated;
+            this.Odometer = odometer;
+            this.FuelQuantity = fuelQuantity;
+            this.Price = price;
+            this.FuelEntryTypeId = fuelEntryTypeId;
+            this.VehicleId = vehicleId;
+
             this.Routes = new HashSet<FuelEntryRouteType>();
             this.ExtraFuelConsumers = new HashSet<FuelEntryExtraFuelConsumer>();
         }
 
-        #region Properties
+        public FuelEntry(DateTime dateCreated, int odometer, double fuelQuantity, decimal price, int fuelEntryTypeId, int vehicleId, string note = null)
+            : this(dateCreated, odometer, fuelQuantity, price, fuelEntryTypeId, vehicleId)
+        {
+            this.Note = note;
+        }
+
+
         [Key]
         public int Id { get; set; }
 
@@ -29,11 +36,7 @@
         public int Odometer { get; set; }
 
         [Required]
-        public int TripOdometer
-        {
-            get => this.tripOdometer;
-            set => this.tripOdometer = this.CalculateDistance();
-        }
+        public int TripOdometer { get; set; }
 
         [Required]
         public double FuelQuantity { get; set; }
@@ -47,23 +50,9 @@
         public int FuelEntryTypeId { get; set; }
 
         public FuelEntryType FuelEntryType { get; set; }
-        
-        public double? Average
-        {
-            get => this.average;
-            set
-            {
-                if (this.tripOdometer == 0)
-                {
-                    this.average = 0;
-                }
-                else
-                {
-                    this.average = (this.FuelQuantity / this.tripOdometer) * 100.0;
-                }
-            }
-        }
 
+        public double Average { get; set; }
+        
         [Required]
         public int VehicleId { get; set; }
 
@@ -72,26 +61,5 @@
         public IEnumerable<FuelEntryRouteType> Routes { get; set; }
         
         public IEnumerable<FuelEntryExtraFuelConsumer> ExtraFuelConsumers { get; set; }
-        #endregion
-
-        #region Methods
-        private int CalculateDistance()
-        {
-            var lastFuelingEntry = this.Vehicle.FuelEntries.LastOrDefault();
-
-            if (lastFuelingEntry == null)
-            {
-                return 0;
-            }
-
-            var distance = this.Odometer - lastFuelingEntry.Odometer;
-            if (distance < 0)
-            {
-                throw new InvalidOperationException("Odometer value should be greater or equal to the last entered odometer value!");
-            }
-
-            return distance;
-        }
-        #endregion
     }
 }

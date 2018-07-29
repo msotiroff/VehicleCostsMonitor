@@ -13,6 +13,7 @@
     using System.Threading.Tasks;
     using VehicleCostsMonitor.Data;
     using VehicleCostsMonitor.Models;
+    using static VehicleCostsMonitor.Models.Common.ModelConstants;
 
     public static class ApplicationBuilderExtensions
     {
@@ -26,10 +27,13 @@
         {
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
+                var userManager = serviceScope.ServiceProvider.GetService<UserManager<User>>();
+                var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
                 var dbContext = serviceScope.ServiceProvider.GetService<JustMonitorDbContext>();
-                dbContext.Database.Migrate();
 
-                SeedDefaultRoles(serviceScope);
+                dbContext.Database.Migrate();
+                
+                SeedDefaultRoles(userManager, roleManager);
 
                 SeedDefaultManufacturers(dbContext);
 
@@ -40,9 +44,79 @@
                 SeedGearingTypes(dbContext);
                 SeedRouteTypes(dbContext);
                 SeedVehicleTypes(dbContext);
+
+                // Seed methods for testing the application functionalities:
+                SeedUsers(dbContext, userManager);
+                SeedVehicles(dbContext);
+
+                //TODO: make seed methods for fuel and cost entries:
+                // SeedFuelEntries(dbContext);
+                // SeedCostEntries(dbContext);
             }
 
             return app;
+        }
+        
+        private static void SeedVehicles(JustMonitorDbContext dbContext)
+        {
+            if (dbContext.Vehicles.Count() < 10)
+            {
+                var vehiclesToSeed = new HashSet<Vehicle>();
+
+                var random = new Random();
+                var usersIds = dbContext.Users.Select(u => u.Id).ToList();
+                var manufacturers = dbContext.Manufacturers.Include(m => m.Models).ToList();
+                var fuelTypesIds = dbContext.FuelTypes.Select(ft => ft.Id).ToList();
+                var gearingTypesIds = dbContext.GearingTypes.Select(gt => gt.Id).ToList();
+                var vehicleTypesIds = dbContext.VehicleTypes.Select(vt => vt.Id).ToList();
+
+                foreach (var userId in usersIds)
+                {
+                    for (int i = 0; i < 5; i++)
+                    {
+                        var manufacturer = manufacturers[random.Next(0, manufacturers.Count)];
+                        var model = manufacturer.Models.ToList()[random.Next(0, manufacturer.Models.Count())];
+
+                        var vehicle = new Vehicle
+                        {
+                            UserId = userId,
+                            ManufacturerId = manufacturer.Id,
+                            ModelId = model.Id,
+                            YearOfManufacture = random.Next(YearOfManufactureMinValue, DateTime.UtcNow.Year),
+                            EngineHorsePower = random.Next(0, 151),
+                            FuelTypeId = fuelTypesIds[random.Next(0, fuelTypesIds.Count)],
+                            GearingTypeId = gearingTypesIds[random.Next(0, gearingTypesIds.Count)],
+                            VehicleTypeId = vehicleTypesIds[random.Next(0, vehicleTypesIds.Count)], 
+                        };
+
+                        vehiclesToSeed.Add(vehicle);
+                    }
+                }
+
+                dbContext.Vehicles.AddRange(vehiclesToSeed);
+                dbContext.SaveChanges();
+            }
+        }
+
+        private static void SeedUsers(JustMonitorDbContext dbContext, UserManager<User> userManager)
+        {
+            if (dbContext.Users.Count() <= 1)
+            {
+                var usersList = File
+                    .ReadAllText(WebConstants.UsersListPath);
+
+                var users = JsonConvert.DeserializeObject<User[]>(usersList);
+
+                foreach (var user in users)
+                {
+                    Task.Run(async () =>
+                    {
+                        await userManager.CreateAsync(user, "password");
+                    })
+                    .GetAwaiter()
+                    .GetResult();
+                }
+            }
         }
         
         private static void SeedVehicleTypes(JustMonitorDbContext dbContext)
@@ -173,11 +247,8 @@
             }
         }
 
-        private static void SeedDefaultRoles(IServiceScope serviceScope)
+        private static void SeedDefaultRoles(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
-            var userManager = serviceScope.ServiceProvider.GetService<UserManager<User>>();
-            var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
-            
             Task
                 .Run(async () =>
                 {

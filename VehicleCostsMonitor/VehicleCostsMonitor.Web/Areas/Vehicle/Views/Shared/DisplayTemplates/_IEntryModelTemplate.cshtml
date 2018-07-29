@@ -1,0 +1,13 @@
+﻿@model IEntryModel
+
+@switch (Model.GetType().Name)
+{
+    case nameof(FuelEntryDetailsModel):
+        @await Html.PartialAsync("../DisplayTemplates/_FuelEntryModelTemplate.cshtml", Model)
+        break;
+    case nameof(CostEntryDetailsModel):
+        @await Html.PartialAsync("../DisplayTemplates/_CostEntryModelTemplate.cshtml", Model)
+        break;
+    default:
+        break;
+}

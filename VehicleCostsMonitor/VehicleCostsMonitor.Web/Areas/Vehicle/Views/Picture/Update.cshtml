@@ -21,7 +21,7 @@
             <br />
             <div class="pull-left">
                 <input type="submit" asp-route-vehicleId="@Model.VehicleId" asp-route-oldPictureId="@Model.Id" class="btn btn-success" name="file" value="Upload Image" />
-                <a asp-controller="home" asp-action="details" asp-route-id="@Model.VehicleId" class="btn btn-default">Cancel</a>
+                <a asp-controller="vehicle" asp-action="details" asp-route-id="@Model.VehicleId" class="btn btn-default">Cancel</a>
             </div>
         </form>
     </div>

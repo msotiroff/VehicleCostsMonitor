@@ -9,14 +9,21 @@
         public void Configure(EntityTypeBuilder<Vehicle> builder)
         {
             builder
-                .HasOne(v => v.User)
-                .WithMany(u => u.Vehicles)
-                .HasForeignKey(v => v.UserId);
-
-            builder
                 .HasOne(v => v.Picture)
                 .WithOne(p => p.Vehicle)
                 .HasForeignKey<Vehicle>(v => v.PictureId);
+
+            builder
+                .HasOne(v => v.Manufacturer)
+                .WithMany(m => m.Vehicles)
+                .HasForeignKey(v => v.ManufacturerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .HasOne(v => v.Model)
+                .WithMany(m => m.Vehicles)
+                .HasForeignKey(v => v.ModelId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

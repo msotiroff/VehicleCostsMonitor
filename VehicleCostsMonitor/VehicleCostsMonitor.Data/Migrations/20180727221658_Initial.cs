@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
@@ -327,6 +328,11 @@ namespace VehicleCostsMonitor.Data.Migrations
                     FuelTypeId = table.Column<int>(nullable: false),
                     GearingTypeId = table.Column<int>(nullable: false),
                     UserId = table.Column<string>(nullable: false),
+                    FuelConsumption = table.Column<double>(nullable: false),
+                    TotalFuelCosts = table.Column<decimal>(nullable: false),
+                    TotalOtherCosts = table.Column<decimal>(nullable: false),
+                    TotalFuelAmount = table.Column<double>(nullable: false),
+                    TotalDistance = table.Column<int>(nullable: false),
                     PictureId = table.Column<int>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false)
                 },
@@ -338,13 +344,13 @@ namespace VehicleCostsMonitor.Data.Migrations
                         column: x => x.FuelTypeId,
                         principalTable: "FuelTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Vehicles_GearingTypes_GearingTypeId",
                         column: x => x.GearingTypeId,
                         principalTable: "GearingTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Vehicles_Manufacturers_ManufacturerId",
                         column: x => x.ManufacturerId,
@@ -368,13 +374,13 @@ namespace VehicleCostsMonitor.Data.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Vehicles_VehicleTypes_VehicleTypeId",
                         column: x => x.VehicleTypeId,
                         principalTable: "VehicleTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -420,6 +426,7 @@ namespace VehicleCostsMonitor.Data.Migrations
                     Price = table.Column<decimal>(nullable: false),
                     Note = table.Column<string>(nullable: true),
                     FuelEntryTypeId = table.Column<int>(nullable: false),
+                    Average = table.Column<double>(nullable: false),
                     VehicleId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>

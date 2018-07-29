@@ -1,5 +1,6 @@
 ﻿namespace VehicleCostsMonitor.Models
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     public class Model
@@ -14,5 +15,7 @@
         public int ManufacturerId { get; set; }
 
         public Manufacturer Manufacturer { get; set; }
+
+        public IEnumerable<Vehicle> Vehicles { get; set; }
     }
 }

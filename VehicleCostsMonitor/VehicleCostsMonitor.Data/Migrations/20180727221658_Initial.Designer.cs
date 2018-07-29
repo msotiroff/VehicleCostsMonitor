@@ -10,8 +10,8 @@ using VehicleCostsMonitor.Data;
 namespace VehicleCostsMonitor.Data.Migrations
 {
     [DbContext(typeof(JustMonitorDbContext))]
-    [Migration("20180724190316_NewColumnsAddedToVehicleTable")]
-    partial class NewColumnsAddedToVehicleTable
+    [Migration("20180727221658_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -196,7 +196,7 @@ namespace VehicleCostsMonitor.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<double?>("Average");
+                    b.Property<double>("Average");
 
                     b.Property<DateTime>("DateCreated");
 
@@ -634,14 +634,14 @@ namespace VehicleCostsMonitor.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("VehicleCostsMonitor.Models.Manufacturer", "Manufacturer")
-                        .WithMany()
+                        .WithMany("Vehicles")
                         .HasForeignKey("ManufacturerId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("VehicleCostsMonitor.Models.Model", "Model")
-                        .WithMany()
+                        .WithMany("Vehicles")
                         .HasForeignKey("ModelId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("VehicleCostsMonitor.Models.Picture", "Picture")
                         .WithOne("Vehicle")

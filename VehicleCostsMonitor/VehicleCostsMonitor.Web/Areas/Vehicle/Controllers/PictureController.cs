@@ -17,6 +17,7 @@
     using VehicleCostsMonitor.Web.Infrastructure.Filters;
 
     [Authorize]
+    // TODO: Implement [Authorize(Roles = "Owner")]
     public class PictureController : BaseVehicleController
     {
         private readonly string webRootPath;
@@ -31,7 +32,6 @@
         }
 
         [HttpGet]
-        [AuthorizeOwner]
         public async Task<IActionResult> Update(int vehicleId)
         {
             var model = await this.pictures
@@ -46,7 +46,6 @@
         }
 
         [HttpPost]
-        [AuthorizeOwner]
         public async Task<IActionResult> Update(IFormFile file, int oldPictureId, int vehicleId)
         {
             // If no file chosen => redirect to form:
@@ -185,7 +184,7 @@
             if (oldPictureId != default(int))
             {
                 // Remove from file system:
-                var localPath = await this.pictures.GetPath(oldPictureId);
+                var localPath = await this.pictures.GetPathAsync(oldPictureId);
                 var fileFullPath = Path.Combine(this.webRootPath, localPath.TrimStart('/', '\\'));
                 if (System.IO.File.Exists(fileFullPath))
                 {

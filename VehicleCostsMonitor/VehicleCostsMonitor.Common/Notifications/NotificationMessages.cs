@@ -26,5 +26,12 @@
         public const string InvalidFileFormat = "Invalid file format!";
 
         public const string LogDoesNotExist = "Log with id \"{0}\" does not exist!";
+
+        public const string CostEntryUpdateFailed = "Cost entry update failed";
+        public const string CostEntryDeleteFailed = "Cost entry delete failed";
+        public const string CostEntryAddedSuccessfull = "You successfully add new cost entry to your vehicle";
+        public const string CostEntryUpdatedSuccessfull = "You successfully update the cost entry";
+        public const string CostEntryDeletedSuccessfull = "You successfully delete the cost entry";
+        public const string CostEntryDoesNotExist = "Cost entry you are trying to access does not exist!";
     }
 }
