@@ -13,6 +13,7 @@
     using VehicleCostsMonitor.Services.Models.Entries.FuelEntries;
     using VehicleCostsMonitor.Web.Areas.Vehicle.Models.Enums;
     using VehicleCostsMonitor.Web.Areas.Vehicle.Models.FuelEntry;
+    using VehicleCostsMonitor.Web.Infrastructure.Filters;
     using VehicleCostsMonitor.Web.Infrastructure.Providers.Interfaces;
 
     [Authorize]
@@ -101,14 +102,9 @@
         }
 
         [HttpPost]
+        [ValidateModelState]
         public async Task<IActionResult> Edit(FuelEntryUpdateViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                this.ShowModelStateError();
-                return RedirectToVehicle(model.VehicleId);
-            }
-            
             var fuelEntry = Mapper.Map<FuelEntry>(model);
             var success = await this.fuelEntries.UpdateAsync(fuelEntry);
             if (!success)
@@ -117,6 +113,34 @@
             }
 
             this.ShowNotification(NotificationMessages.FuelEntryUpdatedSuccessfull, NotificationType.Success);
+
+            return RedirectToVehicle(model.VehicleId);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var model = await this.fuelEntries.GetForDeleteAsync(id);
+            if (model == null)
+            {
+                this.ShowNotification(NotificationMessages.FuelEntryDoesNotExist);
+                return RedirectToProfile();
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateModelState]
+        public async Task<IActionResult> Delete(FuelEntryDeleteServiceModel model)
+        {
+            bool success = await this.fuelEntries.DeleteAsync(model.Id);
+            if (!success)
+            {
+                this.ShowNotification(NotificationMessages.FuelEntryDeleteFailed);
+            }
+
+            this.ShowNotification(NotificationMessages.FuelEntryDeletedSuccessfull, NotificationType.Success);
 
             return RedirectToVehicle(model.VehicleId);
         }

@@ -1,0 +1,55 @@
+﻿@model FuelEntryDeleteServiceModel
+
+@{
+    ViewData["Title"] = "Delete fuel entry";
+}
+
+<h3 class="text-center text-danger">Are you sure you want to delete this fuel entry?</h3>
+<div class="container">
+    <div class="row">
+        <hr />
+        <div class="col-md-3"></div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label asp-for="DateCreated" class="control-label"></label>
+                <input asp-for="DateCreated" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="FuelEntryTypeName" class="control-label"></label>
+                <input asp-for="FuelEntryTypeName" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="FuelTypeName" class="control-label"></label>
+                <input asp-for="FuelTypeName" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="Odometer" class="control-label"></label>
+                <input asp-for="Odometer" class="form-control" readonly />
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label asp-for="FuelQuantity" class="control-label"></label>
+                <input asp-for="FuelQuantity" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="Note" class="control-label"></label>
+                <textarea asp-for="Note" rows="5" class="form-control" readonly></textarea>
+            </div>
+        </div>
+        <br />
+        <div class="col-md-3"></div>
+    </div>
+    <div class="text-center row">
+        <form asp-action="Delete" method="post">
+            <input asp-for="VehicleId" hidden />
+            <input asp-for="Id" hidden />
+            <input type="submit" value="Delete" class="btn btn-danger" />
+            <a asp-controller="vehicle" asp-action="details" asp-route-id="@Model.VehicleId" class="btn btn-default">Cancel</a>
+        </form>
+    </div>
+</div>

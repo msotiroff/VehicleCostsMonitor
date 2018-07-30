@@ -8,11 +8,14 @@
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
     using VehicleCostsMonitor.Data;
     using VehicleCostsMonitor.Models;
+    using VehicleCostsMonitor.Services.Interfaces;
+    using VehicleCostsMonitor.Services.Models.Entries.FuelEntries;
     using static VehicleCostsMonitor.Models.Common.ModelConstants;
 
     public static class ApplicationBuilderExtensions
@@ -27,9 +30,14 @@
         {
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
+                var watch = new Stopwatch();
+                watch.Start();
+
                 var userManager = serviceScope.ServiceProvider.GetService<UserManager<User>>();
                 var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
                 var dbContext = serviceScope.ServiceProvider.GetService<JustMonitorDbContext>();
+                var fuelEntryService = serviceScope.ServiceProvider.GetService<IFuelEntryService>();
+                var dataAccessService = serviceScope.ServiceProvider.GetService<IDataAccessService>();
 
                 dbContext.Database.Migrate();
 
@@ -48,13 +56,122 @@
                 // Seed methods for testing the application functionalities:
                 SeedUsers(dbContext, userManager);
                 SeedVehicles(dbContext);
+                SeedFuelEntries(dbContext, fuelEntryService);
+                SeedCostEntries(dbContext, dataAccessService);
 
-                //TODO: make seed methods for fuel and cost entries:
-                // SeedFuelEntries(dbContext);
-                // SeedCostEntries(dbContext);
+                watch.Stop();
+                var elaspsed = watch.Elapsed.Seconds;
             }
 
             return app;
+        }
+
+        private static void SeedCostEntries(JustMonitorDbContext dbContext, IDataAccessService service)
+        {
+            if (!dbContext.CostEntries.Any())
+            {
+                var allVehicles = dbContext.Vehicles.ToList();
+
+                var random = new Random();
+
+                var currentDate = DateTime.UtcNow;
+                var minDay = 1;
+                var maxDay = 29;
+
+                var costEntryTypesIds = dbContext.CostEntryTypes.Select(cet => cet.Id).ToArray();
+
+                var note = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+
+                foreach (var vehicle in allVehicles)
+                {
+                    var startDate = new DateTime(currentDate.Year - 2, 1, 1);
+                    var costEntries = new HashSet<CostEntry>();
+
+                    while (startDate < currentDate)
+                    {
+                        var day = random.Next(minDay, maxDay);
+                        var entryDate = new DateTime(startDate.Year, startDate.Month, day);
+                        var costEntryTypeId = costEntryTypesIds[random.Next(0, costEntryTypesIds.Length)];
+                        var price = (decimal)random.NextDouble() * 250;
+
+                        var entry = new CostEntry(entryDate, costEntryTypeId, vehicle.Id, price, note);
+                        costEntries.Add(entry);
+
+                        startDate = startDate.AddMonths(1);
+                    }
+
+                    dbContext.CostEntries.AddRange(costEntries);
+                    dbContext.SaveChanges();
+
+                    var result = service.UpdateStatsOnCostEntryChangedAsync(vehicle.Id).Result;
+                }
+            }
+        }
+
+        private static void SeedFuelEntries(JustMonitorDbContext dbContext, IFuelEntryService fuelEntryService)
+        {
+            if (!dbContext.FuelEntries.Any())
+            {
+                var allVehicles = dbContext.Vehicles.ToList();
+
+                var random = new Random();
+
+                var currentDate = DateTime.UtcNow;
+                var minDay = 1;
+                var maxDay = 29;
+
+                var odometerMinStep = 250;
+                var odometerMaxStep = 750;
+
+                var fuelQuantityMinValue = 20;
+                var fuelQuantityMaxValue = 80;
+
+                var note = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+
+                var fuelEntryTypesIds = dbContext.FuelEntryTypes.Select(fet => fet.Id).ToArray();
+
+                var routesIds = dbContext.RouteTypes.Select(r => r.Id).ToArray();
+
+                var extrasIds = dbContext.ExtraFuelConsumers.Select(ex => ex.Id).ToArray();
+
+                foreach (var vehicle in allVehicles)
+                {
+                    var odometer = 100000;
+                    var startDate = new DateTime(currentDate.Year - 1, 1, 1);
+
+                    while (startDate < currentDate)
+                    {
+                        var day = random.Next(minDay, maxDay);
+                        var fuelingDate = new DateTime(startDate.Year, startDate.Month, day);
+                        var quantity = random.Next(fuelQuantityMinValue, fuelQuantityMaxValue);
+
+                        var model = new FuelEntryCreateServiceModel
+                        {
+                            DateCreated = fuelingDate,
+                            Odometer = odometer,
+                            FuelQuantity = quantity,
+                            Price = (decimal)(quantity * (random.NextDouble() + 1.2)),
+                            Note = note,
+                            FuelEntryTypeId = fuelEntryTypesIds[random.Next(0, fuelEntryTypesIds.Length)],
+                            Routes = new List<FuelEntryRouteType>
+                            {
+                                new FuelEntryRouteType { RouteTypeId = routesIds[random.Next(0, routesIds.Length)]}
+                            },
+                            ExtraFuelConsumers = new List<FuelEntryExtraFuelConsumer>
+                            {
+                                new FuelEntryExtraFuelConsumer { ExtraFuelConsumerId = extrasIds[random.Next(0, extrasIds.Length)]}
+                            },
+                            VehicleId = vehicle.Id,
+                            FuelTypeId = vehicle.FuelTypeId
+                        };
+
+                        var success = fuelEntryService.CreateAsync(model).Result;
+
+                        odometer += random.Next(odometerMinStep, odometerMaxStep);
+                        startDate = startDate.AddMonths(1);
+                    }
+                }
+            }
         }
 
         private static void SeedVehicles(JustMonitorDbContext dbContext)
@@ -72,7 +189,7 @@
 
                 foreach (var userId in usersIds)
                 {
-                    for (int i = 0; i < 5; i++)
+                    for (int i = 0; i < 2; i++)
                     {
                         var manufacturer = manufacturers[random.Next(0, manufacturers.Count)];
                         var model = manufacturer.Models.ToList()[random.Next(0, manufacturer.Models.Count())];

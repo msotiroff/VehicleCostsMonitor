@@ -23,5 +23,9 @@
         Task<FuelEntry> GetAsync(int id);
 
         Task<bool> UpdateAsync(FuelEntry fuelEntry);
+
+        Task<FuelEntryDeleteServiceModel> GetForDeleteAsync(int id);
+
+        Task<bool> DeleteAsync(int id);
     }
 }

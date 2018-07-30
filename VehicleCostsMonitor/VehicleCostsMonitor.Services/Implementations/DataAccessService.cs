@@ -1,14 +1,15 @@
 ﻿namespace VehicleCostsMonitor.Services.Implementations
 {
-    using VehicleCostsMonitor.Data;
-    using System.ComponentModel.DataAnnotations;
-    using System.Collections.Generic;
-    using System;
-    using System.Threading.Tasks;
-    using System.Linq;
+    using Interfaces;
     using Microsoft.EntityFrameworkCore;
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using VehicleCostsMonitor.Data;
 
-    public class DataAccessService
+    public class DataAccessService : IDataAccessService
     {
         private const string EntityValidationErrorMsg = "Entity validation failed!";
         protected const string FirstFueling = "First fueling";
@@ -34,7 +35,7 @@
             }
         }
 
-        protected async Task<int> UpdateStatsOnCostEntryChangedAsync(int vehicleId)
+        public async Task<int> UpdateStatsOnCostEntryChangedAsync(int vehicleId)
         {
             var vehicle = await this.db.Vehicles
                 .Where(v => v.Id == vehicleId)
@@ -50,7 +51,7 @@
             return affectedRows;
         }
 
-        protected async Task<int> UpdateStatsOnFuelEntryChangedAsync(int vehicleId)
+        public async Task<int> UpdateStatsOnFuelEntryChangedAsync(int vehicleId)
         {
             var vehicle = await this.db.Vehicles
                 .Where(v => v.Id == vehicleId)
@@ -86,6 +87,10 @@
             if (distance != 0)
             {
                 vehicle.FuelConsumption = quantitiesSum / distance * 100.0;
+            }
+            else if (fuelEntries.Count() <= 1)
+            {
+                vehicle.FuelConsumption = 0;
             }
 
             this.db.Update(vehicle);

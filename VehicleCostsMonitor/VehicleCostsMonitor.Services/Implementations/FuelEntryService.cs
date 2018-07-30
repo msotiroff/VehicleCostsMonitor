@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
+    using AutoMapper.QueryableExtensions;
     using Interfaces;
     using Microsoft.EntityFrameworkCore;
     using VehicleCostsMonitor.Data;
@@ -63,9 +64,15 @@
 
         public async Task<IEnumerable<ExtraFuelConsumer>> GetExtraFuelConsumers()
             => await this.db.ExtraFuelConsumers.ToListAsync();
-
+        
         public async Task<IEnumerable<FuelType>> GetFuelTypes()
             => await this.db.FuelTypes.ToListAsync();
+
+        public async Task<FuelEntryDeleteServiceModel> GetForDeleteAsync(int id)
+            => await this.db.FuelEntries
+            .Where(fe => fe.Id == id)
+            .ProjectTo<FuelEntryDeleteServiceModel>()
+            .FirstOrDefaultAsync();
 
         public async Task<int> GetPreviousOdometerValue(int vehicleId, DateTime currentEntryDate)
         {
@@ -104,8 +111,6 @@
                 return false;
             }
 
-            // TODO: Fix => Another instance is tracking the fuel entry !!!
-
             await this.RemoveOldMappingEntities(fuelEntry);
 
             await this.SetAverageConsumption(fuelEntry.Odometer, fuelEntry, vehicle);
@@ -128,15 +133,8 @@
 
         private async Task RemoveOldMappingEntities(FuelEntry fuelEntry)
         {
-            var dbFuelEntry = await this.db.FuelEntries
-                            .Where(fe => fe.Id == fuelEntry.Id)
-                            .AsNoTracking()
-                            .Include(fe => fe.Routes)
-                            .Include(fe => fe.ExtraFuelConsumers)
-                            .FirstOrDefaultAsync();
-
-            var dbEntryRoutes = dbFuelEntry.Routes.ToList();
-            var dbEntryExtras = dbFuelEntry.ExtraFuelConsumers.ToList();
+            var dbEntryRoutes = await this.db.FuelEntryRouteTypes.Where(fert => fert.FuelEntryId == fuelEntry.Id).ToListAsync();
+            var dbEntryExtras = await this.db.FuelEntryExtraFuelConsumers.Where(feex => feex.FuelEntryId == fuelEntry.Id).ToListAsync();
             this.db.RemoveRange(dbEntryRoutes);
             this.db.RemoveRange(dbEntryExtras);
             await this.db.SaveChangesAsync();
@@ -178,6 +176,28 @@
             else
             {
                 fuelEntry.FuelEntryTypeId = firstFuelingType.Id;
+            }
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var fuelEntry = await this.db.FuelEntries.FirstOrDefaultAsync(fe => fe.Id == id);
+            if (fuelEntry == null)
+            {
+                return false;
+            }
+
+            try
+            {
+                this.db.Remove(fuelEntry);
+                await this.db.SaveChangesAsync();
+                await this.UpdateStatsOnFuelEntryChangedAsync(fuelEntry.VehicleId);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
             }
         }
     }
