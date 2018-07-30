@@ -32,7 +32,7 @@
                 var dbContext = serviceScope.ServiceProvider.GetService<JustMonitorDbContext>();
 
                 dbContext.Database.Migrate();
-                
+
                 SeedDefaultRoles(userManager, roleManager);
 
                 SeedDefaultManufacturers(dbContext);
@@ -56,10 +56,10 @@
 
             return app;
         }
-        
+
         private static void SeedVehicles(JustMonitorDbContext dbContext)
         {
-            if (dbContext.Vehicles.Count() < 10)
+            if (!dbContext.Vehicles.Any())
             {
                 var vehiclesToSeed = new HashSet<Vehicle>();
 
@@ -83,10 +83,10 @@
                             ManufacturerId = manufacturer.Id,
                             ModelId = model.Id,
                             YearOfManufacture = random.Next(YearOfManufactureMinValue, DateTime.UtcNow.Year),
-                            EngineHorsePower = random.Next(0, 151),
+                            EngineHorsePower = random.Next(60, 151),
                             FuelTypeId = fuelTypesIds[random.Next(0, fuelTypesIds.Count)],
                             GearingTypeId = gearingTypesIds[random.Next(0, gearingTypesIds.Count)],
-                            VehicleTypeId = vehicleTypesIds[random.Next(0, vehicleTypesIds.Count)], 
+                            VehicleTypeId = vehicleTypesIds[random.Next(0, vehicleTypesIds.Count)],
                         };
 
                         vehiclesToSeed.Add(vehicle);
@@ -103,22 +103,22 @@
             if (dbContext.Users.Count() <= 1)
             {
                 var usersList = File
-                    .ReadAllText(WebConstants.UsersListPath);
+                .ReadAllText(WebConstants.UsersListPath);
 
                 var users = JsonConvert.DeserializeObject<User[]>(usersList);
 
-                foreach (var user in users)
+                Task.Run(async () =>
                 {
-                    Task.Run(async () =>
+                    foreach (var user in users)
                     {
-                        await userManager.CreateAsync(user, "password");
-                    })
-                    .GetAwaiter()
-                    .GetResult();
-                }
+                        var result = await userManager.CreateAsync(user, "password");
+                    }
+                })
+                .GetAwaiter()
+                .GetResult();
             }
         }
-        
+
         private static void SeedVehicleTypes(JustMonitorDbContext dbContext)
         {
             if (!dbContext.VehicleTypes.Any())
@@ -195,7 +195,7 @@
             {
                 var extraFuelConsumersList = File
                     .ReadAllText(WebConstants.ExtraFuelConsumersListPath);
-                
+
                 var extraFuelConsumers = JsonConvert.DeserializeObject<ExtraFuelConsumer[]>(extraFuelConsumersList);
 
                 dbContext.ExtraFuelConsumers.AddRange(extraFuelConsumers);

@@ -1,0 +1,17 @@
+﻿@model FuelEntryDetailsModel
+
+<td>@Model.DateCreated.ToShortDateString()</td>
+<td>@Model.Odometer.ToString()</td>
+<td>@Model.TripOdometer</td>
+<td>@Model.FuelQuantity</td>
+<td>@Model.FuelTypeName</td>
+<td>@Model.Price</td>
+<td>@Model.Average / 100</td>
+<td>@Model.FuelEntryTypeName</td>
+<td>
+    @if (Model.Owner == this.User.Identity.Name)
+    {
+        <a asp-controller="fuelentry" asp-action="edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+        <a asp-controller="fuelentry" asp-action="delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+    }
+</td>

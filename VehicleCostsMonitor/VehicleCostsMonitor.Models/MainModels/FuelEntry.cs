@@ -36,6 +36,7 @@
         public int Odometer { get; set; }
 
         [Required]
+        [Range(0, int.MaxValue)]
         public int TripOdometer { get; set; }
 
         [Required]
@@ -45,12 +46,18 @@
         public decimal Price { get; set; }
 
         public string Note { get; set; }
-        
+
+        [Required]
+        public int FuelTypeId { get; set; }
+
+        public FuelType FuelType { get; set; }
+
         [Required]
         public int FuelEntryTypeId { get; set; }
 
         public FuelEntryType FuelEntryType { get; set; }
 
+        [Range(0, double.MaxValue)]
         public double Average { get; set; }
         
         [Required]

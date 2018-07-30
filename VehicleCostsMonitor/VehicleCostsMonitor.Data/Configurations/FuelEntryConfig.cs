@@ -22,6 +22,12 @@
                 .HasMany(fe => fe.ExtraFuelConsumers)
                 .WithOne(efc => efc.FuelEntry)
                 .HasForeignKey(efc => efc.FuelEntryId);
+
+            builder
+                .HasOne(fe => fe.FuelType)
+                .WithMany(ft => ft.FuelEntries)
+                .HasForeignKey(fe => fe.FuelTypeId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

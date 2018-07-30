@@ -52,17 +52,9 @@
 
         private void SetNotificationMessage(ActionExecutingContext context, ModelStateDictionary modelState)
         {
-            var firstOccuredErrorMsg = 
-                modelState
-                .Values
-                .FirstOrDefault(v => v.Errors.Any())
-                ?.Errors
-                .FirstOrDefault()
-                ?.ErrorMessage;
-
             var baseController = context.Controller as BaseController;
 
-            baseController.ShowNotification(firstOccuredErrorMsg);
+            baseController.ShowModelStateError();
         }
     }
 }

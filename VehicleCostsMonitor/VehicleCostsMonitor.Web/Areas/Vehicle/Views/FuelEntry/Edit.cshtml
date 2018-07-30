@@ -1,0 +1,91 @@
+﻿@model FuelEntryUpdateViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit fuel entry</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="VehicleId" hidden="hidden" />
+            <input asp-for="Id" hidden="hidden" />
+            <input asp-for="LastOdometer" hidden="hidden" />
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="DateCreated" class="control-label"></label>
+                    <input asp-for="DateCreated" class="form-control" readonly />
+                    <span asp-validation-for="DateCreated" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FuelEntryTypeId" class="control-label"></label>
+                    <select asp-for="FuelEntryTypeId" asp-items="@Model.FuelEntryTypes" class="form-control"></select>
+                    <span asp-validation-for="FuelEntryTypeId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FuelTypeId" class="control-label"></label>
+                    <select asp-for="FuelTypeId" asp-items="@Model.FuelTypes" class="form-control"></select>
+                    <span asp-validation-for="FuelTypeId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Odometer" class="control-label"></label>
+                    <input asp-for="Odometer" class="form-control" data-val="true" data-val-error="Not valid" />
+                    <span asp-validation-for="Odometer" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="RoutesIds" class="control-label"></label>
+                    @foreach (var route in Model.AllRoutes)
+                    {
+                        var selected = Model.RoutesIds.Contains(route.Id) ? "checked" : "";
+                        <div class="input-group">
+                            <input name="RoutesIds" type="checkbox" value="@route.Id" @selected /> @route.Name
+                        </div>
+                    }
+                    <span asp-validation-for="RoutesIds" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="FuelQuantity" class="control-label"></label>
+                    <input asp-for="FuelQuantity" class="form-control" />
+                    <span asp-validation-for="FuelQuantity" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Price" class="control-label"></label>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-8"><input asp-for="Price" class="form-control" /></div>
+                        <div class="col-md-4"><select asp-for="PricingType" asp-items="@Model.PricingTypes" class="form-control"></select></div>
+                    </div>
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Note" class="control-label"></label>
+                    <textarea asp-for="Note" rows="4" class="form-control"></textarea>
+                    <span asp-validation-for="Note" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ExtraFuelConsumersIds" class="control-label"></label>
+                    @foreach (var extra in Model.AllExraFuelConsumers)
+                    {
+                        var selected = Model.ExtraFuelConsumersIds.Contains(extra.Id) ? "checked" : "";
+                        <div class="input-group">
+                            <input name="ExtraFuelConsumersIds" type="checkbox" value="@extra.Id" @selected /> @extra.Name
+                        </div>
+                    }
+                    <span asp-validation-for="RoutesIds" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group text-center">
+                <input type="submit" value="Update" class="btn btn-warning" />
+                <a asp-area="vehicle" asp-controller="vehicle" asp-action="details" asp-route-id="@Model.VehicleId" class="btn btn-default">Cancel</a>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-2"></div>
+</div>

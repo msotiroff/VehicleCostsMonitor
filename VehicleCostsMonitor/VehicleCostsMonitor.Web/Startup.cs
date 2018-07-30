@@ -34,7 +34,7 @@
             services
                 .AddDbContext<JustMonitorDbContext>(options =>
                     options.UseSqlServer(
-                        Configuration.GetConnectionString("DefaultConnection")));
+                        Configuration.GetConnectionString("JustMonitor")));
 
             services
                 .AddIdentity<User, IdentityRole>(options =>
@@ -46,6 +46,7 @@
                     options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequiredLength = 6;
                     options.User.RequireUniqueEmail = true;
+                    options.User.AllowedUserNameCharacters += " ";
                 })
                 .AddEntityFrameworkStores<JustMonitorDbContext>()
                 .AddDefaultUI()

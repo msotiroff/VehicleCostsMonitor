@@ -34,7 +34,7 @@
 
             var model = new CostEntryCreateViewModel
             {
-                DateCreated = this.dateTimeProvider.GetCurrentDateTime().Date,
+                DateCreated = this.dateTimeProvider.GetCurrentDateTime(),
                 VehicleId = id,
                 AllCostEntryTypes = await this.GetAllCostEntryTypes()
             };

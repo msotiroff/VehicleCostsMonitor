@@ -60,8 +60,16 @@
 
         public IQueryable<IEntryModel> GetEntries(int vehicleId)
         {
-            var fuelEntries = this.db.FuelEntries.Where(fe => fe.VehicleId == vehicleId).ProjectTo<FuelEntryDetailsModel>().Cast<IEntryModel>();
-            var costEntries = this.db.CostEntries.Where(fe => fe.VehicleId == vehicleId).ProjectTo<CostEntryDetailsModel>().Cast<IEntryModel>();
+            var fuelEntries = this.db.FuelEntries
+                .Where(fe => fe.VehicleId == vehicleId)
+                .ProjectTo<FuelEntryDetailsModel>()
+                .Cast<IEntryModel>();
+
+            var costEntries = this.db.CostEntries
+                .Where(fe => fe.VehicleId == vehicleId)
+                .ProjectTo<CostEntryDetailsModel>()
+                .Cast<IEntryModel>();
+
             var allEntries = new List<IEntryModel>(fuelEntries);
             allEntries.AddRange(costEntries);
 

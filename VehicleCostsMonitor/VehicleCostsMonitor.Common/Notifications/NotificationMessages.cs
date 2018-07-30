@@ -33,5 +33,12 @@
         public const string CostEntryUpdatedSuccessfull = "You successfully update the cost entry";
         public const string CostEntryDeletedSuccessfull = "You successfully delete the cost entry";
         public const string CostEntryDoesNotExist = "Cost entry you are trying to access does not exist!";
+
+        public const string FuelEntryUpdateFailed = "Fuel entry update failed";
+        public const string FuelEntryDeleteFailed = "Fuel entry delete failed";
+        public const string FuelEntryAddedSuccessfull = "You successfully add new Fuel entry to your vehicle";
+        public const string FuelEntryUpdatedSuccessfull = "You successfully update the Fuel entry";
+        public const string FuelEntryDeletedSuccessfull = "You successfully delete the Fuel entry";
+        public const string FuelEntryDoesNotExist = "Fuel entry you are trying to access does not exist!";
     }
 }

@@ -4,6 +4,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using System.Linq;
     using VehicleCostsMonitor.Models;
     using VehicleCostsMonitor.Web.Areas.User.Controllers;
     using static VehicleCostsMonitor.Common.Notifications.NotificationConstants;
@@ -14,6 +15,21 @@
         {
             this.TempData[NotificationMessageKey] = message;
             this.TempData[NotificationTypeKey] = notificationType.ToString();
+        }
+
+        protected internal void ShowModelStateError()
+        {
+            var firstOccuredErrorMsg = ModelState
+                .Values
+                .FirstOrDefault(v => v.Errors.Any())
+                ?.Errors
+                .FirstOrDefault()
+                ?.ErrorMessage;
+
+            if (firstOccuredErrorMsg != null)
+            {
+                this.ShowNotification(firstOccuredErrorMsg);
+            }
         }
 
         protected IActionResult RedirectToHome() => new RedirectResult("/");
