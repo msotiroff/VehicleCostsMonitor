@@ -24,7 +24,7 @@ Some features:
 - All Admin actions are logged
 
 #### Getting started:
-Just change the name of your local server name in the ConnectionStrings at appsettings.json and run! There is a seed method, which will insert all manufacturers, models, vehicle elements and about 100 sample users, 500 vehicles with many fuel/cost entries.
+Just type your server name in the ConnectionStrings section at appsettings.json and run! There is a seed method, which will insert all manufacturers, models, vehicle elements and about 500 sample users, 1000 vehicles with more than 30'000 fuel entries and nearly 8'000 cost entries. The seed method should take about 0.5-1 minute, depending on your machine.
 #### Enjoy :)
 
 ### 2. [OnlineStore](https://github.com/msotiroff/Asp.Net-Core-Projects/tree/master/OnlineStore "OnlineStore")
