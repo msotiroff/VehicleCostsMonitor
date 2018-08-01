@@ -67,6 +67,7 @@
             if (costEntry == null)
             {
                 this.ShowNotification(NotificationMessages.CostEntryDoesNotExist);
+                this.RedirectToProfile();
             }
 
             var model = Mapper.Map<CostEntryUpdateViewModel>(costEntry);
@@ -86,8 +87,10 @@
             {
                 this.ShowNotification(NotificationMessages.CostEntryUpdateFailed);
             }
-
-            this.ShowNotification(NotificationMessages.CostEntryUpdatedSuccessfull, NotificationType.Success);
+            else
+            {
+                this.ShowNotification(NotificationMessages.CostEntryUpdatedSuccessfull, NotificationType.Success);
+            }
 
             return RedirectToVehicle(model.VehicleId);
         }
@@ -101,6 +104,7 @@
         }
 
         [HttpPost]
+        [ValidateModelState]
         public async Task<IActionResult> Delete(CostEntryDeleteServiceModel model)
         {
             bool success = await this.costEntries.DeleteAsync(model.Id);
@@ -108,9 +112,11 @@
             {
                 this.ShowNotification(NotificationMessages.CostEntryDeleteFailed);
             }
+            else
+            {
+                this.ShowNotification(NotificationMessages.CostEntryDeletedSuccessfull, NotificationType.Success);
+            }
 
-            this.ShowNotification(NotificationMessages.CostEntryDeletedSuccessfull, NotificationType.Success);
-            
             return RedirectToVehicle(model.VehicleId);
         }
 

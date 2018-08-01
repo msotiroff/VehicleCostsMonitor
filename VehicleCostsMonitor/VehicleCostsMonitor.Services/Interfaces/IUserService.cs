@@ -9,5 +9,7 @@
         IQueryable<UserListingServiceModel> GetAll();
 
         Task<UserProfileServiceModel> GetAsync(string id);
+
+        Task<UserProfileServiceModel> GetByEmailAsync(string email);
     }
 }

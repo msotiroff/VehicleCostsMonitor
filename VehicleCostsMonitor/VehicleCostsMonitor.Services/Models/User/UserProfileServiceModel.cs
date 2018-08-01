@@ -13,6 +13,8 @@
 
         public string Email { get; set; }
 
+        public string UserName { get; set; }
+
         public IEnumerable<VehicleConciseServiceModel> Vehicles { get; set; }
 
         public void ConfigureMapping(Profile mapper)

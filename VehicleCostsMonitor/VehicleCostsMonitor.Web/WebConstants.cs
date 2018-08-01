@@ -2,12 +2,12 @@
 {
     public class WebConstants
     {
-        public const string AdministratorArea = "Admin";
         public const string AdministratorRole = "Admin";
         public const string AdminEmail = "admin@justmonitor.com";
         public const string AdminUserName = "Administrator";
         public const string AdminPassword = "admin123";
 
+        public const string AdministratorArea = "Admin";
         public const string UserArea = "User";
         public const string VehicleArea = "Vehicle";
 

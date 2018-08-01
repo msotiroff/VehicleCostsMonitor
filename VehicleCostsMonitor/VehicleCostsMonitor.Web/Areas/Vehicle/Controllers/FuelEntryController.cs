@@ -59,9 +59,9 @@
             if (!ModelState.IsValid)
             {
                 this.ShowModelStateError();
-                return RedirectToVehicle(model.VehicleId);
+                return RedirectToAction(nameof(Create), new { id = model.VehicleId });
             }
-            
+
             var serviceModel = Mapper.Map<FuelEntryCreateServiceModel>(model);
             bool success = await this.fuelEntries.CreateAsync(serviceModel);
             if (!success)

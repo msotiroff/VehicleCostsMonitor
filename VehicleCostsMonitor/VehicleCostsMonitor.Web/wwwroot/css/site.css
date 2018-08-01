@@ -23,6 +23,10 @@ body {
     margin: 2px;
 }
 
+.btn-logout {
+    margin-top: 7px !important;
+}
+
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {

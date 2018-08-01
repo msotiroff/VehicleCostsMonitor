@@ -13,7 +13,7 @@
     <thead>
         <tr>
             <th>Email</th>
-            <th>Vehicles Count</th>
+            <th>Roles</th>
             <th>Add to role</th>
             <th>Remove from role</th>
             <th></th>
@@ -24,17 +24,21 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => user.Email)
+                    <a asp-area="user" asp-controller="profile" asp-action="index" asp-route-email="@user.Email">
+                        @Html.DisplayFor(modelItem => user.Email)
+                    </a>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => user.VehiclesCount)
+                    @(user.CurrentRoles.Any() ? string.Join(", ", user.CurrentRoles) : "None")
                 </td>
                 <td>
                     <div class="form-inline">
                         <form asp-action="addtorole" method="post">
                             <input type="submit" class="btn btn-warning" value="Add to role" />
                             <input type="text" hidden="hidden" name="userEmail" value="@user.Email" />
-                            <select name="role" asp-items="@(new SelectList(user.NonCurrentRoles))" class="form-control"></select>
+                            <select name="role" asp-items="@(new SelectList(user.NonCurrentRoles))" class="form-control">
+                                <option disabled selected>--- Select ---</option>
+                            </select>
                         </form>
                     </div>
                 </td>
@@ -43,12 +47,14 @@
                         <form asp-action="removefromrole" method="post">
                             <input type="submit" class="btn btn-warning" value="Remove from role" />
                             <input type="text" hidden="hidden" name="userEmail" value="@user.Email" />
-                            <select name="role" asp-items="@(new SelectList(user.CurrentRoles))" class="form-control"></select>
+                            <select name="role" asp-items="@(new SelectList(user.CurrentRoles))" class="form-control">
+                                <option disabled selected>--- Select ---</option>
+                            </select>
                         </form>
                     </div>
                 </td>
                 <td>
-                    <a asp-area="identity" asp-controller="user" asp-action="details" asp-route-id="@user.Id" class="btn btn-primary">Details</a>
+                    <a asp-area="user" asp-controller="profile" asp-action="index" asp-route-email="@user.Email" class="btn btn-primary">Details</a>
                 </td>
             </tr>
         }

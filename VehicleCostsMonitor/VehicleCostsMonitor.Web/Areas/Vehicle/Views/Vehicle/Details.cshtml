@@ -48,7 +48,10 @@
                 </dd>
             </dl>
             <div class="col-md-2">
-                <a asp-controller="picture" asp-action="update" asp-route-vehicleId="@Model.Id" class="btn btn-primary">Change picture</a>
+                @if (Model.OwnerUserName == User.Identity.Name)
+                {
+                    <a asp-controller="picture" asp-action="update" asp-route-vehicleId="@Model.Id" class="btn btn-primary">Change picture</a>
+                }
             </div>
             <div class="col-md-4">
                 <img class="img-tiny" src="@Model.PicturePath" />
@@ -58,28 +61,28 @@
     <hr />
     @if (Model.OwnerUserName == User.Identity.Name)
     {
-            <div class="well">
-                <div class="text-center">
-                    @if (Model.OwnerUserName == User.Identity.Name)
-                    {
-                        <a asp-area="vehicle" asp-controller="fuelentry" asp-action="create" asp-route-id="@Model.Id">
-                            <img class="btn btn-default" alt="Add Fuel" title="Add Fuel Entry" src="@Url.Content("~/images/AddFuel.jpg")" />
-                        </a>
+        <div class="well">
+            <div class="text-center">
+                @if (Model.OwnerUserName == User.Identity.Name)
+                {
+                    <a asp-area="vehicle" asp-controller="fuelentry" asp-action="create" asp-route-id="@Model.Id">
+                        <img class="btn btn-default" alt="Add Fuel" title="Add Fuel Entry" src="@Url.Content("~/images/AddFuel.jpg")" />
+                    </a>
 
-                        <a asp-area="vehicle" asp-controller="costentry" asp-action="create" asp-route-id="@Model.Id">
-                            <img class="btn btn-default" alt="Add Cost Entry" title="Add Cost entry" src="@Url.Content("~/images/AddCost.jpg")" />
-                        </a>
+                    <a asp-area="vehicle" asp-controller="costentry" asp-action="create" asp-route-id="@Model.Id">
+                        <img class="btn btn-default" alt="Add Cost Entry" title="Add Cost entry" src="@Url.Content("~/images/AddCost.jpg")" />
+                    </a>
 
-                        <a asp-area="vehicle" asp-controller="vehicle" asp-action="edit" asp-route-id="@Model.Id">
-                            <img class="btn btn-default" alt="Edit Vehicle" title="Edit vehicle info" src="@Url.Content("~/images/Edit.jpg")" />
-                        </a>
+                    <a asp-area="vehicle" asp-controller="vehicle" asp-action="edit" asp-route-id="@Model.Id">
+                        <img class="btn btn-default" alt="Edit Vehicle" title="Edit vehicle info" src="@Url.Content("~/images/Edit.jpg")" />
+                    </a>
 
-                        <a asp-area="vehicle" asp-controller="vehicle" asp-action="delete" asp-route-id="@Model.Id">
-                            <img class="btn btn-default" alt="Delete vehicle" title="Delete vehicle" src="@Url.Content("~/images/Delete.jpg")" />
-                        </a>
-                    }
-                </div>
+                    <a asp-area="vehicle" asp-controller="vehicle" asp-action="delete" asp-route-id="@Model.Id">
+                        <img class="btn btn-default" alt="Delete vehicle" title="Delete vehicle" src="@Url.Content("~/images/Delete.jpg")" />
+                    </a>
+                }
             </div>
+        </div>
     }
     <hr />
 </div>

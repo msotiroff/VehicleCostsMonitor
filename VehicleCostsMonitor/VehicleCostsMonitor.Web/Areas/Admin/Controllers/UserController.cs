@@ -104,7 +104,9 @@
             }
 
             var user = await this.userManager.FindByEmailAsync(userEmail);
-            if (user.Email == userEmail)
+            var currentLoggedUser = await this.userManager.GetUserAsync(User);
+
+            if (user.Email == currentLoggedUser.Email)
             {
                 this.ShowNotification(string.Format(NotificationMessages.UnableToRemoveSelf, role), NotificationType.Warning);
                 return RedirectToAction(nameof(Index));

@@ -6,7 +6,7 @@
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public class EqualOrGreaterThanAttribute : ValidationAttribute
     {
-        private const string FailedValidationErrorMsg = "{0}'s value must be equal or greater than {1}'s value ({2})!";
+        private const string FailedValidationErrorMsg = "{0}'s value must be equal or greater than its previous value ({1})!";
         private const string FailedObjectTypeErrorMsg = "GreaterOrEqualOf attribute can be used only for numeric types";
         private const string PropertyNotFoundErrorMsg = "Property with name {0} not found!";
 
@@ -44,7 +44,7 @@
             {
                 var corePropertyName = validationContext.DisplayName;
 
-                return new ValidationResult(string.Format(FailedValidationErrorMsg, corePropertyName, comparedProperty.Name, comparisonPropertyValue));
+                return new ValidationResult(string.Format(FailedValidationErrorMsg, corePropertyName, comparisonPropertyValue));
             }
 
             return ValidationResult.Success;

@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using VehicleCostsMonitor.Models;
     using VehicleCostsMonitor.Services.Interfaces;
+    using VehicleCostsMonitor.Services.Models.User;
     using VehicleCostsMonitor.Web.Controllers;
     using static WebConstants;
 
@@ -23,19 +24,21 @@
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> Index()
+        [Route("[area]/[controller]/{email?}")]
+        public async Task<IActionResult> Index(string email = null)
         {
-            var model = await this.userService
-                .GetAsync(this.userManager.GetUserId(User));
+            UserProfileServiceModel model;
 
-            return View(model);
-        }
+            if (email == null)
+            {
+                model = await this.userService.GetAsync(this.userManager.GetUserId(User));
+            }
+            else
+            {
+                model = await this.userService.GetByEmailAsync(email);
+            }
 
-        [HttpGet]
-        public async Task<IActionResult> Details(string id)
-        {
-            var model = await this.userService.GetAsync(id);
-            return View(model);
+            return model == null ? this.RedirectToHome() : this.View(model);
         }
     }
 }

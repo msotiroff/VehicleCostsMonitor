@@ -23,6 +23,7 @@
         [EqualOrGreaterThan(nameof(LastOdometer))]
         public int Odometer { get; set; }
 
+        [Display(Name = "Previous odometer value")]
         public int LastOdometer { get; set; }
 
         [Required]

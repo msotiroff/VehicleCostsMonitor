@@ -25,5 +25,12 @@
             .Where(u => u.Id == id)
             .ProjectTo<UserProfileServiceModel>()
             .FirstOrDefaultAsync();
+
+        public async Task<UserProfileServiceModel> GetByEmailAsync(string email)
+            => await this.db
+            .Users
+            .Where(u => u.Email == email)
+            .ProjectTo<UserProfileServiceModel>()
+            .FirstOrDefaultAsync();
     }
 }

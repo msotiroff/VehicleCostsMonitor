@@ -68,13 +68,16 @@
         /// </param>
         private static void ExecuteSqlScripts(JustMonitorDbContext dbContext)
         {
-            var scriptsDirectory = WebConstants.SqlScriptsDirectoryPath;
-            var seedScripts = Directory.GetFiles(scriptsDirectory).OrderBy(f => f);
-
-            foreach (var scriptPath in seedScripts)
+            if (!dbContext.Users.Any())
             {
-                var scriptContent = File.ReadAllText(scriptPath);
-                dbContext.Database.ExecuteSqlCommand(scriptContent);
+                var scriptsDirectory = WebConstants.SqlScriptsDirectoryPath;
+                var seedScripts = Directory.GetFiles(scriptsDirectory).OrderBy(f => f);
+
+                foreach (var scriptPath in seedScripts)
+                {
+                    var scriptContent = File.ReadAllText(scriptPath);
+                    dbContext.Database.ExecuteSqlCommand(scriptContent);
+                }
             }
         }
 

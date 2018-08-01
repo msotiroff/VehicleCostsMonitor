@@ -8,6 +8,7 @@
 
     public class CostEntryDeleteServiceModel : IAutoMapWith<CostEntry>, ICustomMappingConfiguration
     {
+        [Required]
         public int Id { get; set; }
         
         [Display(Name = "Date")]
@@ -25,6 +26,7 @@
         [Display(Name = "Vehicle")]
         public string VehicleFullName { get; set; }
 
+        [Required]
         public int VehicleId { get; set; }
 
         public void ConfigureMapping(Profile mapper)
