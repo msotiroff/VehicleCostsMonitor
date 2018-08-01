@@ -1,5 +1,6 @@
 ﻿namespace VehicleCostsMonitor.Web.Infrastructure.Extensions
 {
+    using AutoMapper;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,6 @@
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
@@ -30,21 +30,11 @@
         {
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
-                var watch = new Stopwatch();
-                watch.Start();
-
-                var userManager = serviceScope.ServiceProvider.GetService<UserManager<User>>();
-                var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
                 var dbContext = serviceScope.ServiceProvider.GetService<JustMonitorDbContext>();
-                var fuelEntryService = serviceScope.ServiceProvider.GetService<IFuelEntryService>();
-                var dataAccessService = serviceScope.ServiceProvider.GetService<IDataAccessService>();
-
+                
                 dbContext.Database.Migrate();
-
-                SeedDefaultRoles(userManager, roleManager);
-
-                SeedDefaultManufacturers(dbContext);
-
+                
+                SeedManufacturersWithModels(dbContext);
                 SeedCostEntryTypes(dbContext);
                 SeedExtraFuelConsumers(dbContext);
                 SeedFuelEntryTypes(dbContext);
@@ -53,17 +43,39 @@
                 SeedRouteTypes(dbContext);
                 SeedVehicleTypes(dbContext);
 
-                // Seed methods for testing the application functionalities:
-                SeedUsers(dbContext, userManager);
-                SeedVehicles(dbContext);
-                SeedFuelEntries(dbContext, fuelEntryService);
-                SeedCostEntries(dbContext, dataAccessService);
+                // Makes the same as the five methods below, but nearly 50x faster:
+                ExecuteSqlScripts(dbContext);
 
-                watch.Stop();
-                var elaspsed = watch.Elapsed.Seconds;
+                //var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<User>>();
+                //var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                //var dataAccessService = serviceScope.ServiceProvider.GetRequiredService<IDataAccessService>();
+
+                //SeedDefaultRoles(userManager, roleManager);
+                //SeedUsers(dbContext, userManager);
+                //SeedVehicles(dbContext);
+                //SeedFuelEntries(dbContext, dataAccessService);
+                //SeedCostEntries(dbContext, dataAccessService);
             }
 
             return app;
+        }
+
+        /// <summary>
+        /// Seed users, roles, vehicles, fuel and cost entries
+        /// </summary>
+        /// <param name="dbContext">
+        /// An instance of JustMonitorDbContext
+        /// </param>
+        private static void ExecuteSqlScripts(JustMonitorDbContext dbContext)
+        {
+            var scriptsDirectory = WebConstants.SqlScriptsDirectoryPath;
+            var seedScripts = Directory.GetFiles(scriptsDirectory).OrderBy(f => f);
+
+            foreach (var scriptPath in seedScripts)
+            {
+                var scriptContent = File.ReadAllText(scriptPath);
+                dbContext.Database.ExecuteSqlCommand(scriptContent);
+            }
         }
 
         private static void SeedCostEntries(JustMonitorDbContext dbContext, IDataAccessService service)
@@ -81,11 +93,12 @@
                 var costEntryTypesIds = dbContext.CostEntryTypes.Select(cet => cet.Id).ToArray();
 
                 var note = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+                var costEntries = new List<CostEntry>();
+
 
                 foreach (var vehicle in allVehicles)
                 {
                     var startDate = new DateTime(currentDate.Year - 2, 1, 1);
-                    var costEntries = new HashSet<CostEntry>();
 
                     while (startDate < currentDate)
                     {
@@ -97,18 +110,26 @@
                         var entry = new CostEntry(entryDate, costEntryTypeId, vehicle.Id, price, note);
                         costEntries.Add(entry);
 
-                        startDate = startDate.AddMonths(1);
+                        startDate = startDate.AddMonths(4);
                     }
+                }
 
-                    dbContext.CostEntries.AddRange(costEntries);
-                    dbContext.SaveChanges();
+                dbContext.CostEntries.AddRange(costEntries);
+                dbContext.SaveChanges();
 
-                    var result = service.UpdateStatsOnCostEntryChangedAsync(vehicle.Id).Result;
+                foreach (var vehicle in allVehicles)
+                {
+                    Task.Run(async () =>
+                    {
+                        await service.UpdateStatsOnCostEntryChangedAsync(vehicle.Id);
+                    })
+                    .GetAwaiter()
+                    .GetResult();
                 }
             }
         }
 
-        private static void SeedFuelEntries(JustMonitorDbContext dbContext, IFuelEntryService fuelEntryService)
+        private static void SeedFuelEntries(JustMonitorDbContext dbContext, IDataAccessService service)
         {
             if (!dbContext.FuelEntries.Any())
             {
@@ -128,31 +149,38 @@
 
                 var note = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
 
-                var fuelEntryTypesIds = dbContext.FuelEntryTypes.Select(fet => fet.Id).ToArray();
+                var firstFuelingTypeId = dbContext.FuelEntryTypes.First(fet => fet.Name == "First fueling").Id;
+                var fullFuelingTypeId = dbContext.FuelEntryTypes.First(fet => fet.Name == "Full").Id;
 
                 var routesIds = dbContext.RouteTypes.Select(r => r.Id).ToArray();
 
                 var extrasIds = dbContext.ExtraFuelConsumers.Select(ex => ex.Id).ToArray();
 
+                var fuelEntriesToAdd = new List<FuelEntry>();
+                
                 foreach (var vehicle in allVehicles)
                 {
                     var odometer = 100000;
-                    var startDate = new DateTime(currentDate.Year - 1, 1, 1);
+                    var startDate = new DateTime(currentDate.Year - 2, 1, 1);
+                    var hasAnyEntries = false;
 
                     while (startDate < currentDate)
                     {
                         var day = random.Next(minDay, maxDay);
                         var fuelingDate = new DateTime(startDate.Year, startDate.Month, day);
                         var quantity = random.Next(fuelQuantityMinValue, fuelQuantityMaxValue);
+                        var tripOdometer = random.Next(odometerMinStep, odometerMaxStep);
 
                         var model = new FuelEntryCreateServiceModel
                         {
                             DateCreated = fuelingDate,
                             Odometer = odometer,
+                            TripOdometer = hasAnyEntries ? tripOdometer : 0,
+                            Average = hasAnyEntries ? ((double)quantity / tripOdometer) * 100 : 0,
                             FuelQuantity = quantity,
                             Price = (decimal)(quantity * (random.NextDouble() + 1.2)),
                             Note = note,
-                            FuelEntryTypeId = fuelEntryTypesIds[random.Next(0, fuelEntryTypesIds.Length)],
+                            FuelEntryTypeId = hasAnyEntries ? fullFuelingTypeId : firstFuelingTypeId,
                             Routes = new List<FuelEntryRouteType>
                             {
                                 new FuelEntryRouteType { RouteTypeId = routesIds[random.Next(0, routesIds.Length)]}
@@ -165,11 +193,26 @@
                             FuelTypeId = vehicle.FuelTypeId
                         };
 
-                        var success = fuelEntryService.CreateAsync(model).Result;
+                        var newFuelEntry = Mapper.Map<FuelEntry>(model);
+                        fuelEntriesToAdd.Add(newFuelEntry);
 
-                        odometer += random.Next(odometerMinStep, odometerMaxStep);
+                        odometer += tripOdometer;
                         startDate = startDate.AddMonths(1);
+                        hasAnyEntries = true;
                     }
+                }
+
+                dbContext.FuelEntries.AddRange(fuelEntriesToAdd);
+                dbContext.SaveChanges();
+
+                foreach (var vehicle in allVehicles)
+                {
+                    Task.Run(async () =>
+                    {
+                        await service.UpdateStatsOnFuelEntryChangedAsync(vehicle.Id);
+                    })
+                    .GetAwaiter()
+                    .GetResult();
                 }
             }
         }
@@ -334,7 +377,7 @@
             }
         }
 
-        private static void SeedDefaultManufacturers(JustMonitorDbContext dbContext)
+        private static void SeedManufacturersWithModels(JustMonitorDbContext dbContext)
         {
             if (!dbContext.Manufacturers.Any())
             {

@@ -41,7 +41,7 @@
         {
             mapper
                 .CreateMap<FuelEntry, FuelEntryDeleteServiceModel>()
-                .ForMember(dest => dest.VehicleFullName, 
+                .ForMember(dest => dest.VehicleFullName,
                     opt => opt.MapFrom(src => $"{src.Vehicle.Manufacturer.Name} {src.Vehicle.Model.Name} {src.Vehicle.ExactModelname}"));
         }
     }

@@ -58,7 +58,7 @@
                 .CreateMap<Vehicle, VehicleDetailsServiceModel>()
                 .ForMember(dest => dest.FullModelName,
                     opt => opt.MapFrom(src => $"{src.Manufacturer.Name} {src.Model.Name} {src.ExactModelname}"))
-                .ForMember(dest => dest.OwnerUserName, 
+                .ForMember(dest => dest.OwnerUserName,
                     opt => opt.MapFrom(src => src.User.UserName))
                 .ForMember(dest => dest.TotalFuelCostsPerHundredKm,
                     opt => opt.MapFrom(src => src.TotalFuelCosts / (src.TotalDistance != 0 ? src.TotalDistance : 100) * 100))

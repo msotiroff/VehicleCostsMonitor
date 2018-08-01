@@ -25,6 +25,10 @@
     <None Include="wwwroot\seedfiles\route-types.json" />
     <None Include="wwwroot\seedfiles\vehicle-types.json" />
     <None Include="wwwroot\seedfiles\vehicles-list.json" />
+    <None Include="wwwroot\seedfiles\sql-scripts\01.dbo.AspNetUsers.Table.sql" />
+    <None Include="wwwroot\seedfiles\sql-scripts\06.dbo.CostEntries.Table.sql" />
+    <None Include="wwwroot\seedfiles\sql-scripts\05.dbo.FuelEntries.Table.sql" />
+    <None Include="wwwroot\seedfiles\sql-scripts\04dbo.Vehicles.Table.sql" />
   </ItemGroup>
 
   <ItemGroup>

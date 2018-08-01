@@ -16,6 +16,7 @@
         public const string VehicleImagePathBase = @"\images\vehicles\{0}";
         public const int PictureMaxHeightSize = 250;
 
+        public const string SqlScriptsDirectoryPath = @"wwwroot\seedfiles\sql-scripts";
         public const string ManufacturersListPath = @"wwwroot\seedfiles\vehicles-list.json";
         public const string CostEntryTypesListPath = @"wwwroot\seedfiles\cost-entry-types.json";
         public const string ExtraFuelConsumersListPath = @"wwwroot\seedfiles\extra-fuel-consumers.json";
