@@ -11,7 +11,8 @@
             builder
                 .HasOne(v => v.Picture)
                 .WithOne(p => p.Vehicle)
-                .HasForeignKey<Vehicle>(v => v.PictureId);
+                .HasForeignKey<Vehicle>(v => v.PictureId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             builder
                 .HasOne(v => v.Manufacturer)

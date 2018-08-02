@@ -17,7 +17,6 @@
     using VehicleCostsMonitor.Web.Infrastructure.Filters;
 
     [Authorize]
-    // TODO: Implement [Authorize(Roles = "Owner")]
     public class PictureController : BaseVehicleController
     {
         private readonly string webRootPath;
@@ -32,6 +31,7 @@
         }
 
         [HttpGet]
+        [EnsureOwnership]
         public async Task<IActionResult> Update(int vehicleId)
         {
             var model = await this.pictures
@@ -46,6 +46,7 @@
         }
 
         [HttpPost]
+        [EnsureOwnership]
         public async Task<IActionResult> Update(IFormFile file, int oldPictureId, int vehicleId)
         {
             // If no file chosen => redirect to form:
@@ -85,7 +86,16 @@
                 }
             }
 
-            return LocalRedirect($"/vehicle/details/{vehicleId}");
+            return RedirectToVehicle(vehicleId);
+        }
+
+        [HttpPost]
+        [EnsureOwnership]
+        public async Task<IActionResult> Delete(int oldPictureId, int vehicleId)
+        {
+            await this.Delete(oldPictureId);
+
+            return RedirectToVehicle(vehicleId);
         }
 
         #region Private methods

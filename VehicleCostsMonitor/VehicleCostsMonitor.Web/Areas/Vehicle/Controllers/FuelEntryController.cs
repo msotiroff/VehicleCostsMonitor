@@ -17,7 +17,6 @@
     using VehicleCostsMonitor.Web.Infrastructure.Providers.Interfaces;
 
     [Authorize]
-    // TODO: Implement [Authorize(Roles = "Owner")]
     public class FuelEntryController : BaseVehicleController
     {
         private readonly IDateTimeProvider dateTimeProvider;
@@ -75,6 +74,7 @@
         }
 
         [HttpGet]
+        [EnsureOwnership]
         public async Task<IActionResult> Edit(int id)
         {
             var fuelEntry = await this.fuelEntries.GetAsync(id);
@@ -103,6 +103,7 @@
 
         [HttpPost]
         [ValidateModelState]
+        [EnsureOwnership]
         public async Task<IActionResult> Edit(FuelEntryUpdateViewModel model)
         {
             var fuelEntry = Mapper.Map<FuelEntry>(model);
@@ -118,6 +119,7 @@
         }
 
         [HttpGet]
+        [EnsureOwnership]
         public async Task<IActionResult> Delete(int id)
         {
             var model = await this.fuelEntries.GetForDeleteAsync(id);
@@ -132,6 +134,7 @@
 
         [HttpPost]
         [ValidateModelState]
+        [EnsureOwnership]
         public async Task<IActionResult> Delete(FuelEntryDeleteServiceModel model)
         {
             bool success = await this.fuelEntries.DeleteAsync(model.Id);

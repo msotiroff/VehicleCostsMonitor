@@ -21,7 +21,6 @@
     using static WebConstants;
 
     [Authorize]
-    // TODO: Implement [Authorize(Roles = "Owner")]
     [Route("[area]/[action]/{id?}")]
     public class VehicleController : BaseVehicleController
     {
@@ -106,6 +105,7 @@
         }
 
         [HttpGet]
+        [EnsureOwnership]
         public async Task<IActionResult> Edit(int id)
         {
             var vehicle = await this.vehicles.GetForUpdateAsync(id);
@@ -122,6 +122,7 @@
 
         [HttpPost]
         [ValidateModelState]
+        [EnsureOwnership]
         public async Task<IActionResult> Edit(VehicleUpdateViewModel model)
         {
             var serviceModel = Mapper.Map<VehicleUpdateServiceModel>(model);
@@ -138,6 +139,7 @@
         }
 
         [HttpGet]
+        [EnsureOwnership]
         public async Task<IActionResult> Delete(int id)
         {
             var model = await this.vehicles.GetAsync(id);
@@ -152,6 +154,7 @@
 
         [HttpPost]
         [ActionName(nameof(Delete))]
+        [EnsureOwnership]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var success = await this.vehicles.DeleteAsync(id);

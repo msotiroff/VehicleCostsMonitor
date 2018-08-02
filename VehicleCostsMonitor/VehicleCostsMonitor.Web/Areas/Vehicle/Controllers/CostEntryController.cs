@@ -15,7 +15,6 @@
     using VehicleCostsMonitor.Web.Infrastructure.Providers.Interfaces;
 
     [Authorize]
-    // TODO: Implement [Authorize(Roles = "Owner")]
     public class CostEntryController : BaseVehicleController
     {
         private readonly IDateTimeProvider dateTimeProvider;
