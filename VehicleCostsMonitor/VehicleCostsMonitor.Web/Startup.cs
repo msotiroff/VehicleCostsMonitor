@@ -12,6 +12,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using VehicleCostsMonitor.Data;
     using VehicleCostsMonitor.Models;
+    using VehicleCostsMonitor.Web.Areas.Identity.Services.Email;
 
     public class Startup
     {
@@ -25,6 +26,7 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services
+                .Configure<SendGridOptions>(this.Configuration.GetSection("EmailSetting"))
                 .Configure<CookiePolicyOptions>(options =>
                 {
                     options.CheckConsentNeeded = context => true;
@@ -34,8 +36,20 @@
             services
                 .AddDbContext<JustMonitorDbContext>(options =>
                     options.UseSqlServer(
-                        Configuration.GetConnectionString("JustMonitor")));
+                        this.Configuration.GetConnectionString("JustMonitor")));
 
+            services.AddAuthentication()
+                .AddFacebook(options =>
+                {
+                    options.AppId = this.Configuration.GetSection("ExternalAuthentications:Facebook:AppId").Value;
+                    options.AppSecret = this.Configuration.GetSection("ExternalAuthentications:Facebook:AppSecret").Value;
+                })
+                .AddGoogle(options =>
+                {
+                    options.ClientId = this.Configuration.GetSection("ExternalAuthentications:Google:ClientId").Value;
+                    options.ClientSecret = this.Configuration.GetSection("ExternalAuthentications:Google:ClientSecret").Value;
+                });
+            
             services
                 .AddIdentity<User, IdentityRole>(options =>
                 {
@@ -46,7 +60,7 @@
                     options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequiredLength = 6;
                     options.User.RequireUniqueEmail = true;
-                    options.User.AllowedUserNameCharacters += " ";
+                    options.SignIn.RequireConfirmedEmail = true;
                 })
                 .AddEntityFrameworkStores<JustMonitorDbContext>()
                 .AddDefaultUI()
@@ -62,10 +76,10 @@
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddApplicationServices();
-            services.AddDomainServices();
-
-            services.AddAutoMapper();
+            services
+                .AddApplicationServices()
+                .AddDomainServices()
+                .AddAutoMapper();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

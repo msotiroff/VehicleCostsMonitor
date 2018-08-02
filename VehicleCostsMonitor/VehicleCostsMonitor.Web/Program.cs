@@ -2,6 +2,8 @@
 {
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Configuration;
+    using System.IO;
 
     public class Program
     {
@@ -12,6 +14,12 @@
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+            .ConfigureAppConfiguration((context, config) => 
+            {
+                config
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("secrets.json", optional: false, reloadOnChange: true);
+            })
+            .UseStartup<Startup>();
     }
 }
