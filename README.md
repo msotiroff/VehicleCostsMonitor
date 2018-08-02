@@ -17,7 +17,6 @@ Some features:
 - Registered users can add vehicles to their profile
 - Registered users can add fuel and cost entries to their vehicles
 - Registered users can create/update/delete their vehicles
-- Registered users can send private messages to another registered users
 - Admin users can create/update/delete all vehicle manufacturers and models
 - Admin users can see all users details (incl. vehicles, roles, ect.)
 - Admin users can add/remove users to roles

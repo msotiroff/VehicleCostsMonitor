@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VehicleCostsMonitor.Web", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VehicleCostsMonitor.Data", "VehicleCostsMonitor.Data\VehicleCostsMonitor.Data.csproj", "{D47A370F-BD90-4F2B-9E4F-E4DA8D6B084D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleCostsMonitor.Services", "VehicleCostsMonitor.Services\VehicleCostsMonitor.Services.csproj", "{4D422707-9A7E-47DB-A760-CB14817CCF19}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VehicleCostsMonitor.Services", "VehicleCostsMonitor.Services\VehicleCostsMonitor.Services.csproj", "{4D422707-9A7E-47DB-A760-CB14817CCF19}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleCostsMonitor.Common", "VehicleCostsMonitor.Common\VehicleCostsMonitor.Common.csproj", "{7EF09569-B015-4C87-A7B8-9DC0A8BAE74C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VehicleCostsMonitor.Common", "VehicleCostsMonitor.Common\VehicleCostsMonitor.Common.csproj", "{7EF09569-B015-4C87-A7B8-9DC0A8BAE74C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
