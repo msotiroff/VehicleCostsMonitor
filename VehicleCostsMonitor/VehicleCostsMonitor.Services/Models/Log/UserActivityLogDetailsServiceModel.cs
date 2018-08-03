@@ -12,7 +12,7 @@
         [Display(Name = "Date")]
         public DateTime DateTime { get; set; }
         
-        [Display(Name = "Email")]
+        [Display(Name = "User")]
         public string UserEmail { get; set; }
 
         [Display(Name = "Http Method")]

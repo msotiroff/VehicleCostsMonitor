@@ -10,7 +10,7 @@
         Task<int> CreateAsync(VehicleCreateServiceModel model);
 
         Task<VehicleDetailsServiceModel> GetAsync(int id);
-
+        
         IQueryable<IEntryModel> GetEntries(int vehicleId);
 
         Task<VehicleUpdateServiceModel> GetForUpdateAsync(int id);
@@ -18,5 +18,10 @@
         Task<bool> UpdateAsync(VehicleUpdateServiceModel model);
 
         Task<bool> DeleteAsync(int id);
+
+        IQueryable<VehicleSearchServiceModel> Get(
+            int manufacturerId, string modelName, string exactModelName, int vehicleTypeId, 
+            int fuelTypeId, int gearingTypeId, int engineHorsePowerMin, int engineHorsePowerMax, 
+            int yearOfManufactureMin, int yearOfManufactureMax, int minimumKilometers);
     }
 }

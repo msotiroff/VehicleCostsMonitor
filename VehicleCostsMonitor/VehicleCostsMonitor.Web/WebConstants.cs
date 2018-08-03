@@ -15,6 +15,7 @@
 
         public const string VehicleImagePathBase = @"\images\vehicles\{0}";
         public const int PictureMaxHeightSize = 250;
+        public const string DecimalNumberFormat = "f2";
 
         public const string SqlScriptsDirectoryPath = @"wwwroot\seedfiles\sql-scripts";
         public const string ManufacturersListPath = @"wwwroot\seedfiles\vehicles-list.json";
@@ -30,6 +31,7 @@
         public const int UsersListPageSize = 20;
         public const int LogsListPageSize = 20;
         public const int EntriesListPageSize = 20;
+        public const int SearchResultsPageSize = 15;
 
         public const string BadRequestErrorMsg = "Ops! Something went wrong while processing your request!";
     }

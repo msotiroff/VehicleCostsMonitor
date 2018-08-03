@@ -9,6 +9,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using VehicleCostsMonitor.Common;
     using VehicleCostsMonitor.Data;
     using VehicleCostsMonitor.Models;
     using VehicleCostsMonitor.Services.Models.Entries;
@@ -46,6 +47,46 @@
 
             return true;
         }
+        
+        public IQueryable<VehicleSearchServiceModel> Get(int manufacturerId, string modelName, string exactModelName, 
+            int vehicleTypeId, int fuelTypeId, int gearingTypeId, int engineHorsePowerMin, int engineHorsePowerMax, 
+            int yearOfManufactureMin, int yearOfManufactureMax, int minimumKilometers)
+        {
+            var modelNameSearchSubstring = modelName != GlobalConstants.SearchTermForAllModels ? modelName : "";
+            var exaxtModelNameSearchSubstring = string.IsNullOrWhiteSpace(exactModelName) ? "" : exactModelName;
+            engineHorsePowerMax = engineHorsePowerMax != default(int) ? engineHorsePowerMax : int.MaxValue;
+            yearOfManufactureMax = yearOfManufactureMax != default(int) ? yearOfManufactureMax : int.MaxValue;
+            minimumKilometers = minimumKilometers != default(int) ? minimumKilometers : int.MaxValue;
+
+            var vehicles = this.db
+                .Vehicles
+                .Where(v =>
+                    v.ManufacturerId == manufacturerId &&
+                    v.Model.Name.Contains(modelNameSearchSubstring) &&
+                    v.ExactModelname.Contains(exaxtModelNameSearchSubstring) &&
+                    v.EngineHorsePower >= engineHorsePowerMin &&
+                    v.EngineHorsePower <= engineHorsePowerMax &&
+                    v.YearOfManufacture >= yearOfManufactureMin &&
+                    v.YearOfManufacture <= yearOfManufactureMax &&
+                    v.TotalDistance >= minimumKilometers);
+
+            if (vehicleTypeId != default(int))
+            {
+                vehicles = vehicles.Where(v => v.VehicleTypeId == vehicleTypeId);
+            }
+            if (fuelTypeId != default(int))
+            {
+                vehicles = vehicles.Where(v => v.FuelTypeId == fuelTypeId);
+            }
+            if (gearingTypeId != default(int))
+            {
+                vehicles = vehicles.Where(v => v.GearingTypeId == gearingTypeId);
+            }
+
+            return vehicles
+                .ProjectTo<VehicleSearchServiceModel>()
+                .OrderBy(v => v.FuelConsumption);
+        }
 
         public async Task<VehicleDetailsServiceModel> GetAsync(int id)
         {
@@ -57,7 +98,7 @@
 
             return vehicle;
         }
-
+        
         public IQueryable<IEntryModel> GetEntries(int vehicleId)
         {
             var fuelEntries = this.db.FuelEntries

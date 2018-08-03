@@ -26,20 +26,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var log in Model.Logs)
-        {
-            <tr>
-                <td>@log.UserEmail</td>
-                <td>@log.DateTime</td>
-                <td>@log.HttpMethod</td>
-                <td>@log.AreaName</td>
-                <td>@log.ControllerName</td>
-                <td>@log.ActionName</td>
-                <td>
-                    <a asp-action="details" asp-route-id="@log.Id" class="btn btn-primary">Details</a>
-                </td>
-            </tr>
-        }
+        @Html.DisplayFor(model => model.Logs)
     </tbody>
 </table>
 

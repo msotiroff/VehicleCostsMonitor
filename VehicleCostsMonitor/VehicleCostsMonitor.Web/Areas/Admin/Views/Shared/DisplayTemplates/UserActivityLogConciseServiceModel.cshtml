@@ -1,0 +1,13 @@
+﻿@model UserActivityLogConciseServiceModel
+
+<tr>
+    <td>@Model.UserEmail</td>
+    <td>@Model.DateTime</td>
+    <td>@Model.HttpMethod</td>
+    <td>@Model.AreaName</td>
+    <td>@Model.ControllerName</td>
+    <td>@Model.ActionName</td>
+    <td>
+        <a asp-action="details" asp-route-id="@Model.Id" class="btn btn-primary">Details</a>
+    </td>
+</tr>

@@ -23,15 +23,17 @@
         }
 
         [HttpGet]
-        [Authorize]
         [Route("[area]/[controller]/{email?}")]
         public async Task<IActionResult> Index(string email = null)
         {
-            UserProfileServiceModel model;
+            UserProfileServiceModel model = null;
 
             if (email == null)
             {
-                model = await this.userService.GetAsync(this.userManager.GetUserId(User));
+                if (this.User.Identity.IsAuthenticated)
+                {
+                    model = await this.userService.GetAsync(this.userManager.GetUserId(User));
+                }
             }
             else
             {

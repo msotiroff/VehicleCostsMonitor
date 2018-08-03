@@ -48,6 +48,7 @@
         }
         
         [HttpGet]
+        [AllowAnonymous]
         public async Task<JsonResult> GetModelsByManufacturerId(int manufacturerId)
         {
             var models = await this.models.GetByManufacturerIdAsync(manufacturerId);

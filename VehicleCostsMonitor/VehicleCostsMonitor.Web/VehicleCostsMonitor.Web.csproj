@@ -48,7 +48,6 @@
 
   <ItemGroup>
     <Folder Include="Areas\User\Models\" />
-    <Folder Include="Views\Shared\DisplayTemplates\" />
   </ItemGroup>
 
   <ItemGroup>
