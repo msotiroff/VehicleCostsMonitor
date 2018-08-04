@@ -17,15 +17,18 @@
     {
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly UserManager<User> userManager;
+        private readonly SignInManager<User> signInManager;
         private readonly IUserService userService;
 
         public UserController(
             RoleManager<IdentityRole> roleManager, 
             UserManager<User> userManager,
+            SignInManager<User> signInManager,
             IUserService userService)
         {
             this.roleManager = roleManager;
             this.userManager = userManager;
+            this.signInManager = signInManager;
             this.userService = userService;
         }
 
@@ -82,6 +85,7 @@
             var success = identityResult.Succeeded;
             if (success)
             {
+                await this.signInManager.RefreshSignInAsync(user);
                 this.ShowNotification(
                     string.Format(NotificationMessages.UserAddedToRole, userEmail, role),
                     NotificationType.Success);
@@ -117,6 +121,7 @@
             var success = identityResult.Succeeded;
             if (success)
             {
+                await this.signInManager.RefreshSignInAsync(user);
                 this.ShowNotification(
                     string.Format(NotificationMessages.UserRemovedFromRole, userEmail, role),
                     NotificationType.Success);

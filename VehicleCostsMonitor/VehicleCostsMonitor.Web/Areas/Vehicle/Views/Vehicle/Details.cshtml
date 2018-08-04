@@ -91,18 +91,18 @@
     <tbody>
         <tr>
             <td>Consumption:</td>
-            <td>@Model.FuelConsumption.ToString("f2") / 100 km</td>
+            <td>@Model.FuelConsumption.ToString(WebConstants.DecimalNumberFormat) / 100 km</td>
             <td>@Model.TotalDistance km and @Model.TotalFuelAmount litres</td>
         </tr>
         <tr>
             <td>Fuel Costs:</td>
-            <td>@Model.TotalFuelCostsPerHundredKm.ToString("f2") / 100km</td>
-            <td>@Model.TotalDistance km and @Model.TotalFuelCosts.ToString("f2") money</td>
+            <td>@Model.TotalFuelCostsPerHundredKm.ToString(WebConstants.DecimalNumberFormat) / 100km</td>
+            <td>@Model.TotalDistance km and @Model.TotalFuelCosts.ToString(WebConstants.DecimalNumberFormat) money</td>
         </tr>
         <tr>
             <td>Other Costs:</td>
-            <td>@Model.TotalOtherCosts.ToString("f2")</td>
-            <td>@Model.TotalDistance km and @Model.TotalOtherCosts.ToString("f2") money</td>
+            <td>@Model.TotalOtherCosts.ToString(WebConstants.DecimalNumberFormat)</td>
+            <td>@Model.TotalDistance km and @Model.TotalOtherCosts.ToString(WebConstants.DecimalNumberFormat) money</td>
         </tr>
     </tbody>
 </table>
@@ -113,7 +113,7 @@
             <th>Date</th>
             <th>Odometer</th>
             <th>Trip Odometer</th>
-            <th>Fuel Quantity</th>
+            <th>Quantity</th>
             <th>Fuel Type</th>
             <th>Price</th>
             <th>Average</th>

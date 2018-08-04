@@ -58,19 +58,19 @@
         [Display(Name = "Exact model name")]
         public string ExactModelname { get; set; }
         
-        [Display(Name = "From")]
+        [Display(Name = "Year from")]
         public int YearOfManufactureMin { get; set; }
 
-        [Display(Name = "To")]
+        [Display(Name = "Year to")]
         [EqualOrGreaterThan(nameof(YearOfManufactureMin))]
         public int YearOfManufactureMax { get; set; }
 
         public IEnumerable<SelectListItem> AvailableYears { get; set; }
         
-        [Display(Name = "From")]
+        [Display(Name = "Power from")]
         public int EngineHorsePowerMin { get; set; }
 
-        [Display(Name = "To")]
+        [Display(Name = "Power to")]
         public int EngineHorsePowerMax { get; set; }
 
         [Display(Name = "Vehicle type")]

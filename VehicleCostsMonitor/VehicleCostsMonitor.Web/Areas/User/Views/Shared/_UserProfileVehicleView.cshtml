@@ -7,7 +7,7 @@
             <i class="fa fa-link" aria-hidden="true"></i>&ensp;@Model.FullModelName
         </a>
     </td>
-    <td>@Model.FuelConsumption.ToString("f2")</td>
+    <td>@Model.FuelConsumption.ToString(WebConstants.DecimalNumberFormat)</td>
     <td>
         <a class="btn btn-info" asp-area="vehicle" asp-controller="vehicle" asp-action="details" asp-route-id="@Model.Id">Details</a>
     </td>
