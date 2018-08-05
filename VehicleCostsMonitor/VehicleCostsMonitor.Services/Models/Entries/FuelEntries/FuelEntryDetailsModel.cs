@@ -1,6 +1,8 @@
 ﻿namespace VehicleCostsMonitor.Services.Models.Entries
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using AutoMapper;
     using Common.AutoMapping;
     using Interfaces;
@@ -30,11 +32,18 @@
 
         public string Owner { get; set; }
 
+        public ICollection<string> Routes { get; set; }
+
+        public override string ToString() => this.FuelEntryTypeName;
+
         public void ConfigureMapping(Profile mapper)
         {
             mapper
                 .CreateMap<FuelEntry, FuelEntryDetailsModel>()
-                .ForMember(dest => dest.Owner, opt => opt.MapFrom(src => src.Vehicle.User.UserName));
+                .ForMember(dest => dest.Owner, 
+                    opt => opt.MapFrom(src => src.Vehicle.User.UserName))
+                .ForMember(dest => dest.Routes, 
+                    opt => opt.MapFrom(src => src.Routes.Select(r => r.RouteType.Name)));
         }
     }
 }

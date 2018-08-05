@@ -4,15 +4,12 @@
     using AutoMapper.QueryableExtensions;
     using Interfaces;
     using Microsoft.EntityFrameworkCore;
-    using Models.Entries.Interfaces;
     using Models.Vehicle;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using VehicleCostsMonitor.Common;
     using VehicleCostsMonitor.Data;
     using VehicleCostsMonitor.Models;
-    using VehicleCostsMonitor.Services.Models.Entries;
 
     public class VehicleService : DataAccessService, IVehicleService
     {
@@ -99,24 +96,6 @@
             return vehicle;
         }
         
-        public IQueryable<IEntryModel> GetEntries(int vehicleId)
-        {
-            var fuelEntries = this.db.FuelEntries
-                .Where(fe => fe.VehicleId == vehicleId)
-                .ProjectTo<FuelEntryDetailsModel>()
-                .Cast<IEntryModel>();
-
-            var costEntries = this.db.CostEntries
-                .Where(fe => fe.VehicleId == vehicleId)
-                .ProjectTo<CostEntryDetailsModel>()
-                .Cast<IEntryModel>();
-
-            var allEntries = new List<IEntryModel>(fuelEntries);
-            allEntries.AddRange(costEntries);
-
-            return allEntries.OrderByDescending(e => e.DateCreated).AsQueryable();
-        }
-
         public async Task<VehicleUpdateServiceModel> GetForUpdateAsync(int id)
             => await this.db
                 .Vehicles

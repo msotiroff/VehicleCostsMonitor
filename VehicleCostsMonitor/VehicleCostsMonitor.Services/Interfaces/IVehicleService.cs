@@ -10,8 +10,6 @@
         Task<int> CreateAsync(VehicleCreateServiceModel model);
 
         Task<VehicleDetailsServiceModel> GetAsync(int id);
-        
-        IQueryable<IEntryModel> GetEntries(int vehicleId);
 
         Task<VehicleUpdateServiceModel> GetForUpdateAsync(int id);
 

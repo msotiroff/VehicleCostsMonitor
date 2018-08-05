@@ -2,9 +2,11 @@
 {
     using AutoMapper;
     using Common.AutoMapping;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using VehicleCostsMonitor.Common;
     using VehicleCostsMonitor.Models;
+    using VehicleCostsMonitor.Services.Models.Entries;
 
     public class VehicleDetailsServiceModel : IAutoMapWith<Vehicle>, ICustomMappingConfiguration
     {
@@ -51,6 +53,10 @@
 
         [Display(Name = "Absolute other costs")]
         public decimal TotalOtherCosts { get; set; }
+
+        public ICollection<FuelEntryDetailsModel> FuelEntries { get; set; }
+
+        public ICollection<CostEntryDetailsModel> CostEntries { get; set; }
 
         public void ConfigureMapping(Profile mapper)
         {

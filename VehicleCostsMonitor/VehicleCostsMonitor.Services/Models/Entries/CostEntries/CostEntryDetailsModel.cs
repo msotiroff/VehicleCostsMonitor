@@ -22,6 +22,8 @@
 
         public string Owner { get; set; }
 
+        public override string ToString() => this.CostEntryTypeName;
+
         public void ConfigureMapping(Profile mapper)
         {
             mapper

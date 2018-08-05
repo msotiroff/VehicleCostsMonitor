@@ -19,6 +19,11 @@ body {
     border-radius: 5px !important;
 }
 
+.img-action {
+    max-height: 80px !important;
+    max-width: 150px !important;
+}
+
 .btn {
     margin: 2px;
 }

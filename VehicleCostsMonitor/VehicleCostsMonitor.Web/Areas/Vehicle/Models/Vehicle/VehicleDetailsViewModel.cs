@@ -1,9 +1,10 @@
 ﻿namespace VehicleCostsMonitor.Web.Areas.Vehicle.Models
 {
+    using AutoMapper;
     using Common.AutoMapping;
     using Services.Models.Vehicle;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
     using VehicleCostsMonitor.Services.Models.Entries.Interfaces;
     using VehicleCostsMonitor.Web.Infrastructure.Collections;
 
@@ -51,6 +52,8 @@
 
         [Display(Name = "Total other costs")]
         public double TotalOtherCosts { get; set; }
+
+        public Statistics Stats { get; set; }
 
         public PaginatedList<IEntryModel> Entries { get; set; }
     }

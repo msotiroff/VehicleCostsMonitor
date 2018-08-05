@@ -87,21 +87,9 @@
                 this.ShowNotification(NotificationMessages.VehicleDoesNotExist);
                 return RedirectToHome();
             }
-
-            var model = Mapper.Map<VehicleDetailsViewModel>(vehicle);
-            var entriesQuery = this.vehicles.GetEntries(id);
-
-            pageIndex = Math.Max(1, pageIndex);
-            var totalPages = (int)(Math.Ceiling(entriesQuery.Count() / (double)EntriesListPageSize));
-            pageIndex = Math.Min(pageIndex, Math.Max(1, totalPages));
-
-            var entriesToShow = entriesQuery
-                .Skip((pageIndex - 1) * EntriesListPageSize)
-                .Take(EntriesListPageSize)
-                .ToList();
-
-            model.Entries = new PaginatedList<IEntryModel>(entriesToShow, pageIndex, totalPages);
-
+            
+            var model = this.InitializeDetailedModel(vehicle, pageIndex);
+            
             return View(model);
         }
 
@@ -211,5 +199,40 @@
 
             return model;
         }
+        
+        private VehicleDetailsViewModel InitializeDetailedModel(VehicleDetailsServiceModel vehicle, int pageIndex)
+        {
+            var allEntries = vehicle
+                .FuelEntries
+                .Cast<IEntryModel>()
+                .Concat(vehicle.CostEntries
+                    .Cast<IEntryModel>())
+                .OrderByDescending(e => e.DateCreated)
+                .ToList();
+
+            pageIndex = Math.Max(1, pageIndex);
+            var totalPages = (int)(Math.Ceiling(allEntries.Count() / (double)EntriesListPageSize));
+            pageIndex = Math.Min(pageIndex, Math.Max(1, totalPages));
+
+            var costs = vehicle.CostEntries.GroupBy(e => e.ToString()).ToDictionary(x => x.Key, y => y.Sum(e => e.Price));
+            costs.Add("Fuel", vehicle.FuelEntries.Sum(fe => fe.Price));
+            var routes = vehicle.FuelEntries.SelectMany(fe => fe.Routes).GroupBy(r => r).ToDictionary(x => x.Key, x => x.Count());
+
+            var model = Mapper.Map<VehicleDetailsViewModel>(vehicle);
+            model.Stats = new Statistics
+            {
+                Costs = costs,
+                Routes = routes
+            };
+
+            var entriesToShow = allEntries
+                .Skip((pageIndex - 1) * EntriesListPageSize)
+                .Take(EntriesListPageSize)
+                .ToList();
+            
+            model.Entries = new PaginatedList<IEntryModel>(entriesToShow, pageIndex, totalPages);
+            return model;
+        }
+
     }
 }

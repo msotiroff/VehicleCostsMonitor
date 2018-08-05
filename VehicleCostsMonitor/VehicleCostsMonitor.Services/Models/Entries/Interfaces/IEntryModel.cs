@@ -7,5 +7,7 @@
         int Id { get; set; }
 
         DateTime DateCreated { get; set; }
+
+        decimal Price { get; set; }
     }
 }
