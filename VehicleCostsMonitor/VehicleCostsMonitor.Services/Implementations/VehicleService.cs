@@ -53,7 +53,6 @@
             var exaxtModelNameSearchSubstring = string.IsNullOrWhiteSpace(exactModelName) ? "" : exactModelName;
             engineHorsePowerMax = engineHorsePowerMax != default(int) ? engineHorsePowerMax : int.MaxValue;
             yearOfManufactureMax = yearOfManufactureMax != default(int) ? yearOfManufactureMax : int.MaxValue;
-            minimumKilometers = minimumKilometers != default(int) ? minimumKilometers : int.MaxValue;
 
             var vehicles = this.db
                 .Vehicles

@@ -63,6 +63,7 @@
         <div class="row">
             <div class="pull-left" id="routes-chart"></div>
             <div class="pull-left" id="costs-chart"></div>
+            <div class="pull-left" id="consumption-chart"></div>
         </div>
     </div>
     <hr />
@@ -150,6 +151,31 @@
         google.charts.load('current', { 'packages': ['corechart'] });
         google.charts.setOnLoadCallback(drawRoutesChart);
         google.charts.setOnLoadCallback(drawCostsChart);
+        google.charts.setOnLoadCallback(drawConsumptionChart);
+        
+        function drawConsumptionChart() {
+            let array = [
+                ["Upper limit", "Count", { role: "style" }]
+            ]
+
+            @foreach (var range in Model.Stats.ConsumptionRanges.OrderByDescending(cr => cr.To))
+            {
+                @: array.push(["@range.To.ToString(WebConstants.DecimalNumberFormat)", @range.Count, "#006eff"])
+            }
+
+            let data = google.visualization.arrayToDataTable(array);
+            
+            let options = {
+                title: "Consumption histogram",
+                width: 300,
+                height: 200,
+                bar: { groupWidth: "95%" },
+                legend: { position: "none" },
+            };
+
+            let chart = new google.visualization.BarChart(document.getElementById("consumption-chart"));
+            chart.draw(data, options);
+        }
 
         function drawCostsChart() {
             let data = new google.visualization.DataTable();

@@ -5,11 +5,13 @@
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Http.Features;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using System.Linq;
     using VehicleCostsMonitor.Data;
     using VehicleCostsMonitor.Models;
     using VehicleCostsMonitor.Web.Areas.Identity.Services.Email;
@@ -32,7 +34,7 @@
                     options.CheckConsentNeeded = context => true;
                     options.MinimumSameSitePolicy = SameSiteMode.None;
                 });
-
+            
             services
                 .AddDbContext<JustMonitorDbContext>(options =>
                     options.UseSqlServer(
