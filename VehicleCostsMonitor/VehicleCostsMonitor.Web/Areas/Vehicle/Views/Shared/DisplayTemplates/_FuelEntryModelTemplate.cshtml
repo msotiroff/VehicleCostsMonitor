@@ -6,7 +6,16 @@
 <td>@Model.FuelQuantity</td>
 <td>@Model.FuelTypeName</td>
 <td>@Model.Price</td>
-<td>@Model.Average?.ToString(WebConstants.DecimalNumberFormat) / 100</td>
+<td class="text-center">
+    @if (Model.Average != 0)
+    {
+        @Model.Average?.ToString(WebConstants.DecimalNumberFormat)@: / 100
+    }
+    else
+    {
+        <img class="img-miniature" src="~/images/PartlyFull.jpg" alt="Partly full" title="Not full" />
+    }
+</td>
 <td>@Model.FuelEntryTypeName</td>
 <td>
     @if (Model.Owner == this.User.Identity.Name)

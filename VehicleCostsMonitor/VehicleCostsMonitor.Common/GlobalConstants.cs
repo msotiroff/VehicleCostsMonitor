@@ -5,5 +5,7 @@
         public const string DefaultPicturePath = @"\images\vehicles\default.jpg";
 
         public const string SearchTermForAllModels = "-All-";
+
+        public const int MostEconomicVehiclesListCount = 30;
     }
 }

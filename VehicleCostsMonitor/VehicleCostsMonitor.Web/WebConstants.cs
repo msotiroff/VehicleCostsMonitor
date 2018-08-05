@@ -17,6 +17,7 @@
         public const int PictureMaxHeightSize = 250;
         public const string DecimalNumberFormat = "f2";
         public const int ConsumptionHistogramRangesCount = 5;
+        public const int MileageByDateItemsCount = 12;
 
         public const string SqlScriptsDirectoryPath = @"wwwroot\seedfiles\sql-scripts";
         public const string ManufacturersListPath = @"wwwroot\seedfiles\vehicles-list.json";

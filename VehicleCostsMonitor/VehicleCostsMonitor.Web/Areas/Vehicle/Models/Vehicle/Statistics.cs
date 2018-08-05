@@ -4,11 +4,13 @@
 
     public class Statistics
     {
-        public Dictionary<string, int> Routes { get; set; }
+        public IDictionary<string, int> Routes { get; set; }
 
-        public Dictionary<string, decimal> Costs { get; set; }
+        public IDictionary<string, decimal> Costs { get; set; }
 
-        public List<ConsumptionInRange> ConsumptionRanges { get; set; }
+        public IList<ConsumptionInRange> ConsumptionRanges { get; set; }
+
+        public IEnumerable<MileageByDate> MileageByDate { get; set; }
 
         public double MaxConsumption { get; set; }
 

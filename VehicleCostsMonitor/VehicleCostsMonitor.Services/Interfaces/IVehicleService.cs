@@ -1,9 +1,9 @@
 ﻿namespace VehicleCostsMonitor.Services.Interfaces
 {
     using Models.Vehicle;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using VehicleCostsMonitor.Services.Models.Entries.Interfaces;
 
     public interface IVehicleService
     {
@@ -16,6 +16,8 @@
         Task<bool> UpdateAsync(VehicleUpdateServiceModel model);
 
         Task<bool> DeleteAsync(int id);
+
+        Task<IEnumerable<VehicleStatisticServiceModel>> GetMostEconomicCars();
 
         IQueryable<VehicleSearchServiceModel> Get(
             int manufacturerId, string modelName, string exactModelName, int vehicleTypeId, 

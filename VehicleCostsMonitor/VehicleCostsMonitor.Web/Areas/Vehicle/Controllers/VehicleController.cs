@@ -218,8 +218,15 @@
             var costs = vehicle.CostEntries.GroupBy(e => e.ToString()).ToDictionary(x => x.Key, y => y.Sum(e => e.Price));
             costs.Add("Fuel", vehicle.FuelEntries.Sum(fe => fe.Price));
             var routes = vehicle.FuelEntries.SelectMany(fe => fe.Routes).GroupBy(r => r).ToDictionary(x => x.Key, x => x.Count());
-            var minConsumption = vehicle.FuelEntries.Where(fe => fe.Average > 0).Min(fe => fe.Average.Value);
-            var maxConsumption = vehicle.FuelEntries.Where(fe => fe.Average > 0).Max(fe => fe.Average.Value);
+
+            var minConsumption = vehicle.FuelEntries.Any(fe => fe.Average.Value > 0) 
+                ? vehicle.FuelEntries.Where(fe => fe.Average > 0).Min(fe => fe.Average.Value) 
+                : 0;
+
+            var maxConsumption = vehicle.FuelEntries.Any(fe => fe.Average.Value > 0) 
+                ? vehicle.FuelEntries.Where(fe => fe.Average > 0).Max(fe => fe.Average.Value) 
+                : 0;
+
             var step = (maxConsumption - minConsumption) / ConsumptionHistogramRangesCount;
             
             var model = Mapper.Map<VehicleDetailsViewModel>(vehicle);
@@ -243,6 +250,17 @@
 
                 minConsumption += step;
             }
+
+            model.Stats.MileageByDate = vehicle.FuelEntries
+                .OrderByDescending(fe => fe.DateCreated)
+                .Take(MileageByDateItemsCount)
+                .Select(fe => new MileageByDate
+                {
+                    Date = fe.DateCreated,
+                    Consumption = fe.Average.HasValue ? fe.Average.Value : default(double)
+                })
+                .OrderBy(m => m.Date);
+
 
             var entriesToShow = allEntries
                 .Skip((pageIndex - 1) * EntriesListPageSize)

@@ -5,6 +5,7 @@
     using Interfaces;
     using Microsoft.EntityFrameworkCore;
     using Models.Vehicle;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using VehicleCostsMonitor.Common;
@@ -58,7 +59,7 @@
                 .Vehicles
                 .Where(v =>
                     v.ManufacturerId == manufacturerId &&
-                    v.Model.Name.Contains(modelNameSearchSubstring) &&
+                    v.Model.Name.ToLower() == modelNameSearchSubstring.ToLower() &&
                     v.ExactModelname.Contains(exaxtModelNameSearchSubstring) &&
                     v.EngineHorsePower >= engineHorsePowerMin &&
                     v.EngineHorsePower <= engineHorsePowerMax &&
@@ -101,6 +102,25 @@
                 .Where(v => v.Id == id)
                 .ProjectTo<VehicleUpdateServiceModel>()
                 .FirstOrDefaultAsync();
+
+        public async Task<IEnumerable<VehicleStatisticServiceModel>> GetMostEconomicCars()
+        {
+            var vehicles = await this.db.Vehicles
+                .GroupBy(v => v.ModelId)
+                .OrderBy(vg => vg.Sum(v => v.FuelConsumption) / vg.Count())
+                .Take(GlobalConstants.MostEconomicVehiclesListCount)
+                .Select(vl => new VehicleStatisticServiceModel
+                {
+                    ManufacturerId = vl.First().ManufacturerId,
+                    ManufacturerName = vl.First().Manufacturer.Name,
+                    ModelName = vl.First().Model.Name,
+                    Average = vl.Sum(v => v.FuelConsumption) / vl.Count(),
+                    Count = vl.Count()
+                })
+                .ToListAsync();
+            
+            return vehicles;
+        }
 
         public async Task<bool> UpdateAsync(VehicleUpdateServiceModel model)
         {
