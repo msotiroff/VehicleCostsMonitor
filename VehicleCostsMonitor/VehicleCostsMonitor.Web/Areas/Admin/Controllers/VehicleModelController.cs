@@ -35,6 +35,36 @@
         }
 
         [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var model = await this.vehicleModels.GetAsync(id);
+            if (model == null)
+            {
+                this.ShowNotification(NotificationMessages.InvalidOperation);
+                return RedirectToAction(nameof(ManufacturerController.Index), "Manufacturer");
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateModelState]
+        public async Task<IActionResult> Edit(ModelConciseServiceModel model)
+        {
+            bool success = await this.vehicleModels.UpdateAsync(model.Id, model.Name);
+            if (!success)
+            {
+                this.ShowNotification(NotificationMessages.InvalidOperation);
+            }
+            else
+            {
+                this.ShowNotification(string.Format(NotificationMessages.ModelUpdatedSuccessfull, model.Name), NotificationType.Success);
+            }
+            
+            return RedirectToAction(nameof(ManufacturerController.Index), "manufacturer");
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
             var model = await this.vehicleModels.GetAsync(id);

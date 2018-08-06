@@ -4,7 +4,7 @@
     ViewData["Title"] = "MostEconomicVehicles";
 }
 
-<h2 class="text-primary">The most fuel efficient vehicles</h2>
+<h2 class="text-primary">The most fuel efficient @Model.FirstOrDefault()?.FuelType vehicles</h2>
 <div>
     <p>
         These lists show the top @(GlobalConstants.MostEconomicVehiclesListCount) most fuel efficient vehicles. The ranking is based on the fueling entries in our database.

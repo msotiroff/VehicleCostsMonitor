@@ -14,8 +14,10 @@
         public const string PaginationPartial = @"~/Views/Shared/_PaginationElementsPartial.cshtml";
 
         public const string VehicleImagePathBase = @"\images\vehicles\{0}";
-        public const int PictureMaxHeightSize = 250;
         public const string DecimalNumberFormat = "f2";
+
+        public const int PictureMaxHeightSize = 250;
+        public const int PictureSizeLimit = 10485760;
         public const int ConsumptionHistogramRangesCount = 5;
         public const int MileageByDateItemsCount = 12;
 

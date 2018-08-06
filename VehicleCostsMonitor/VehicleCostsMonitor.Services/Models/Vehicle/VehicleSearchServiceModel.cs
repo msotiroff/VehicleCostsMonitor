@@ -22,7 +22,7 @@
         [Display(Name = "Owner")]
         public string OwnerUserName { get; set; }
         
-        public string OwnerEmail { get; set; }
+        public string OwnerId { get; set; }
 
         public void ConfigureMapping(Profile mapper)
         {
@@ -34,8 +34,8 @@
                     opt => opt.MapFrom(src => src.Picture != null ? src.Picture.Path : GlobalConstants.DefaultPicturePath))
                 .ForMember(dest => dest.OwnerUserName,
                     opt => opt.MapFrom(src => src.User.UserName))
-                .ForMember(dest => dest.OwnerEmail,
-                    opt => opt.MapFrom(src => src.User.Email));
+                .ForMember(dest => dest.OwnerId,
+                    opt => opt.MapFrom(src => src.User.Id));
         }
     }
 }

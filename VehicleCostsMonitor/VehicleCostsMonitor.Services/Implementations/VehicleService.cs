@@ -50,7 +50,12 @@
             int vehicleTypeId, int fuelTypeId, int gearingTypeId, int engineHorsePowerMin, int engineHorsePowerMax, 
             int yearOfManufactureMin, int yearOfManufactureMax, int minimumKilometers)
         {
-            var modelNameSearchSubstring = modelName != GlobalConstants.SearchTermForAllModels ? modelName : "";
+            var modelNameSearchSubstring = modelName != null 
+                ? modelName != GlobalConstants.SearchTermForAllModels 
+                    ? modelName 
+                    : "" 
+                    : "";
+            
             var exaxtModelNameSearchSubstring = string.IsNullOrWhiteSpace(exactModelName) ? "" : exactModelName;
             engineHorsePowerMax = engineHorsePowerMax != default(int) ? engineHorsePowerMax : int.MaxValue;
             yearOfManufactureMax = yearOfManufactureMax != default(int) ? yearOfManufactureMax : int.MaxValue;
@@ -103,9 +108,10 @@
                 .ProjectTo<VehicleUpdateServiceModel>()
                 .FirstOrDefaultAsync();
 
-        public async Task<IEnumerable<VehicleStatisticServiceModel>> GetMostEconomicCars()
+        public async Task<IEnumerable<VehicleStatisticServiceModel>> GetMostEconomicCars(string fuelType)
         {
             var vehicles = await this.db.Vehicles
+                .Where(v => v.FuelType.Name.ToLower() == fuelType)
                 .GroupBy(v => v.ModelId)
                 .OrderBy(vg => vg.Sum(v => v.FuelConsumption) / vg.Count())
                 .Take(GlobalConstants.MostEconomicVehiclesListCount)
@@ -114,6 +120,7 @@
                     ManufacturerId = vl.First().ManufacturerId,
                     ManufacturerName = vl.First().Manufacturer.Name,
                     ModelName = vl.First().Model.Name,
+                    FuelType = fuelType,
                     Average = vl.Sum(v => v.FuelConsumption) / vl.Count(),
                     Count = vl.Count()
                 })

@@ -18,9 +18,11 @@
         public const string ManufacturerDeletedSuccessfull = "Manufacturer \"{0}\" deleted successfully";
         
         public const string ModelCreatedSuccessfull = "Model \"{0}\" created successfully";
+        public const string ModelUpdatedSuccessfull = "Model \"{0}\" updated successfully";
         public const string ModelDeletedSuccessfull = "Model \"{0}\" deleted successfully";
 
         public const string NoFileChosen = "No file chosen! Please, select a file!";
+        public const string FileIsTooLarge = "The file you are trying to upload is too large. Maximum file size is {0} MB";
         public const string PictureUpdatedSuccessfull = "Vehicle picture updated successfully!";
         public const string PictureUploadFailed = "Picture uploading failed";
         public const string InvalidFileFormat = "Invalid file format!";

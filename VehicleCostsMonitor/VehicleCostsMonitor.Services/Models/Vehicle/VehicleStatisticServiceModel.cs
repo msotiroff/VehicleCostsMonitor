@@ -8,6 +8,8 @@
 
         public string ModelName { get; set; }
 
+        public string FuelType { get; set; }
+
         public int Count { get; set; }
 
         public double Average { get; set; }

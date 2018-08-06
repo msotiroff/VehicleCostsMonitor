@@ -63,5 +63,27 @@
             .Where(mod => mod.ManufacturerId == manufacturerId)
             .Select(mod => mod.Name)
             .ToListAsync();
+
+        public async Task<bool> UpdateAsync(int id, string name)
+        {
+            var model = await this.db.Models.FirstOrDefaultAsync(m => m.Id == id);
+            if (model == null)
+            {
+                return false;
+            }
+
+            try
+            {
+                model.Name = name;
+                this.db.Update(model);
+                await this.db.SaveChangesAsync();
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

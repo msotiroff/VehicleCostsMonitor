@@ -24,7 +24,11 @@
         {
             <tr>
                 <td>
-                    <a asp-area="user" asp-controller="profile" asp-action="index" asp-route-email="@user.Email">
+                    <a asp-area="user" 
+                       asp-controller="profile" 
+                       asp-action="index" 
+                       asp-route-id="@user.Id" 
+                       asp-route-userName="@user.UserName">
                         @Html.DisplayFor(modelItem => user.Email)
                     </a>
                 </td>
@@ -54,7 +58,14 @@
                     </div>
                 </td>
                 <td>
-                    <a asp-area="user" asp-controller="profile" asp-action="index" asp-route-email="@user.Email" class="btn btn-primary">Details</a>
+                    <a asp-area="user"
+                       asp-controller="profile"
+                       asp-action="index"
+                       asp-route-email="@user.Id"
+                       asp-route-userName="@user.UserName"
+                       class="btn btn-primary">
+                        Details
+                    </a>
                 </td>
             </tr>
         }

@@ -3,6 +3,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using System.Security.Claims;
     using System.Threading.Tasks;
     using VehicleCostsMonitor.Models;
     using VehicleCostsMonitor.Services.Interfaces;
@@ -23,12 +24,12 @@
         }
 
         [HttpGet]
-        [Route("[area]/[controller]/{email?}")]
-        public async Task<IActionResult> Index(string email = null)
+        [Route("[area]/[controller]/{userName?}/{id?}")]
+        public async Task<IActionResult> Index(string id = null, string userName = null)
         {
             UserProfileServiceModel model = null;
 
-            if (email == null)
+            if (id == null)
             {
                 if (this.User.Identity.IsAuthenticated)
                 {
@@ -37,7 +38,7 @@
             }
             else
             {
-                model = await this.userService.GetByEmailAsync(email);
+                model = await this.userService.GetAsync(id);
             }
 
             return model == null ? this.RedirectToHome() : this.View(model);

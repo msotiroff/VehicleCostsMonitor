@@ -17,7 +17,7 @@
 
         Task<bool> DeleteAsync(int id);
 
-        Task<IEnumerable<VehicleStatisticServiceModel>> GetMostEconomicCars();
+        Task<IEnumerable<VehicleStatisticServiceModel>> GetMostEconomicCars(string fuelType);
 
         IQueryable<VehicleSearchServiceModel> Get(
             int manufacturerId, string modelName, string exactModelName, int vehicleTypeId, 

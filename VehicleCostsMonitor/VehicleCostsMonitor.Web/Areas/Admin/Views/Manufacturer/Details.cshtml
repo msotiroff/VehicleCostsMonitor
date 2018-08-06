@@ -1,28 +1,9 @@
 ﻿@model ManufacturerDetailsServiceModel
 
-<h2>Details</h2>
+<h2 class=" text-center">Details for @Model.Name</h2>
 
 <div>
-    <h3>@Model.Name</h3>
     <hr />
-    <div class="well">
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.Id)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Id)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.Name)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Name)
-            </dd>
-        </dl>
-    </div>
-    <hr />
-    <h4>Models</h4>
     <div class="container">
         <div class="col-md-4"></div>
         <div class="col-md-4 form-inline">
@@ -33,43 +14,44 @@
             </form>
         </div>
     </div>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>
-                    Manufacturer
-                </th>
-                <th>
-                    Model
-                </th>
-                <th>
-                    Id
-                </th>
-                <th>
-                    Actions
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var vehicleModel in Model.Models)
-            {
-                <tr>
-                    <td>
-                        @Model.Name
-                    </td>
-                    <td>
-                        @vehicleModel.Name
-                    </td>
-                    <td>
-                        @vehicleModel.Id
-                    </td>
-                    <td>
-                        <a asp-controller="vehiclemodel" asp-action="delete" asp-route-id="@vehicleModel.Id" class="btn btn-danger">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div class="container">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            Manufacturer
+                        </th>
+                        <th>
+                            Model
+                        </th>
+                        <th>
+                            Id
+                        </th>
+                        <th>
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var vehicleModel in Model.Models)
+                    {
+                        <tr>
+                            <td>@Model.Name</td>
+                            <td>@vehicleModel.Name</td>
+                            <td>@vehicleModel.Id</td>
+                            <td>
+                                <a asp-area="admin" asp-controller="vehiclemodel" asp-action="edit" asp-route-id="@vehicleModel.Id" class="btn btn-warning">Edit</a>
+                                <a asp-area="admin" asp-controller="vehiclemodel" asp-action="delete" asp-route-id="@vehicleModel.Id" class="btn btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
 </div>
 <div>
     <a asp-action="Index" class="btn btn-default">Back to List</a>

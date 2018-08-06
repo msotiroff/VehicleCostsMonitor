@@ -1,8 +1,8 @@
 ﻿@model ModelConciseServiceModel
 
-<h2>Delete "@Model.Name"</h2>
+<h2>Delete "@($"{Model.ManufacturerName} {Model.Name}")" ?</h2>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Are you sure you want to delete this model?</h3>
 <div>
     <hr />
     <dl class="dl-horizontal">
@@ -11,6 +11,12 @@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ManufacturerName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ManufacturerName)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Name)

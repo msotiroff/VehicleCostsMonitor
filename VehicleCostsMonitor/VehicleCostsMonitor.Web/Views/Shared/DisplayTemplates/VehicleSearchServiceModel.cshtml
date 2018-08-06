@@ -13,7 +13,11 @@
         @Model.FuelConsumption.ToString(WebConstants.DecimalNumberFormat)
     </td>
     <td>
-        <a asp-area="user" asp-controller="profile" asp-action="index" asp-route-email="@Model.OwnerEmail">
+        <a asp-area="user" 
+           asp-controller="profile" 
+           asp-action="index" 
+           asp-route-id="@Model.OwnerId" 
+           asp-route-userName="@Model.OwnerUserName">
             @Model.OwnerUserName
         </a>
     </td>

@@ -12,7 +12,7 @@
             </p>
             <p>
                 After a <a asp-area="identity" asp-page="/account/register" class="text-success">free registration</a>, you will be able to use all functions,
-                e.g. include an icon in bulletin boards, analyse costs or enter fuelings.
+                e.g. include an image to your vehicles, analyse costs or enter fuelings.
             </p>
             <p>
                 <b>JustMonitor.com</b> helps you to calculate and track your fuel economy and vehicle-related costs.
@@ -57,8 +57,23 @@
 <hr />
 <h5>See also:</h5>
 <p>
-    <a asp-area="vehicle" asp-controller="evaluation" asp-action="mosteconomicvehicles">
-        Most economic vehicles
+    <a asp-area="vehicle" asp-controller="evaluation" asp-action="mosteconomicvehicles" asp-route-fuelType="diesel">
+        Most economic diesel vehicles
+    </a>
+</p>
+<p>
+    <a asp-area="vehicle" asp-controller="evaluation" asp-action="mosteconomicvehicles" asp-route-fuelType="gasoline">
+        Most economic gasoline vehicles
+    </a>
+</p>
+<p>
+    <a asp-area="vehicle" asp-controller="evaluation" asp-action="mosteconomicvehicles" asp-route-fuelType="lpg">
+        Most economic LPG vehicles
+    </a>
+</p>
+<p>
+    <a asp-area="vehicle" asp-controller="evaluation" asp-action="mosteconomicvehicles" asp-route-fuelType="cng">
+        Most economic CNG vehicles
     </a>
 </p>
 

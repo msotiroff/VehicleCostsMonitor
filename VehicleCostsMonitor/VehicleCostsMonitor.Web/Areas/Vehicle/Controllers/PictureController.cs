@@ -55,6 +55,13 @@
                 this.ShowNotification(NotificationMessages.NoFileChosen, NotificationType.Warning);
                 return RedirectToAction(nameof(Update), new { vehicleId });
             }
+
+            // If file is too large => redirect to form:
+            if (file.Length > WebConstants.PictureSizeLimit)
+            {
+                this.ShowNotification(string.Format(NotificationMessages.FileIsTooLarge, (WebConstants.PictureSizeLimit / 1024 / 1024)));
+                return RedirectToAction(nameof(Update), new { vehicleId });
+            }
             
             // Process the file to the file system:
             var extension = this.GetValidExtension(file.FileName);
