@@ -71,6 +71,8 @@
             services
                 .AddRouting(options => options.LowercaseUrls = true);
 
+            services.AddDistributedMemoryCache();
+
             services
                 .AddMvc(optiions =>
                 {
