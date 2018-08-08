@@ -12,7 +12,6 @@
         private const string RequestUrl = "convert?q={0}_{1}&compact=ultra";
 
         private IDictionary<string, decimal> rates;
-        private readonly string outputCurrency;
         private readonly HttpClient client;
 
         public CurrencyExchanger(HttpClient client)
@@ -25,9 +24,9 @@
         {
             var rate = this.GetRate(inputCurrency, outputCurrency);
 
-            var coef = amount * rate;
+            var convertedAmount = amount * rate;
 
-            return coef;
+            return convertedAmount;
         }
 
         public decimal GetRate(string inputCurrency, string outputCurrency)
