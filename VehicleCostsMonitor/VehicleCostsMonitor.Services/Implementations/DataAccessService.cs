@@ -9,7 +9,7 @@
     using System.Threading.Tasks;
     using VehicleCostsMonitor.Data;
 
-    public class DataAccessService : IDataAccessService
+    public class DataAccessService
     {
         private const string EntityValidationErrorMsg = "Entity validation failed!";
         protected const string FirstFueling = "First fueling";
@@ -34,24 +34,8 @@
                 throw new InvalidOperationException(EntityValidationErrorMsg);
             }
         }
-
-        public async Task<int> UpdateStatsOnCostEntryChangedAsync(int vehicleId)
-        {
-            var vehicle = await this.db.Vehicles
-                .Where(v => v.Id == vehicleId)
-                .Include(v => v.CostEntries)
-                .FirstOrDefaultAsync();
-
-            var costEntrySum = vehicle.CostEntries.Sum(ce => ce.Price);
-            vehicle.TotalOtherCosts = costEntrySum;
-
-            this.db.Update(vehicle);
-            var affectedRows = await this.db.SaveChangesAsync();
-
-            return affectedRows;
-        }
-
-        public async Task<int> UpdateStatsOnFuelEntryChangedAsync(int vehicleId)
+        
+        protected async Task<int> UpdateStatsOnFuelEntryChangedAsync(int vehicleId)
         {
             var vehicle = await this.db.Vehicles
                 .Where(v => v.Id == vehicleId)
@@ -63,7 +47,6 @@
 
             vehicle.TotalDistance = fuelEntries.Sum(fe => fe.TripOdometer);
             vehicle.TotalFuelAmount = fuelEntries.Sum(fe => fe.FuelQuantity);
-            vehicle.TotalFuelCosts = fuelEntries.Sum(fe => fe.Price);
 
             var lastFullFuelEntry = fuelEntries.LastOrDefault(fe => fe.FuelEntryType.Name == FullFueling);
             var indexOfLastFullFueling = Math.Max(0, Array.LastIndexOf(fuelEntries, lastFullFuelEntry));

@@ -14,7 +14,7 @@
 
         [Required]
         public string UserEmail { get; set; }
-
+        
         [Required]
         public string HttpMethod { get; set; }
 

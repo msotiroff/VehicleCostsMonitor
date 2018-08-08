@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace VehicleCostsMonitor.Web.Areas.Admin.Models.Enums
+﻿namespace VehicleCostsMonitor.Web.Areas.Admin.Models.Enums
 {
     public enum LogSearchCriteria
     {

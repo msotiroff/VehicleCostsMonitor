@@ -1,4 +1,4 @@
-﻿namespace VehicleCostsMonitor.Web.Infrastructure.Providers.Interfaces
+﻿namespace VehicleCostsMonitor.Web.Infrastructure.Utilities.Interfaces
 {
     using System;
 

@@ -54,11 +54,7 @@
         public User User { get; set; }
 
         public double FuelConsumption { get; set; }
-
-        public decimal TotalFuelCosts { get; set; }
-
-        public decimal TotalOtherCosts { get; set; }
-
+        
         public double TotalFuelAmount { get; set; }
 
         public int TotalDistance { get; set; }

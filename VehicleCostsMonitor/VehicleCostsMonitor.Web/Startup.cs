@@ -12,6 +12,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using System.Linq;
+    using System.Net.Http;
     using VehicleCostsMonitor.Data;
     using VehicleCostsMonitor.Models;
     using VehicleCostsMonitor.Web.Areas.Identity.Services.Email;
@@ -39,6 +40,8 @@
                 .AddDbContext<JustMonitorDbContext>(options =>
                     options.UseSqlServer(
                         this.Configuration.GetConnectionString("JustMonitor")));
+            
+            services.AddTransient<HttpClient>();
 
             services.AddAuthentication()
                 .AddFacebook(options =>

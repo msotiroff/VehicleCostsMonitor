@@ -100,7 +100,7 @@
             
             if (Input.CurrencyId != user.CurrencyId)
             {
-                var currencyUpdatedResult = await userManager.UpdateCurrencyAsync(user, Input.CurrencyId);
+                var currencyUpdatedResult = await userManager.UpdateDisplayCurrencyAsync(user, Input.CurrencyId);
                 if (!currencyUpdatedResult.Succeeded)
                 {
                     throw new InvalidOperationException($"Unexpected error occurred while updating display currency for user with ID '{userId}'.");

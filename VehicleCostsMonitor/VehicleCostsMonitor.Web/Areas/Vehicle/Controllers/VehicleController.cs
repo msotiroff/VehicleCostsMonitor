@@ -4,7 +4,7 @@
     using AutoMapper;
     using Infrastructure.Collections;
     using Infrastructure.Filters;
-    using Infrastructure.Providers.Interfaces;
+    using Infrastructure.Utilities.Interfaces;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
@@ -20,6 +20,7 @@
     using System.Threading.Tasks;
     using VehicleCostsMonitor.Common.Notifications;
     using VehicleCostsMonitor.Models;
+    using VehicleCostsMonitor.Web.Infrastructure.Extensions;
     using static VehicleCostsMonitor.Models.Common.ModelConstants;
     using static WebConstants;
 
@@ -37,6 +38,7 @@
         private readonly IVehicleModelService models;
         private readonly IVehicleElementService vehicleElements;
         private readonly IDateTimeProvider dateTimeProvider;
+        private readonly ICurrencyExchanger currencyExchanger;
 
         public VehicleController(
             UserManager<User> userManager,
@@ -45,7 +47,8 @@
             IManufacturerService manufacturers,
             IVehicleModelService models,
             IVehicleElementService vehicleElements,
-            IDateTimeProvider dateTimeProvider)
+            IDateTimeProvider dateTimeProvider,
+            ICurrencyExchanger currencyExchanger)
         {
             this.userManager = userManager;
             this.cache = cache;
@@ -54,6 +57,7 @@
             this.models = models;
             this.vehicleElements = vehicleElements;
             this.dateTimeProvider = dateTimeProvider;
+            this.currencyExchanger = currencyExchanger;
         }
 
         [HttpGet]
@@ -210,8 +214,32 @@
             var totalPages = (int)(Math.Ceiling(allEntries.Count() / (double)EntriesListPageSize));
             pageIndex = Math.Min(pageIndex, Math.Max(1, totalPages));
 
-            var costs = vehicle.CostEntries.GroupBy(e => e.ToString()).ToDictionary(x => x.Key, y => y.Sum(e => e.Price));
-            costs.Add("Fuel", vehicle.FuelEntries.Sum(fe => fe.Price));
+            var displayCurrency = vehicle.OwnerDisplayCurrency;
+
+            var fuelEntriesToConvert = vehicle.FuelEntries
+                .GroupBy(fe => fe.CurrencyCode)
+                .ToDictionary(x => x.Key, x => x.Sum(fe => fe.Price));
+
+            var fuelEntriesConverted = new Dictionary<string, decimal>();
+            fuelEntriesToConvert
+                .ForEach(kvp => fuelEntriesConverted[kvp.Key] = this.currencyExchanger.Convert(kvp.Key, kvp.Value, displayCurrency));
+            var totalFuelCosts = fuelEntriesConverted.Sum(fe => fe.Value);
+
+            var costEntriesToConvert = vehicle.CostEntries
+                .GroupBy(fe => fe.CurrencyCode)
+                .ToDictionary(x => x.Key, x => x.Sum(fe => fe.Price));
+
+            var costEntriesConverted = new Dictionary<string, decimal>();
+            costEntriesToConvert
+                .ForEach(kvp => costEntriesConverted[kvp.Key] = this.currencyExchanger.Convert(kvp.Key, kvp.Value, displayCurrency));
+            var totalOtherCosts = costEntriesConverted.Sum(kvp => kvp.Value);
+
+            var costs = vehicle.CostEntries
+                .ForEach(ce => ce.Price = this.currencyExchanger.Convert(ce.CurrencyCode, ce.Price, displayCurrency))
+                .GroupBy(e => e.ToString())
+                .ToDictionary(x => x.Key, y => y.Sum(e => e.Price));            
+            costs.Add("Fuel", totalFuelCosts);
+
             var routes = vehicle.FuelEntries.SelectMany(fe => fe.Routes).GroupBy(r => r).ToDictionary(x => x.Key, x => x.Count());
 
             var minConsumption = vehicle.FuelEntries.Any(fe => fe.Average.Value > 0)
@@ -233,6 +261,10 @@
                 MaxConsumption = maxConsumption,
                 ConsumptionRanges = new List<ConsumptionInRange>()
             };
+            model.TotalFuelCosts = totalFuelCosts;
+            model.TotalOtherCosts = totalOtherCosts;
+            model.TotalSpent = totalFuelCosts + totalOtherCosts;
+            model.TotalCostsPerHundredKm = model.TotalSpent / (model.TotalDistance != 0 ? model.TotalDistance : 100) * 100;
 
             for (int i = 0; i < ConsumptionHistogramRangesCount; i++)
             {

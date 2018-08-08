@@ -4,7 +4,7 @@
     using AutoMapper;
     using Common.Notifications;
     using Infrastructure.Filters;
-    using Infrastructure.Providers.Interfaces;
+    using Infrastructure.Utilities.Interfaces;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;

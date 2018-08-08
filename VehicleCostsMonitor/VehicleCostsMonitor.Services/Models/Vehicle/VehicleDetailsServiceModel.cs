@@ -33,26 +33,20 @@
         [Display(Name = "Owner")]
         public string OwnerUserName { get; set; }
 
+        [Display(Name = "Currency")]
+        public string OwnerDisplayCurrency { get; set; }
+
         [Display(Name = "Fuel consumption")]
         public double FuelConsumption { get; set; }
 
-        [Display(Name = "Picture")]
-        public string PicturePath { get; set; }
+        [Display(Name = "Distance")]
+        public int TotalDistance { get; set; }
 
         [Display(Name = "Total fuel amount")]
         public double TotalFuelAmount { get; set; }
 
-        [Display(Name = "Total distance")]
-        public int TotalDistance { get; set; }
-
-        [Display(Name = "Total fuel costs per 100 km")]
-        public decimal TotalFuelCostsPerHundredKm { get; set; }
-
-        [Display(Name = "Absolute fuel costs")]
-        public decimal TotalFuelCosts { get; set; }
-
-        [Display(Name = "Absolute other costs")]
-        public decimal TotalOtherCosts { get; set; }
+        [Display(Name = "Picture")]
+        public string PicturePath { get; set; }
 
         public ICollection<FuelEntryDetailsModel> FuelEntries { get; set; }
 
@@ -66,8 +60,8 @@
                     opt => opt.MapFrom(src => $"{src.Manufacturer.Name} {src.Model.Name} {src.ExactModelname}"))
                 .ForMember(dest => dest.OwnerUserName,
                     opt => opt.MapFrom(src => src.User.UserName))
-                .ForMember(dest => dest.TotalFuelCostsPerHundredKm,
-                    opt => opt.MapFrom(src => src.TotalFuelCosts / (src.TotalDistance != 0 ? src.TotalDistance : 100) * 100))
+                .ForMember(dest => dest.OwnerDisplayCurrency,
+                    opt => opt.MapFrom(src => src.User.DisplayCurrency.Code))
                 .ForMember(dest => dest.PicturePath,
                     opt => opt.MapFrom(src => src.Picture != null ? src.Picture.Path : GlobalConstants.DefaultPicturePath));
         }

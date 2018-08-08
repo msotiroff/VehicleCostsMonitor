@@ -112,13 +112,18 @@
                     </tr>
                     <tr>
                         <td>Fuel Costs:</td>
-                        <td>@Model.TotalFuelCostsPerHundredKm.ToString(WebConstants.DecimalNumberFormat) / 100 km</td>
-                        <td>@Model.TotalDistance km and @Model.TotalFuelCosts.ToString(WebConstants.DecimalNumberFormat) spent</td>
+                        <td>@Model.TotalFuelCosts.ToString(WebConstants.DecimalNumberFormat)</td>
+                        <td>@Model.TotalDistance km and @Model.TotalFuelCosts.ToString(WebConstants.DecimalNumberFormat) @Model.OwnerDisplayCurrency spent</td>
                     </tr>
                     <tr>
                         <td>Other Costs:</td>
                         <td>@Model.TotalOtherCosts.ToString(WebConstants.DecimalNumberFormat)</td>
-                        <td>@Model.TotalDistance km and @Model.TotalOtherCosts.ToString(WebConstants.DecimalNumberFormat) spent</td>
+                        <td>@Model.TotalDistance km and @Model.TotalOtherCosts.ToString(WebConstants.DecimalNumberFormat) @Model.OwnerDisplayCurrency spent</td>
+                    </tr>
+                    <tr>
+                        <td>Total Costs per 100 km:</td>
+                        <td>@Model.TotalCostsPerHundredKm.ToString(WebConstants.DecimalNumberFormat) / 100 km</td>
+                        <td>@Model.TotalDistance km and @Model.TotalCostsPerHundredKm.ToString(WebConstants.DecimalNumberFormat) @Model.OwnerDisplayCurrency spent</td>
                     </tr>
                 </tbody>
             </table>

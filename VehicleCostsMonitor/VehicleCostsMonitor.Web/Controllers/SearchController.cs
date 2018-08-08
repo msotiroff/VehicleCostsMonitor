@@ -9,7 +9,7 @@
     using VehicleCostsMonitor.Services.Interfaces;
     using VehicleCostsMonitor.Services.Models.Vehicle;
     using VehicleCostsMonitor.Web.Infrastructure.Collections;
-    using VehicleCostsMonitor.Web.Infrastructure.Providers.Interfaces;
+    using VehicleCostsMonitor.Web.Infrastructure.Utilities.Interfaces;
     using VehicleCostsMonitor.Web.Models.Search;
     using static VehicleCostsMonitor.Models.Common.ModelConstants;
     using static WebConstants;

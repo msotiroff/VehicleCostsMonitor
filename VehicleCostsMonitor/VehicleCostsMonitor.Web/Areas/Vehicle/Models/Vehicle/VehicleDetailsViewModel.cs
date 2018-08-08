@@ -1,10 +1,8 @@
 ﻿namespace VehicleCostsMonitor.Web.Areas.Vehicle.Models
 {
-    using AutoMapper;
     using Common.AutoMapping;
     using Services.Models.Vehicle;
     using System.ComponentModel.DataAnnotations;
-    using System.Linq;
     using VehicleCostsMonitor.Services.Models.Entries.Interfaces;
     using VehicleCostsMonitor.Web.Infrastructure.Collections;
 
@@ -33,6 +31,9 @@
         [Display(Name = "Owner")]
         public string OwnerUserName { get; set; }
 
+        [Display(Name = "Currency")]
+        public string OwnerDisplayCurrency { get; set; }
+
         [Display(Name = "Fuel consumption")]
         public double FuelConsumption { get; set; }
 
@@ -45,13 +46,16 @@
         public int TotalDistance { get; set; }
 
         [Display(Name = "Total costs per 100 km")]
-        public double TotalFuelCostsPerHundredKm { get; set; }
+        public decimal TotalCostsPerHundredKm { get; set; }
 
         [Display(Name = "Total fuel costs")]
-        public double TotalFuelCosts { get; set; }
+        public decimal TotalFuelCosts { get; set; }
 
         [Display(Name = "Total other costs")]
-        public double TotalOtherCosts { get; set; }
+        public decimal TotalOtherCosts { get; set; }
+
+        [Display(Name = "Total spent money")]
+        public decimal TotalSpent { get; set; }
 
         public Statistics Stats { get; set; }
 

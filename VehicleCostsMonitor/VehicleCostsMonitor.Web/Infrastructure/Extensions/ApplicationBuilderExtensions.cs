@@ -1,22 +1,21 @@
 ﻿namespace VehicleCostsMonitor.Web.Infrastructure.Extensions
 {
     using AutoMapper;
+    using Common;
+    using Data;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
     using Models.Dtos;
     using Newtonsoft.Json;
+    using Services.Models.Entries.FuelEntries;
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
-    using VehicleCostsMonitor.Common;
-    using VehicleCostsMonitor.Data;
     using VehicleCostsMonitor.Models;
-    using VehicleCostsMonitor.Services.Interfaces;
-    using VehicleCostsMonitor.Services.Models.Entries.FuelEntries;
     using static VehicleCostsMonitor.Models.Common.ModelConstants;
 
     public static class ApplicationBuilderExtensions
@@ -32,27 +31,28 @@
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 var dbContext = serviceScope.ServiceProvider.GetService<JustMonitorDbContext>();
-                
+
                 dbContext.Database.Migrate();
-                
+
                 SeedRequiredData(dbContext);
-                SeedOptionalData(serviceScope, dbContext); // Comment this row if you don't need users and vehicles initial seed!
+
+                // Comment this row if you don't need users and vehicles initial seed!
+                SeedOptionalData(serviceScope, dbContext);
             }
 
             return app;
         }
-        
+
         private static void SeedOptionalData(IServiceScope serviceScope, JustMonitorDbContext dbContext)
         {
             var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<User>>();
             var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var dataAccessService = serviceScope.ServiceProvider.GetRequiredService<IDataAccessService>();
 
             SeedDefaultRoles(userManager, roleManager, dbContext);
             SeedUsers(dbContext, userManager);
             SeedVehicles(dbContext);
-            SeedFuelEntries(dbContext, dataAccessService);
-            SeedCostEntries(dbContext, dataAccessService);
+            SeedFuelEntries(dbContext);
+            SeedCostEntries(dbContext);
         }
 
         private static void SeedRequiredData(JustMonitorDbContext dbContext)
@@ -84,8 +84,6 @@
 
                 vehicle.TotalDistance = vehicle.FuelEntries.Sum(fe => fe.TripOdometer);
                 vehicle.TotalFuelAmount = vehicle.FuelEntries.Sum(fe => fe.FuelQuantity);
-                vehicle.TotalOtherCosts = vehicle.CostEntries.Sum(ce => ce.Price);
-                vehicle.TotalFuelCosts = vehicle.FuelEntries.Sum(fe => fe.Price);
                 vehicle.FuelConsumption = fuelSumWithoutFirstFueling / vehicle.TotalDistance * 100.0;
             }
 
@@ -105,7 +103,7 @@
             }
         }
 
-        private static void SeedCostEntries(JustMonitorDbContext dbContext, IDataAccessService service)
+        private static void SeedCostEntries(JustMonitorDbContext dbContext)
         {
             if (!dbContext.CostEntries.Any())
             {
@@ -153,7 +151,7 @@
             }
         }
 
-        private static void SeedFuelEntries(JustMonitorDbContext dbContext, IDataAccessService service)
+        private static void SeedFuelEntries(JustMonitorDbContext dbContext)
         {
             if (!dbContext.FuelEntries.Any())
             {
@@ -252,7 +250,7 @@
 
                 foreach (var userId in usersIds)
                 {
-                    for (int i = 0; i < 2; i++)
+                    for (int i = 0; i < 8; i++)
                     {
                         var manufacturer = manufacturers[random.Next(0, manufacturers.Count)];
                         var model = manufacturer.Models.ToList()[random.Next(0, manufacturer.Models.Count())];
@@ -282,22 +280,27 @@
         {
             if (dbContext.Users.Count() <= 1)
             {
-                var usersList = File
-                .ReadAllText(WebConstants.UsersListPath);
+                var defaultDisplayCurrencyId = dbContext
+                    .Currencies
+                    .FirstOrDefault(c => c.Code == GlobalConstants.DefaultCurrencyCode)
+                    ?.Id;
+
+                var usersList = File.ReadAllText(WebConstants.UsersListPath);
 
                 var users = JsonConvert.DeserializeObject<User[]>(usersList);
-                var defaultDisplayCurrencyId = dbContext.Currencies.FirstOrDefault(c => c.Code == GlobalConstants.DefaultCurrencyCode)?.Id;
 
-                foreach (var user in users)
+                Task.Run(async () =>
                 {
-                    user.NormalizedEmail = user.Email.ToUpper();
-                    user.NormalizedUserName = user.UserName.ToUpper();
-                    user.EmailConfirmed = true;
-                    user.CurrencyId = defaultDisplayCurrencyId;
-                }
+                    foreach (var user in users)
+                    {
+                        user.EmailConfirmed = true;
+                        user.CurrencyId = defaultDisplayCurrencyId;
 
-                dbContext.Users.AddRange(users);
-                dbContext.SaveChanges();
+                        await userManager.CreateAsync(user, "password");
+                    }
+                })
+                .GetAwaiter()
+                .GetResult();
             }
         }
 

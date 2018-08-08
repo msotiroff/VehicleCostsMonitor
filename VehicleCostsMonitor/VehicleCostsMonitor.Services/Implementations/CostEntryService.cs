@@ -26,7 +26,6 @@
 
                 await this.db.CostEntries.AddAsync(costEntry);
                 await this.db.SaveChangesAsync();
-                await this.UpdateStatsOnCostEntryChangedAsync(vehicleId);
                 return true;
             }
             catch
@@ -45,7 +44,6 @@
 
             this.db.CostEntries.Remove(costEntry);
             await this.db.SaveChangesAsync();
-            await this.UpdateStatsOnCostEntryChangedAsync(costEntry.VehicleId);
             
             return true;
         }
@@ -80,7 +78,6 @@
 
                 this.db.Update(costEntry);
                 await this.db.SaveChangesAsync();
-                await this.UpdateStatsOnCostEntryChangedAsync(costEntry.VehicleId);
 
                 return true;
             }

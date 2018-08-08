@@ -6,7 +6,7 @@
 
     public static class UserManagerExtensions
     {
-        public static async Task<IdentityResult> UpdateCurrencyAsync(this UserManager<User> userManager, User user, int? currencyId)
+        public static async Task<IdentityResult> UpdateDisplayCurrencyAsync(this UserManager<User> userManager, User user, int? currencyId)
         {
             if (user.CurrencyId == currencyId)
             {
