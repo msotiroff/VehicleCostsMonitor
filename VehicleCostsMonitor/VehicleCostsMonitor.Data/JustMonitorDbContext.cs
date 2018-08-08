@@ -17,6 +17,7 @@
         public DbSet<Model> Models { get; set; }
         public DbSet<FuelEntry> FuelEntries { get; set; }
         public DbSet<CostEntry> CostEntries { get; set; }
+        public DbSet<Currency> Currencies { get; set; }
         public DbSet<UserActivityLog> UserActivityLogs { get; set; }
 
         public DbSet<FuelEntryRouteType> FuelEntryRouteTypes { get; set; }

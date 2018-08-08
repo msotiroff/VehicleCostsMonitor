@@ -1,0 +1,17 @@
+﻿[
+  {
+    "name": "Car"
+  },
+  {
+    "name": "Two-wheeler"
+  },
+  {
+    "name": "Bus"
+  },
+  {
+    "name": "Truck"
+  },
+  {
+    "name": "Other"
+  }
+]

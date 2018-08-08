@@ -46,7 +46,7 @@
 
                 return true;
             }
-            catch (Exception ex)
+            catch
             {
                 return false;
             }
@@ -125,7 +125,7 @@
 
                 return true;
             }
-            catch (Exception ex)
+            catch
             {
                 return false;
             }
@@ -195,7 +195,7 @@
 
                 return true;
             }
-            catch (Exception ex)
+            catch
             {
                 return false;
             }

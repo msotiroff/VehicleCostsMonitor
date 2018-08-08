@@ -20,6 +20,8 @@
 
         public decimal Price { get; set; }
 
+        public int CurrencyId { get; set; }
+
         public string Note { get; set; }
 
         [Required]

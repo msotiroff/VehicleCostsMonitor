@@ -14,9 +14,9 @@
 
         Task<CostEntryDeleteServiceModel> GetForDeleteAsync(int id);
         
-        Task<bool> CreateAsync(DateTime dateCreated, int costEntryTypeId, int vehicleId, decimal price, string note, int? odometer);
+        Task<bool> CreateAsync(DateTime dateCreated, int costEntryTypeId, int vehicleId, decimal price, int currencyId, string note, int? odometer);
         
-        Task<bool> UpdateAsync(int id, DateTime dateCreated, int costEntryTypeId, int vehicleId, decimal price, string note, int? odometer);
+        Task<bool> UpdateAsync(int id, DateTime dateCreated, int costEntryTypeId, int vehicleId, decimal price, int currencyId, string note, int? odometer);
 
         Task<bool> DeleteAsync(int id);
     }

@@ -25,7 +25,9 @@
         public string FuelTypeName { get; set; }
 
         public decimal Price { get; set; }
-        
+
+        public string CurrencyCode { get; set; }
+
         public double? Average { get; set; }
         
         public int VehicleId { get; set; }

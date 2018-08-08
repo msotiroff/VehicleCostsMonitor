@@ -1,41 +1,58 @@
 ﻿namespace VehicleCostsMonitor.Web.Areas.Vehicle.Controllers
 {
+    using Areas.Vehicle.Models.CostEntry;
     using AutoMapper;
+    using Common.Notifications;
+    using Infrastructure.Filters;
+    using Infrastructure.Providers.Interfaces;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.Extensions.Caching.Distributed;
+    using Newtonsoft.Json;
+    using Services.Interfaces;
+    using Services.Models.Entries.CostEntries;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using VehicleCostsMonitor.Common.Notifications;
-    using VehicleCostsMonitor.Services.Interfaces;
-    using VehicleCostsMonitor.Services.Models.Entries.CostEntries;
-    using VehicleCostsMonitor.Web.Areas.Vehicle.Models.CostEntry;
-    using VehicleCostsMonitor.Web.Infrastructure.Filters;
-    using VehicleCostsMonitor.Web.Infrastructure.Providers.Interfaces;
+    using VehicleCostsMonitor.Models;
 
     [Authorize]
-    public class CostEntryController : BaseVehicleController
+    public class CostEntryController : BaseEntryController
     {
-        private readonly IDateTimeProvider dateTimeProvider;
-        private readonly ICostEntryService costEntries;
+        private const string CostEntryTypesCacheKey = "_CostEntryTypesStoredInCache";
 
-        public CostEntryController(IDateTimeProvider dateTimeProvider, ICostEntryService costEntries)
+        private readonly UserManager<User> userManager;
+        private readonly IDateTimeProvider dateTimeProvider;
+        private readonly ICostEntryService costEntryService;
+
+        public CostEntryController(
+            IDistributedCache cache,
+            UserManager<User> userManager,
+            IDateTimeProvider dateTimeProvider, 
+            ICostEntryService costEntries,
+            ICurrencyService currencyService)
+            : base(cache, currencyService)
         {
+            this.userManager = userManager;
             this.dateTimeProvider = dateTimeProvider;
-            this.costEntries = costEntries;
+            this.costEntryService = costEntries;
         }
 
         [HttpGet]
         public async Task<IActionResult> Create(int id)
         {
-            var costEntryTypes = await this.costEntries.GetEntryTypesAsync();
+            var user = await this.userManager.GetUserAsync(User);
 
             var model = new CostEntryCreateViewModel
             {
                 DateCreated = this.dateTimeProvider.GetCurrentDateTime(),
                 VehicleId = id,
-                AllCostEntryTypes = await this.GetAllCostEntryTypes()
+                CurrencyId = user.CurrencyId,
+                AllCostEntryTypes = await this.GetAllCostEntryTypes(),
+                AllCurrencies = await this.GetAllCurrenciesAsync()
             };
 
             return View(model);
@@ -45,8 +62,8 @@
         [ValidateModelState]
         public async Task<IActionResult> Create(CostEntryCreateViewModel model)
         {
-            var success = await this.costEntries
-                .CreateAsync(model.DateCreated, model.CostEntryTypeId, model.VehicleId, model.Price, model.Note, model.Odometer);
+            var success = await this.costEntryService
+                .CreateAsync(model.DateCreated, model.CostEntryTypeId, model.VehicleId, model.Price, model.CurrencyId.Value, model.Note, model.Odometer);
 
             if (!success)
             {
@@ -62,7 +79,7 @@
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var costEntry = await this.costEntries.GetForUpdateAsync(id);
+            var costEntry = await this.costEntryService.GetForUpdateAsync(id);
             if (costEntry == null)
             {
                 this.ShowNotification(NotificationMessages.CostEntryDoesNotExist);
@@ -71,6 +88,7 @@
 
             var model = Mapper.Map<CostEntryUpdateViewModel>(costEntry);
             model.AllCostEntryTypes = await this.GetAllCostEntryTypes();
+            model.AllCurrencies = await this.GetAllCurrenciesAsync();
 
             return View(model);
         }
@@ -79,8 +97,8 @@
         [ValidateModelState]
         public async Task<IActionResult> Edit(CostEntryUpdateViewModel model)
         {
-            var success = await this.costEntries
-                .UpdateAsync(model.Id, model.DateCreated, model.CostEntryTypeId, model.VehicleId, model.Price, model.Note, model.Odometer);
+            var success = await this.costEntryService
+                .UpdateAsync(model.Id, model.DateCreated, model.CostEntryTypeId, model.VehicleId, model.Price, model.CurrencyId, model.Note, model.Odometer);
 
             if (!success)
             {
@@ -97,7 +115,7 @@
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            var model = await this.costEntries.GetForDeleteAsync(id);
+            var model = await this.costEntryService.GetForDeleteAsync(id);
 
             return View(model);
         }
@@ -106,7 +124,7 @@
         [ValidateModelState]
         public async Task<IActionResult> Delete(CostEntryDeleteServiceModel model)
         {
-            bool success = await this.costEntries.DeleteAsync(model.Id);
+            bool success = await this.costEntryService.DeleteAsync(model.Id);
             if (!success)
             {
                 this.ShowNotification(NotificationMessages.CostEntryDeleteFailed);
@@ -121,9 +139,25 @@
 
         private async Task<IEnumerable<SelectListItem>> GetAllCostEntryTypes()
         {
-            var types = await this.costEntries.GetEntryTypesAsync();
+            IEnumerable<SelectListItem> list;
 
-            return types.Select(ce => new SelectListItem(ce.Name, ce.Id.ToString())).ToList();
+            var listFromCache = await this.Cache.GetStringAsync(CostEntryTypesCacheKey);
+            if (listFromCache == null)
+            {
+                var costEntries = await this.costEntryService.GetEntryTypesAsync();
+                list = costEntries.Select(x => new SelectListItem(x.Name.ToString(), x.Id.ToString()));
+
+                var options = new DistributedCacheEntryOptions();
+                options.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(WebConstants.StaticElementsCacheExpirationInDays);
+
+                await this.Cache.SetStringAsync(CostEntryTypesCacheKey, JsonConvert.SerializeObject(list), options);
+            }
+            else
+            {
+                list = JsonConvert.DeserializeObject<IEnumerable<SelectListItem>>(listFromCache);
+            }
+
+            return list;
         }
     }
 }

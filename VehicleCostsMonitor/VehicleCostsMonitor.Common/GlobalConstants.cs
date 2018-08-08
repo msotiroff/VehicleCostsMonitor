@@ -7,5 +7,7 @@
         public const string SearchTermForAllModels = "-All-";
 
         public const int MostEconomicVehiclesListCount = 30;
+
+        public const string DefaultCurrencyCode = "EUR";
     }
 }

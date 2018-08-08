@@ -9,5 +9,7 @@
         DateTime DateCreated { get; set; }
 
         decimal Price { get; set; }
+
+        string CurrencyCode { get; set; }
     }
 }

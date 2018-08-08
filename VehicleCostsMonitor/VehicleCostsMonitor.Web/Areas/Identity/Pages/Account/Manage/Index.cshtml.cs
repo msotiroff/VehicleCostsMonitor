@@ -4,26 +4,34 @@
     using Microsoft.AspNetCore.Identity.UI.Services;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
+    using Microsoft.AspNetCore.Mvc.Rendering;
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
     using System.Text.Encodings.Web;
     using System.Threading.Tasks;
     using VehicleCostsMonitor.Models;
+    using VehicleCostsMonitor.Services.Interfaces;
+    using VehicleCostsMonitor.Web.Infrastructure.Extensions;
 
     public partial class IndexModel : PageModel
     {
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
         private readonly IEmailSender emailSender;
+        private readonly ICurrencyService currencyService;
 
         public IndexModel(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            ICurrencyService currencyService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.emailSender = emailSender;
+            this.currencyService = currencyService;
         }
 
         public string Username { get; set; }
@@ -36,17 +44,6 @@
         [BindProperty]
         public InputModel Input { get; set; }
 
-        public class InputModel
-        {
-            [Required]
-            [EmailAddress]
-            public string Email { get; set; }
-
-            [Phone]
-            [Display(Name = "Phone number")]
-            public string PhoneNumber { get; set; }
-        }
-
         public async Task<IActionResult> OnGetAsync()
         {
             var user = await userManager.GetUserAsync(User);
@@ -58,13 +55,17 @@
             var userName = await userManager.GetUserNameAsync(user);
             var email = await userManager.GetEmailAsync(user);
             var phoneNumber = await userManager.GetPhoneNumberAsync(user);
+            var currencyId = user.CurrencyId;
+            var allCurrencies = await this.currencyService.GetAsync();
 
             Username = userName;
 
             Input = new InputModel
             {
                 Email = email,
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                CurrencyId = currencyId,
+                AllCurrencies = allCurrencies.Select(c => new SelectListItem(c.ToString(), c.Id.ToString()))
             };
 
             IsEmailConfirmed = await userManager.IsEmailConfirmedAsync(user);
@@ -80,6 +81,8 @@
             }
 
             var user = await userManager.GetUserAsync(User);
+            var userId = await userManager.GetUserIdAsync(user);
+
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{userManager.GetUserId(User)}'.");
@@ -91,8 +94,16 @@
                 var setEmailResult = await userManager.SetEmailAsync(user, Input.Email);
                 if (!setEmailResult.Succeeded)
                 {
-                    var userId = await userManager.GetUserIdAsync(user);
                     throw new InvalidOperationException($"Unexpected error occurred setting email for user with ID '{userId}'.");
+                }
+            }
+            
+            if (Input.CurrencyId != user.CurrencyId)
+            {
+                var currencyUpdatedResult = await userManager.UpdateCurrencyAsync(user, Input.CurrencyId);
+                if (!currencyUpdatedResult.Succeeded)
+                {
+                    throw new InvalidOperationException($"Unexpected error occurred while updating display currency for user with ID '{userId}'.");
                 }
             }
 
@@ -102,7 +113,6 @@
                 var setPhoneResult = await userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
                 if (!setPhoneResult.Succeeded)
                 {
-                    var userId = await userManager.GetUserIdAsync(user);
                     throw new InvalidOperationException($"Unexpected error occurred setting phone number for user with ID '{userId}'.");
                 }
             }
@@ -142,5 +152,21 @@
             StatusMessage = "Verification email sent. Please check your email.";
             return RedirectToPage();
         }
+        
+        public class InputModel
+        {
+            [Required]
+            [EmailAddress]
+            public string Email { get; set; }
+
+            [Phone]
+            [Display(Name = "Phone number")]
+            public string PhoneNumber { get; set; }
+
+            public int? CurrencyId { get; set; }
+
+            public IEnumerable<SelectListItem> AllCurrencies { get; set; }
+        }
+
     }
 }

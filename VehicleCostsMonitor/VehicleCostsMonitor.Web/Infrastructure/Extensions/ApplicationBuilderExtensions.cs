@@ -12,6 +12,7 @@
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
+    using VehicleCostsMonitor.Common;
     using VehicleCostsMonitor.Data;
     using VehicleCostsMonitor.Models;
     using VehicleCostsMonitor.Services.Interfaces;
@@ -34,50 +35,73 @@
                 
                 dbContext.Database.Migrate();
                 
-                SeedManufacturersWithModels(dbContext);
-                SeedCostEntryTypes(dbContext);
-                SeedExtraFuelConsumers(dbContext);
-                SeedFuelEntryTypes(dbContext);
-                SeedFuelTypes(dbContext);
-                SeedGearingTypes(dbContext);
-                SeedRouteTypes(dbContext);
-                SeedVehicleTypes(dbContext);
-
-                // Makes the same as the five methods below, but nearly 50x faster:
-                ExecuteSqlScripts(dbContext);
-
-                //var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<User>>();
-                //var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-                //var dataAccessService = serviceScope.ServiceProvider.GetRequiredService<IDataAccessService>();
-
-                //SeedDefaultRoles(userManager, roleManager);
-                //SeedUsers(dbContext, userManager);
-                //SeedVehicles(dbContext);
-                //SeedFuelEntries(dbContext, dataAccessService);
-                //SeedCostEntries(dbContext, dataAccessService);
+                SeedRequiredData(dbContext);
+                SeedOptionalData(serviceScope, dbContext); // Comment this row if you don't need users and vehicles initial seed!
             }
 
             return app;
         }
-
-        /// <summary>
-        /// Seed users, roles, vehicles, fuel and cost entries
-        /// </summary>
-        /// <param name="dbContext">
-        /// An instance of JustMonitorDbContext
-        /// </param>
-        private static void ExecuteSqlScripts(JustMonitorDbContext dbContext)
+        
+        private static void SeedOptionalData(IServiceScope serviceScope, JustMonitorDbContext dbContext)
         {
-            if (!dbContext.Users.Any())
-            {
-                var scriptsDirectory = WebConstants.SqlScriptsDirectoryPath;
-                var seedScripts = Directory.GetFiles(scriptsDirectory).OrderBy(f => f);
+            var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<User>>();
+            var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var dataAccessService = serviceScope.ServiceProvider.GetRequiredService<IDataAccessService>();
 
-                foreach (var scriptPath in seedScripts)
-                {
-                    var scriptContent = File.ReadAllText(scriptPath);
-                    dbContext.Database.ExecuteSqlCommand(scriptContent);
-                }
+            SeedDefaultRoles(userManager, roleManager, dbContext);
+            SeedUsers(dbContext, userManager);
+            SeedVehicles(dbContext);
+            SeedFuelEntries(dbContext, dataAccessService);
+            SeedCostEntries(dbContext, dataAccessService);
+        }
+
+        private static void SeedRequiredData(JustMonitorDbContext dbContext)
+        {
+            SeedManufacturersWithModels(dbContext);
+            SeedCostEntryTypes(dbContext);
+            SeedExtraFuelConsumers(dbContext);
+            SeedFuelEntryTypes(dbContext);
+            SeedFuelTypes(dbContext);
+            SeedGearingTypes(dbContext);
+            SeedRouteTypes(dbContext);
+            SeedVehicleTypes(dbContext);
+            SeedCurrencies(dbContext);
+        }
+
+        private static void UpdateVehiclesStats(JustMonitorDbContext dbContext)
+        {
+            var firstFuelingTypeId = dbContext.FuelEntryTypes.First(fet => fet.Name == "First fueling").Id;
+
+            var vehicles = dbContext
+                .Vehicles
+                .Include(v => v.CostEntries)
+                .Include(v => v.FuelEntries)
+                .ToList();
+
+            foreach (var vehicle in vehicles)
+            {
+                var fuelSumWithoutFirstFueling = vehicle.FuelEntries.Where(fe => fe.FuelEntryTypeId != firstFuelingTypeId).Sum(fe => fe.FuelQuantity);
+
+                vehicle.TotalDistance = vehicle.FuelEntries.Sum(fe => fe.TripOdometer);
+                vehicle.TotalFuelAmount = vehicle.FuelEntries.Sum(fe => fe.FuelQuantity);
+                vehicle.TotalOtherCosts = vehicle.CostEntries.Sum(ce => ce.Price);
+                vehicle.TotalFuelCosts = vehicle.FuelEntries.Sum(fe => fe.Price);
+                vehicle.FuelConsumption = fuelSumWithoutFirstFueling / vehicle.TotalDistance * 100.0;
+            }
+
+            dbContext.Vehicles.UpdateRange(vehicles);
+            dbContext.SaveChanges();
+        }
+
+        private static void SeedCurrencies(JustMonitorDbContext dbContext)
+        {
+            if (!dbContext.Currencies.Any())
+            {
+                var currenciesAsJson = File.ReadAllText(WebConstants.CurrenciesListPath);
+                var currencies = JsonConvert.DeserializeObject<Currency[]>(currenciesAsJson);
+
+                dbContext.AddRange(currencies);
+                dbContext.SaveChanges();
             }
         }
 
@@ -86,6 +110,11 @@
             if (!dbContext.CostEntries.Any())
             {
                 var allVehicles = dbContext.Vehicles.ToList();
+
+                var defaultCurrencyId = dbContext
+                    .Currencies
+                    .First(c => c.Code == GlobalConstants.DefaultCurrencyCode)
+                    .Id;
 
                 var random = new Random();
 
@@ -110,7 +139,7 @@
                         var costEntryTypeId = costEntryTypesIds[random.Next(0, costEntryTypesIds.Length)];
                         var price = (decimal)random.NextDouble() * 250;
 
-                        var entry = new CostEntry(entryDate, costEntryTypeId, vehicle.Id, price, note);
+                        var entry = new CostEntry(entryDate, costEntryTypeId, vehicle.Id, price, defaultCurrencyId, note);
                         costEntries.Add(entry);
 
                         startDate = startDate.AddMonths(4);
@@ -120,15 +149,7 @@
                 dbContext.CostEntries.AddRange(costEntries);
                 dbContext.SaveChanges();
 
-                foreach (var vehicle in allVehicles)
-                {
-                    Task.Run(async () =>
-                    {
-                        await service.UpdateStatsOnCostEntryChangedAsync(vehicle.Id);
-                    })
-                    .GetAwaiter()
-                    .GetResult();
-                }
+                UpdateVehiclesStats(dbContext);
             }
         }
 
@@ -137,6 +158,11 @@
             if (!dbContext.FuelEntries.Any())
             {
                 var allVehicles = dbContext.Vehicles.ToList();
+
+                var defaultCurrencyId = dbContext
+                    .Currencies
+                    .First(c => c.Code == GlobalConstants.DefaultCurrencyCode)
+                    .Id;
 
                 var random = new Random();
 
@@ -159,8 +185,8 @@
 
                 var extrasIds = dbContext.ExtraFuelConsumers.Select(ex => ex.Id).ToArray();
 
-                var fuelEntriesToAdd = new List<FuelEntry>();
-                
+                var fuelEntriesToBeCreated = new List<FuelEntry>();
+
                 foreach (var vehicle in allVehicles)
                 {
                     var odometer = 100000;
@@ -181,7 +207,8 @@
                             TripOdometer = hasAnyEntries ? tripOdometer : 0,
                             Average = hasAnyEntries ? ((double)quantity / tripOdometer) * 100 : 0,
                             FuelQuantity = quantity,
-                            Price = (decimal)(quantity * (random.NextDouble() + 1.2)),
+                            Price = (decimal)(quantity * (random.NextDouble() + 0.7)),
+                            CurrencyId = defaultCurrencyId,
                             Note = note,
                             FuelEntryTypeId = hasAnyEntries ? fullFuelingTypeId : firstFuelingTypeId,
                             Routes = new List<FuelEntryRouteType>
@@ -197,7 +224,7 @@
                         };
 
                         var newFuelEntry = Mapper.Map<FuelEntry>(model);
-                        fuelEntriesToAdd.Add(newFuelEntry);
+                        fuelEntriesToBeCreated.Add(newFuelEntry);
 
                         odometer += tripOdometer;
                         startDate = startDate.AddMonths(1);
@@ -205,18 +232,8 @@
                     }
                 }
 
-                dbContext.FuelEntries.AddRange(fuelEntriesToAdd);
+                dbContext.FuelEntries.AddRange(fuelEntriesToBeCreated);
                 dbContext.SaveChanges();
-
-                foreach (var vehicle in allVehicles)
-                {
-                    Task.Run(async () =>
-                    {
-                        await service.UpdateStatsOnFuelEntryChangedAsync(vehicle.Id);
-                    })
-                    .GetAwaiter()
-                    .GetResult();
-                }
             }
         }
 
@@ -269,16 +286,18 @@
                 .ReadAllText(WebConstants.UsersListPath);
 
                 var users = JsonConvert.DeserializeObject<User[]>(usersList);
+                var defaultDisplayCurrencyId = dbContext.Currencies.FirstOrDefault(c => c.Code == GlobalConstants.DefaultCurrencyCode)?.Id;
 
-                Task.Run(async () =>
+                foreach (var user in users)
                 {
-                    foreach (var user in users)
-                    {
-                        var result = await userManager.CreateAsync(user, "password");
-                    }
-                })
-                .GetAwaiter()
-                .GetResult();
+                    user.NormalizedEmail = user.Email.ToUpper();
+                    user.NormalizedUserName = user.UserName.ToUpper();
+                    user.EmailConfirmed = true;
+                    user.CurrencyId = defaultDisplayCurrencyId;
+                }
+
+                dbContext.Users.AddRange(users);
+                dbContext.SaveChanges();
             }
         }
 
@@ -410,7 +429,7 @@
             }
         }
 
-        private static void SeedDefaultRoles(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        private static void SeedDefaultRoles(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, JustMonitorDbContext dbContext)
         {
             Task
                 .Run(async () =>
@@ -431,12 +450,12 @@
                         }
                     }
 
-                    await RegisterAdminUser(userManager, adminRoleName);
+                    await RegisterAdminUser(userManager, adminRoleName, dbContext);
                 })
                 .Wait();
         }
 
-        private static async Task RegisterAdminUser(UserManager<User> userManager, string adminRoleName)
+        private static async Task RegisterAdminUser(UserManager<User> userManager, string adminRoleName, JustMonitorDbContext dbContext)
         {
             var adminEmail = WebConstants.AdminEmail;
             var adminUserName = WebConstants.AdminUserName;
@@ -445,10 +464,17 @@
 
             if (adminUser == null)
             {
+                var defaultDisplayCurrencyId = dbContext
+                    .Currencies
+                    .FirstOrDefault(c => c.Code == GlobalConstants.DefaultCurrencyCode)
+                    ?.Id;
+
                 adminUser = new User
                 {
                     Email = adminEmail,
-                    UserName = adminUserName
+                    UserName = adminUserName,
+                    CurrencyId = defaultDisplayCurrencyId,
+                    EmailConfirmed = true,
                 };
 
                 await userManager.CreateAsync(adminUser, WebConstants.AdminPassword);

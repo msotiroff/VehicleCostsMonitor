@@ -10,6 +10,10 @@
             this.Vehicles = new HashSet<Vehicle>();
         }
 
+        public int? CurrencyId { get; set; }
+
+        public Currency DisplayCurrency { get; set; }
+
         public ICollection<Vehicle> Vehicles { get; set; }
     }
 }

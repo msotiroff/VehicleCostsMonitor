@@ -16,9 +16,9 @@
         public CostEntryService(JustMonitorDbContext db) 
             : base(db) { }
 
-        public async Task<bool> CreateAsync(DateTime dateCreated, int costEntryTypeId, int vehicleId, decimal price, string note, int? odometer)
+        public async Task<bool> CreateAsync(DateTime dateCreated, int costEntryTypeId, int vehicleId, decimal price, int currencyId, string note, int? odometer)
         {
-            var costEntry = new CostEntry(dateCreated, costEntryTypeId, vehicleId, price, note, odometer);
+            var costEntry = new CostEntry(dateCreated, costEntryTypeId, vehicleId, price, currencyId, note, odometer);
             
             try
             {
@@ -29,7 +29,7 @@
                 await this.UpdateStatsOnCostEntryChangedAsync(vehicleId);
                 return true;
             }
-            catch (Exception ex)
+            catch
             {
                 return false;
             }
@@ -59,7 +59,7 @@
         public async Task<CostEntryUpdateServiceModel> GetForUpdateAsync(int id)
             => await this.db.CostEntries.Where(ce => ce.Id == id).ProjectTo<CostEntryUpdateServiceModel>().FirstOrDefaultAsync();
 
-        public async Task<bool> UpdateAsync(int id, DateTime dateCreated, int costEntryTypeId, int vehicleId, decimal price, string note, int? odometer)
+        public async Task<bool> UpdateAsync(int id, DateTime dateCreated, int costEntryTypeId, int vehicleId, decimal price, int currencyId, string note, int? odometer)
         {
             var costEntry = await this.db.CostEntries.FirstOrDefaultAsync(ce => ce.Id == id);
             if (costEntry == null)
@@ -70,6 +70,7 @@
             costEntry.DateCreated = dateCreated;
             costEntry.CostEntryTypeId = costEntryTypeId;
             costEntry.Price = price;
+            costEntry.CurrencyId = currencyId;
             costEntry.Note = note;
             costEntry.Odometer = odometer;
 
@@ -83,7 +84,7 @@
 
                 return true;
             }
-            catch (Exception ex)
+            catch
             {
                 return false;
             }

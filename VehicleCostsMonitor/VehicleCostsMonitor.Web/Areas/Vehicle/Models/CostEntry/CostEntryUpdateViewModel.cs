@@ -27,6 +27,11 @@
         [DataType(DataType.Currency)]
         public decimal Price { get; set; }
 
+        [Display(Name = "Currency")]
+        public int CurrencyId { get; set; }
+
+        public IEnumerable<SelectListItem> AllCurrencies { get; set; }
+
         public string Note { get; set; }
 
         [Required]

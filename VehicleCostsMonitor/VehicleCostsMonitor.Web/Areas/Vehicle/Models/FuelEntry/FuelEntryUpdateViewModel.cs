@@ -33,6 +33,11 @@
         [Required]
         public decimal Price { get; set; }
 
+        [Required]
+        public int CurrencyId { get; set; }
+
+        public IEnumerable<SelectListItem> AllCurrencies { get; set; }
+
         public string PricingType { get; set; }
 
         public IEnumerable<SelectListItem> PricingTypes { get; set; }

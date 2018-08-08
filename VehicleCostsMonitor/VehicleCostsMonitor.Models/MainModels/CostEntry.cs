@@ -5,12 +5,13 @@
 
     public class CostEntry
     {
-        public CostEntry(DateTime dateCreated, int costEntryTypeId, int vehicleId, decimal price, string note, int? odometer = null)
+        public CostEntry(DateTime dateCreated, int costEntryTypeId, int vehicleId, decimal price, int currencyId, string note, int? odometer = null)
             : this(dateCreated, costEntryTypeId, vehicleId)
         {
             this.Price = price;
             this.Note = note;
             this.Odometer = odometer;
+            this.CurrencyId = currencyId;
         }
         
         public CostEntry(DateTime dateCreated, int costEntryTypeId, int vehicleId)
@@ -35,6 +36,10 @@
 
         public decimal Price { get; set; }
 
+        public int CurrencyId { get; set; }
+
+        public Currency Currency { get; set; }
+        
         public string Note { get; set; }
 
         [Required]

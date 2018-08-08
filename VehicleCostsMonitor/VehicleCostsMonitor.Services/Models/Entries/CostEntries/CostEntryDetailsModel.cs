@@ -17,7 +17,9 @@
         public string CostEntryTypeName { get; set; }
 
         public decimal Price { get; set; }
-        
+
+        public string CurrencyCode { get; set; }
+
         public int VehicleId { get; set; }
 
         public string Owner { get; set; }

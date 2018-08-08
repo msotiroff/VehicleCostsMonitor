@@ -6,7 +6,7 @@
 
     public class FuelEntry
     {
-        public FuelEntry(DateTime dateCreated, int odometer, double fuelQuantity, decimal price, int fuelEntryTypeId, int vehicleId)
+        public FuelEntry(DateTime dateCreated, int odometer, double fuelQuantity, decimal price,/*int currencyId,*/ int fuelEntryTypeId, int vehicleId)
         {
             this.DateCreated = dateCreated;
             this.Odometer = odometer;
@@ -19,7 +19,7 @@
             this.ExtraFuelConsumers = new HashSet<FuelEntryExtraFuelConsumer>();
         }
 
-        public FuelEntry(DateTime dateCreated, int odometer, double fuelQuantity, decimal price, int fuelEntryTypeId, int vehicleId, string note = null)
+        public FuelEntry(DateTime dateCreated, int odometer, double fuelQuantity, decimal price,/*int currencyId,*/ int fuelEntryTypeId, int vehicleId, string note = null)
             : this(dateCreated, odometer, fuelQuantity, price, fuelEntryTypeId, vehicleId)
         {
             this.Note = note;
@@ -44,6 +44,11 @@
 
         [Required]
         public decimal Price { get; set; }
+
+        [Required]
+        public int CurrencyId { get; set; }
+
+        public Currency Currency { get; set; }
 
         public string Note { get; set; }
 

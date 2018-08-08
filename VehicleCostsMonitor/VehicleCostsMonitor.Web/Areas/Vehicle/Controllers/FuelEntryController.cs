@@ -1,53 +1,68 @@
 ﻿namespace VehicleCostsMonitor.Web.Areas.Vehicle.Controllers
 {
+    using Areas.Vehicle.Models.FuelEntry;
     using AutoMapper;
+    using Common.Notifications;
+    using Infrastructure.Filters;
+    using Infrastructure.Providers.Interfaces;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.Extensions.Caching.Distributed;
+    using Newtonsoft.Json;
+    using Services.Interfaces;
+    using Services.Models.Entries.FuelEntries;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using VehicleCostsMonitor.Common.Notifications;
     using VehicleCostsMonitor.Models;
-    using VehicleCostsMonitor.Services.Interfaces;
-    using VehicleCostsMonitor.Services.Models.Entries.FuelEntries;
-    using VehicleCostsMonitor.Web.Areas.Vehicle.Models.Enums;
-    using VehicleCostsMonitor.Web.Areas.Vehicle.Models.FuelEntry;
-    using VehicleCostsMonitor.Web.Infrastructure.Filters;
-    using VehicleCostsMonitor.Web.Infrastructure.Providers.Interfaces;
+    using static WebConstants;
 
     [Authorize]
-    public class FuelEntryController : BaseVehicleController
+    public class FuelEntryController : BaseEntryController
     {
-        private readonly IDateTimeProvider dateTimeProvider;
-        private readonly IFuelEntryService fuelEntries;
+        private const string FuelEntryTypesCacheKey = "_FuelEntryTypesStoredInCache";
+        private const string RouteTypesCacheKey = "_RouteTypesStoredInCache";
+        private const string ExtraFuelConsumersCacheKey = "_ExtraFuelConsumersStoredInCache";
 
-        public FuelEntryController(IDateTimeProvider dateTimeProvider, IFuelEntryService fuelEntries)
+        private readonly UserManager<User> userManager;
+        private readonly IFuelEntryService fuelEntryService;
+        private readonly IDateTimeProvider dateTimeProvider;
+
+        public FuelEntryController(
+            IDistributedCache cache, 
+            IFuelEntryService fuelEntryService, 
+            ICurrencyService currencies,
+            UserManager<User> userManager,
+            IDateTimeProvider dateTimeProvider) 
+            : base(cache, currencies)
         {
+            this.userManager = userManager;
+            this.fuelEntryService = fuelEntryService;
             this.dateTimeProvider = dateTimeProvider;
-            this.fuelEntries = fuelEntries;
         }
 
         [HttpGet]
         public async Task<IActionResult> Create(int id)
         {
-            var allFuelEntryTypes = await this.fuelEntries.GetEntryTypes();
-            var allFuelTypes = await this.fuelEntries.GetFuelTypes();
-            var allRouteTypes = await this.fuelEntries.GetRouteTypes();
-            var allExtraFuelConsumers = await this.fuelEntries.GetExtraFuelConsumers();
+            var user = await this.userManager.GetUserAsync(User);
+            DateTime dateCreated = this.dateTimeProvider.GetCurrentDateTime();
 
             var model = new FuelEntryCreateViewModel
             {
-                DateCreated = this.dateTimeProvider.GetCurrentDateTime(),
+                DateCreated = dateCreated,
                 VehicleId = id,
-                FuelEntryTypes = allFuelEntryTypes.Select(fet => new SelectListItem(fet.Name, fet.Id.ToString())),
-                FuelTypes = allFuelTypes.Select(ft => new SelectListItem(ft.Name, ft.Id.ToString())),
-                AllRoutes = allRouteTypes,
-                AllExraFuelConsumers = allExtraFuelConsumers,
-                PricingTypes = Enum.GetNames(typeof(PricingType)).Select(pt => new SelectListItem(pt.ToString(), pt.ToString())),
+                CurrencyId = user.CurrencyId,
+                FuelEntryTypes = await this.GetAllFuelEntryTypesAsync(),
+                FuelTypes = await this.GetAllFuelTypesAsync(),
+                AllRoutes = await this.GetAllRouteTypesAsync(),
+                AllExraFuelConsumers = await this.GetAllExtraFuelConsumersAsync(),
+                AllCurrencies = await this.GetAllCurrenciesAsync(),
+                PricingTypes = await this.GetAllPricingTypesAsync(),
+                LastOdometer = await this.GetPreviousOdometerValue(id, dateCreated)
             };
-
-            model.LastOdometer = await this.fuelEntries.GetPreviousOdometerValue(model.VehicleId, model.DateCreated);
 
             return View(model);
         }
@@ -62,7 +77,7 @@
             }
 
             var serviceModel = Mapper.Map<FuelEntryCreateServiceModel>(model);
-            bool success = await this.fuelEntries.CreateAsync(serviceModel);
+            var success = await this.fuelEntryService.CreateAsync(serviceModel);
             if (!success)
             {
                 this.ShowNotification(NotificationMessages.FuelEntryUpdateFailed);
@@ -77,26 +92,22 @@
         [EnsureOwnership]
         public async Task<IActionResult> Edit(int id)
         {
-            var fuelEntry = await this.fuelEntries.GetAsync(id);
+            var fuelEntry = await this.fuelEntryService.GetAsync(id);
             if (fuelEntry == null)
             {
                 this.ShowNotification(NotificationMessages.FuelEntryDoesNotExist);
                 return RedirectToProfile();
             }
 
-            var allFuelEntryTypes = await this.fuelEntries.GetEntryTypes();
-            var allFuelTypes = await this.fuelEntries.GetFuelTypes();
-            var allRouteTypes = await this.fuelEntries.GetRouteTypes();
-            var allExtraFuelConsumers = await this.fuelEntries.GetExtraFuelConsumers();
-            var lastOdometer = await this.fuelEntries.GetPreviousOdometerValue(fuelEntry.VehicleId, fuelEntry.DateCreated);
-
             var model = Mapper.Map<FuelEntryUpdateViewModel>(fuelEntry);
-            model.FuelEntryTypes = allFuelEntryTypes.Select(fet => new SelectListItem(fet.Name, fet.Id.ToString()));
-            model.FuelTypes = allFuelTypes.Select(ft => new SelectListItem(ft.Name, ft.Id.ToString()));
-            model.AllRoutes = allRouteTypes;
-            model.AllExraFuelConsumers = allExtraFuelConsumers;
-            model.LastOdometer = lastOdometer;
-            model.PricingTypes = Enum.GetNames(typeof(PricingType)).Select(pt => new SelectListItem(pt.ToString(), pt.ToString()));
+
+            model.FuelEntryTypes = await this.GetAllFuelEntryTypesAsync();
+            model.FuelTypes = await this.GetAllFuelTypesAsync();
+            model.AllRoutes = await this.GetAllRouteTypesAsync();
+            model.AllExraFuelConsumers = await this.GetAllExtraFuelConsumersAsync();
+            model.AllCurrencies = await this.GetAllCurrenciesAsync();
+            model.LastOdometer = await this.GetPreviousOdometerValue(fuelEntry.VehicleId, fuelEntry.DateCreated);
+            model.PricingTypes = await this.GetAllPricingTypesAsync();
 
             return View(model);
         }
@@ -107,7 +118,7 @@
         public async Task<IActionResult> Edit(FuelEntryUpdateViewModel model)
         {
             var fuelEntry = Mapper.Map<FuelEntry>(model);
-            var success = await this.fuelEntries.UpdateAsync(fuelEntry);
+            var success = await this.fuelEntryService.UpdateAsync(fuelEntry);
             if (!success)
             {
                 this.ShowNotification(NotificationMessages.FuelEntryUpdateFailed);
@@ -122,7 +133,7 @@
         [EnsureOwnership]
         public async Task<IActionResult> Delete(int id)
         {
-            var model = await this.fuelEntries.GetForDeleteAsync(id);
+            var model = await this.fuelEntryService.GetForDeleteAsync(id);
             if (model == null)
             {
                 this.ShowNotification(NotificationMessages.FuelEntryDoesNotExist);
@@ -137,7 +148,7 @@
         [EnsureOwnership]
         public async Task<IActionResult> Delete(FuelEntryDeleteServiceModel model)
         {
-            bool success = await this.fuelEntries.DeleteAsync(model.Id);
+            bool success = await this.fuelEntryService.DeleteAsync(model.Id);
             if (!success)
             {
                 this.ShowNotification(NotificationMessages.FuelEntryDeleteFailed);
@@ -147,5 +158,102 @@
 
             return RedirectToVehicle(model.VehicleId);
         }
+
+        #region Private methods
+        private async Task<int> GetPreviousOdometerValue(int vehicleId, DateTime dateCreated)
+        {
+            return await this.fuelEntryService.GetPreviousOdometerValue(vehicleId, dateCreated);
+        }
+
+        private async Task<IEnumerable<SelectListItem>> GetAllFuelEntryTypesAsync()
+        {
+            IEnumerable<SelectListItem> list;
+
+            var listFromCache = await this.Cache.GetStringAsync(FuelEntryTypesCacheKey);
+            if (listFromCache == null)
+            {
+                var entryTypes = await this.fuelEntryService.GetEntryTypes();
+                list = entryTypes.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+
+                var options = new DistributedCacheEntryOptions();
+                options.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(StaticElementsCacheExpirationInDays);
+
+                await this.Cache.SetStringAsync(FuelEntryTypesCacheKey, JsonConvert.SerializeObject(list), options);
+            }
+            else
+            {
+                list = JsonConvert.DeserializeObject<IEnumerable<SelectListItem>>(listFromCache);
+            }
+
+            return list;
+        }
+        
+        private async Task<IEnumerable<SelectListItem>> GetAllFuelTypesAsync()
+        {
+            IEnumerable<SelectListItem> list;
+
+            var listFromCache = await this.Cache.GetStringAsync(FuelTypesCacheKey);
+            if (listFromCache == null)
+            {
+                var fuelTypes = await this.fuelEntryService.GetFuelTypes();
+                list = fuelTypes.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+
+                var options = new DistributedCacheEntryOptions();
+                options.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(StaticElementsCacheExpirationInDays);
+
+                await this.Cache.SetStringAsync(FuelTypesCacheKey, JsonConvert.SerializeObject(list), options);
+            }
+            else
+            {
+                list = JsonConvert.DeserializeObject<IEnumerable<SelectListItem>>(listFromCache);
+            }
+
+            return list;
+        }
+
+        private async Task<IEnumerable<RouteType>> GetAllRouteTypesAsync()
+        {
+            IEnumerable<RouteType> list;
+
+            var listFromCache = await this.Cache.GetStringAsync(RouteTypesCacheKey);
+            if (listFromCache == null)
+            {
+                list = await this.fuelEntryService.GetRouteTypes();
+
+                var options = new DistributedCacheEntryOptions();
+                options.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(StaticElementsCacheExpirationInDays);
+
+                await this.Cache.SetStringAsync(RouteTypesCacheKey, JsonConvert.SerializeObject(list), options);
+            }
+            else
+            {
+                list = JsonConvert.DeserializeObject<IEnumerable<RouteType>>(listFromCache);
+            }
+
+            return list;
+        }
+
+        private async Task<IEnumerable<ExtraFuelConsumer>> GetAllExtraFuelConsumersAsync()
+        {
+            IEnumerable<ExtraFuelConsumer> list;
+
+            var listFromCache = await this.Cache.GetStringAsync(ExtraFuelConsumersCacheKey);
+            if (listFromCache == null)
+            {
+                list = await this.fuelEntryService.GetExtraFuelConsumers();
+
+                var options = new DistributedCacheEntryOptions();
+                options.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(StaticElementsCacheExpirationInDays);
+
+                await this.Cache.SetStringAsync(ExtraFuelConsumersCacheKey, JsonConvert.SerializeObject(list), options);
+            }
+            else
+            {
+                list = JsonConvert.DeserializeObject<IEnumerable<ExtraFuelConsumer>>(listFromCache);
+            }
+
+            return list;
+        }
+        #endregion
     }
 }

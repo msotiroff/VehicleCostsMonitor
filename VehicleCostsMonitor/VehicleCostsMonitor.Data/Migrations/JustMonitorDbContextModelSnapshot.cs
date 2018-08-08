@@ -141,6 +141,8 @@ namespace VehicleCostsMonitor.Data.Migrations
 
                     b.Property<int>("CostEntryTypeId");
 
+                    b.Property<int>("CurrencyId");
+
                     b.Property<DateTime>("DateCreated");
 
                     b.Property<string>("Note");
@@ -154,6 +156,8 @@ namespace VehicleCostsMonitor.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CostEntryTypeId");
+
+                    b.HasIndex("CurrencyId");
 
                     b.HasIndex("VehicleId");
 
@@ -172,6 +176,22 @@ namespace VehicleCostsMonitor.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CostEntryTypes");
+                });
+
+            modelBuilder.Entity("VehicleCostsMonitor.Models.Currency", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Code")
+                        .IsRequired();
+
+                    b.Property<string>("DisplayName");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Currencies");
                 });
 
             modelBuilder.Entity("VehicleCostsMonitor.Models.ExtraFuelConsumer", b =>
@@ -196,6 +216,8 @@ namespace VehicleCostsMonitor.Data.Migrations
 
                     b.Property<double>("Average");
 
+                    b.Property<int>("CurrencyId");
+
                     b.Property<DateTime>("DateCreated");
 
                     b.Property<int>("FuelEntryTypeId");
@@ -215,6 +237,8 @@ namespace VehicleCostsMonitor.Data.Migrations
                     b.Property<int>("VehicleId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CurrencyId");
 
                     b.HasIndex("FuelEntryTypeId");
 
@@ -368,6 +392,8 @@ namespace VehicleCostsMonitor.Data.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
+                    b.Property<int?>("CurrencyId");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256);
 
@@ -397,6 +423,8 @@ namespace VehicleCostsMonitor.Data.Migrations
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CurrencyId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -570,6 +598,11 @@ namespace VehicleCostsMonitor.Data.Migrations
                         .HasForeignKey("CostEntryTypeId")
                         .OnDelete(DeleteBehavior.Cascade);
 
+                    b.HasOne("VehicleCostsMonitor.Models.Currency", "InputCurrency")
+                        .WithMany()
+                        .HasForeignKey("CurrencyId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("VehicleCostsMonitor.Models.Vehicle", "Vehicle")
                         .WithMany("CostEntries")
                         .HasForeignKey("VehicleId")
@@ -578,6 +611,11 @@ namespace VehicleCostsMonitor.Data.Migrations
 
             modelBuilder.Entity("VehicleCostsMonitor.Models.FuelEntry", b =>
                 {
+                    b.HasOne("VehicleCostsMonitor.Models.Currency", "InputCurrency")
+                        .WithMany()
+                        .HasForeignKey("CurrencyId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("VehicleCostsMonitor.Models.FuelEntryType", "FuelEntryType")
                         .WithMany()
                         .HasForeignKey("FuelEntryTypeId")
@@ -626,6 +664,13 @@ namespace VehicleCostsMonitor.Data.Migrations
                         .WithMany("Models")
                         .HasForeignKey("ManufacturerId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("VehicleCostsMonitor.Models.User", b =>
+                {
+                    b.HasOne("VehicleCostsMonitor.Models.Currency", "DisplayCurrency")
+                        .WithMany()
+                        .HasForeignKey("CurrencyId");
                 });
 
             modelBuilder.Entity("VehicleCostsMonitor.Models.Vehicle", b =>

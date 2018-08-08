@@ -6,28 +6,25 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\seedfiles\cost-entry-types.json" />
-    <Content Remove="wwwroot\seedfiles\extra-fuel-consumers.json" />
-    <Content Remove="wwwroot\seedfiles\fuel-entry-types.json" />
-    <Content Remove="wwwroot\seedfiles\fuel-types.json" />
-    <Content Remove="wwwroot\seedfiles\gearing-types.json" />
-    <Content Remove="wwwroot\seedfiles\route-types.json" />
-    <Content Remove="wwwroot\seedfiles\vehicle-types.json" />
-    <Content Remove="wwwroot\seedfiles\vehicles-list.json" />
+    <Content Remove="Resourses\seedfiles\cost-entry-types.json" />
+    <Content Remove="Resourses\seedfiles\extra-fuel-consumers.json" />
+    <Content Remove="Resourses\seedfiles\fuel-entry-types.json" />
+    <Content Remove="Resourses\seedfiles\fuel-types.json" />
+    <Content Remove="Resourses\seedfiles\gearing-types.json" />
+    <Content Remove="Resourses\seedfiles\route-types.json" />
+    <Content Remove="Resourses\seedfiles\vehicle-types.json" />
+    <Content Remove="Resourses\seedfiles\vehicles-list.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\seedfiles\cost-entry-types.json" />
-    <None Include="wwwroot\seedfiles\extra-fuel-consumers.json" />
-    <None Include="wwwroot\seedfiles\fuel-entry-types.json" />
-    <None Include="wwwroot\seedfiles\fuel-types.json" />
-    <None Include="wwwroot\seedfiles\gearing-types.json" />
-    <None Include="wwwroot\seedfiles\route-types.json" />
-    <None Include="wwwroot\seedfiles\vehicle-types.json" />
-    <None Include="wwwroot\seedfiles\vehicles-list.json" />
-    <None Include="wwwroot\seedfiles\sql-scripts\06.dbo.CostEntries.Table.sql" />
-    <None Include="wwwroot\seedfiles\sql-scripts\05.dbo.FuelEntries.Table.sql" />
-    <None Include="wwwroot\seedfiles\sql-scripts\04dbo.Vehicles.Table.sql" />
+    <None Include="Resourses\seedfiles\cost-entry-types.json" />
+    <None Include="Resourses\seedfiles\extra-fuel-consumers.json" />
+    <None Include="Resourses\seedfiles\fuel-entry-types.json" />
+    <None Include="Resourses\seedfiles\fuel-types.json" />
+    <None Include="Resourses\seedfiles\gearing-types.json" />
+    <None Include="Resourses\seedfiles\route-types.json" />
+    <None Include="Resourses\seedfiles\vehicle-types.json" />
+    <None Include="Resourses\seedfiles\vehicles-list.json" />
   </ItemGroup>
 
   <ItemGroup>

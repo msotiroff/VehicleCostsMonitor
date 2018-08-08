@@ -23,6 +23,9 @@
         [Required]
         public decimal Price { get; set; }
 
+        [Required]
+        public int CurrencyId { get; set; }
+
         public string Note { get; set; }
 
         [Required]

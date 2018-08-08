@@ -7,6 +7,8 @@
     [Area(VehicleArea)]
     public class BaseVehicleController : BaseController
     {
+        protected const string FuelTypesCacheKey = "_FuelTypes";
+        
         protected IActionResult RedirectToVehicle(int id)
             => RedirectToAction("details", "vehicle", new { id = id, area = "vehicle" });
     }

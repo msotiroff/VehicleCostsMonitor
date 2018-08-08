@@ -9,6 +9,8 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
+    using Microsoft.Extensions.Caching.Distributed;
+    using Newtonsoft.Json;
     using Services.Interfaces;
     using Services.Models.Entries.Interfaces;
     using Services.Models.Vehicle;
@@ -25,7 +27,11 @@
     [Route("[area]/[action]/{id?}")]
     public class VehicleController : BaseVehicleController
     {
+        private const string GearingTypesCacheKey = "_GearingTypesStoredInCache";
+        private const string VehicleTypesCacheKey = "_VehicleTypesStoredInCache";
+
         private readonly UserManager<User> userManager;
+        private readonly IDistributedCache cache;
         private readonly IVehicleService vehicles;
         private readonly IManufacturerService manufacturers;
         private readonly IVehicleModelService models;
@@ -34,6 +40,7 @@
 
         public VehicleController(
             UserManager<User> userManager,
+            IDistributedCache cache,
             IVehicleService vehicles,
             IManufacturerService manufacturers,
             IVehicleModelService models,
@@ -41,13 +48,14 @@
             IDateTimeProvider dateTimeProvider)
         {
             this.userManager = userManager;
+            this.cache = cache;
             this.vehicles = vehicles;
             this.manufacturers = manufacturers;
             this.models = models;
             this.vehicleElements = vehicleElements;
             this.dateTimeProvider = dateTimeProvider;
         }
-        
+
         [HttpGet]
         [AllowAnonymous]
         public async Task<JsonResult> GetModelsByManufacturerId(int manufacturerId)
@@ -56,7 +64,7 @@
 
             return Json(new SelectList(models));
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -88,9 +96,9 @@
                 this.ShowNotification(NotificationMessages.VehicleDoesNotExist);
                 return RedirectToHome();
             }
-            
+
             var model = this.InitializeDetailedModel(vehicle, pageIndex);
-            
+
             return View(model);
         }
 
@@ -158,49 +166,36 @@
             return RedirectToAction("index", "profile", new { area = "user", id = this.userManager.GetUserId(User) });
         }
 
-        [ResponseCache(Duration = 3600)]
+        #region Private methods
         private async Task<VehicleCreateViewModel> InitializeCreationModel()
         {
             var allManufacturers = await this.manufacturers.AllAsync();
-            var allVehicleTypes = await this.vehicleElements.GetVehicleTypes();
-            var allFuelTypes = await this.vehicleElements.GetFuelTypes();
-            var allGearingTypes = await this.vehicleElements.GetGearingTypes();
-            var allAvailableYears = Enumerable
-                .Range(YearOfManufactureMinValue, this.dateTimeProvider.GetCurrentDateTime().Year - YearOfManufactureMinValue + 1)
-                .Select(y => y.ToString());
 
             var model = new VehicleCreateViewModel
             {
                 AllManufacturers = allManufacturers.Select(m => new SelectListItem(m.Name, m.Id.ToString())),
-                AllVehicleTypes = allVehicleTypes.Select(m => new SelectListItem(m.Name, m.Id.ToString())),
-                AllFuelTypes = allFuelTypes.Select(m => new SelectListItem(m.Name, m.Id.ToString())),
-                AllGearingTypes = allGearingTypes.Select(m => new SelectListItem(m.Name, m.Id.ToString())),
-                AvailableYears = allAvailableYears.Select(y => new SelectListItem(y, y))
+                AllVehicleTypes = await this.GetAllVehicleTypesAsync(),
+                AllFuelTypes = await this.GetAllFuelTypesAsync(),
+                AllGearingTypes = await this.GetAllGearingTypesAsync(),
+                AvailableYears = this.GetAvailableYears()
             };
 
             return model;
         }
 
-        [ResponseCache(Duration = 3600)]
         private async Task<VehicleUpdateViewModel> InitializeEditionModel(VehicleUpdateViewModel model)
         {
             var allManufacturers = await this.manufacturers.AllAsync();
-            var allVehicleTypes = await this.vehicleElements.GetVehicleTypes();
-            var allFuelTypes = await this.vehicleElements.GetFuelTypes();
-            var allGearingTypes = await this.vehicleElements.GetGearingTypes();
-            var allAvailableYears = Enumerable
-                .Range(YearOfManufactureMinValue, this.dateTimeProvider.GetCurrentDateTime().Year - YearOfManufactureMinValue + 1)
-                .Select(y => y.ToString());
-            
+
             model.AllManufacturers = allManufacturers.Select(m => new SelectListItem(m.Name, m.Id.ToString()));
-            model.AllVehicleTypes = allVehicleTypes.Select(m => new SelectListItem(m.Name, m.Id.ToString()));
-            model.AllFuelTypes = allFuelTypes.Select(m => new SelectListItem(m.Name, m.Id.ToString()));
-            model.AllGearingTypes = allGearingTypes.Select(m => new SelectListItem(m.Name, m.Id.ToString()));
-            model.AvailableYears = allAvailableYears.Select(y => new SelectListItem(y, y));
+            model.AllVehicleTypes = await this.GetAllVehicleTypesAsync();
+            model.AllFuelTypes = await this.GetAllFuelTypesAsync();
+            model.AllGearingTypes = await this.GetAllGearingTypesAsync();
+            model.AvailableYears = this.GetAvailableYears();
 
             return model;
         }
-        
+
         private VehicleDetailsViewModel InitializeDetailedModel(VehicleDetailsServiceModel vehicle, int pageIndex)
         {
             var allEntries = vehicle
@@ -219,16 +214,16 @@
             costs.Add("Fuel", vehicle.FuelEntries.Sum(fe => fe.Price));
             var routes = vehicle.FuelEntries.SelectMany(fe => fe.Routes).GroupBy(r => r).ToDictionary(x => x.Key, x => x.Count());
 
-            var minConsumption = vehicle.FuelEntries.Any(fe => fe.Average.Value > 0) 
-                ? vehicle.FuelEntries.Where(fe => fe.Average > 0).Min(fe => fe.Average.Value) 
+            var minConsumption = vehicle.FuelEntries.Any(fe => fe.Average.Value > 0)
+                ? vehicle.FuelEntries.Where(fe => fe.Average > 0).Min(fe => fe.Average.Value)
                 : 0;
 
-            var maxConsumption = vehicle.FuelEntries.Any(fe => fe.Average.Value > 0) 
-                ? vehicle.FuelEntries.Where(fe => fe.Average > 0).Max(fe => fe.Average.Value) 
+            var maxConsumption = vehicle.FuelEntries.Any(fe => fe.Average.Value > 0)
+                ? vehicle.FuelEntries.Where(fe => fe.Average > 0).Max(fe => fe.Average.Value)
                 : 0;
 
             var step = (maxConsumption - minConsumption) / ConsumptionHistogramRangesCount;
-            
+
             var model = Mapper.Map<VehicleDetailsViewModel>(vehicle);
             model.Stats = new Statistics
             {
@@ -257,7 +252,7 @@
                 .Select(fe => new MileageByDate
                 {
                     Date = fe.DateCreated,
-                    Consumption = fe.Average.HasValue ? fe.Average.Value : default(double)
+                    Consumption = fe.Average ?? default(double)
                 })
                 .OrderBy(m => m.Date);
 
@@ -266,10 +261,92 @@
                 .Skip((pageIndex - 1) * EntriesListPageSize)
                 .Take(EntriesListPageSize)
                 .ToList();
-            
+
             model.Entries = new PaginatedList<IEntryModel>(entriesToShow, pageIndex, totalPages);
             return model;
         }
 
+        private async Task<IEnumerable<SelectListItem>> GetAllGearingTypesAsync()
+        {
+            IEnumerable<SelectListItem> list;
+
+            var listFromCache = await this.cache.GetStringAsync(GearingTypesCacheKey);
+            if (listFromCache == null)
+            {
+                var gearingTypes = await this.vehicleElements.GetGearingTypes();
+                list = gearingTypes.Select(x => new SelectListItem(x.Name.ToString(), x.Id.ToString()));
+
+                var options = new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(WebConstants.StaticElementsCacheExpirationInDays)
+                };
+
+                await this.cache.SetStringAsync(GearingTypesCacheKey, JsonConvert.SerializeObject(list), options);
+            }
+            else
+            {
+                list = JsonConvert.DeserializeObject<IEnumerable<SelectListItem>>(listFromCache);
+            }
+
+            return list;
+        }
+
+        private async Task<IEnumerable<SelectListItem>> GetAllFuelTypesAsync()
+        {
+            IEnumerable<SelectListItem> list;
+
+            var listFromCache = await this.cache.GetStringAsync(FuelTypesCacheKey);
+            if (listFromCache == null)
+            {
+                var fuelTypes = await this.vehicleElements.GetFuelTypes();
+                list = fuelTypes.Select(x => new SelectListItem(x.Name.ToString(), x.Id.ToString()));
+
+                var options = new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(WebConstants.StaticElementsCacheExpirationInDays)
+                };
+
+                await this.cache.SetStringAsync(FuelTypesCacheKey, JsonConvert.SerializeObject(list), options);
+            }
+            else
+            {
+                list = JsonConvert.DeserializeObject<IEnumerable<SelectListItem>>(listFromCache);
+            }
+
+            return list;
+        }
+
+        private async Task<IEnumerable<SelectListItem>> GetAllVehicleTypesAsync()
+        {
+            IEnumerable<SelectListItem> list;
+
+            var listFromCache = await this.cache.GetStringAsync(VehicleTypesCacheKey);
+            if (listFromCache == null)
+            {
+                var vehicleTypes = await this.vehicleElements.GetVehicleTypes();
+                list = vehicleTypes.Select(x => new SelectListItem(x.Name.ToString(), x.Id.ToString()));
+
+                var options = new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(WebConstants.StaticElementsCacheExpirationInDays)
+                };
+
+                await this.cache.SetStringAsync(VehicleTypesCacheKey, JsonConvert.SerializeObject(list), options);
+            }
+            else
+            {
+                list = JsonConvert.DeserializeObject<IEnumerable<SelectListItem>>(listFromCache);
+            }
+
+            return list;
+        }
+
+        private IEnumerable<SelectListItem> GetAvailableYears()
+        {
+            return Enumerable
+                    .Range(YearOfManufactureMinValue, this.dateTimeProvider.GetCurrentDateTime().Year - YearOfManufactureMinValue + 1)
+                    .Select(y => new SelectListItem(y.ToString(), y.ToString()));
+        }
+        #endregion
     }
 }
