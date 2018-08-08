@@ -2,28 +2,30 @@
 Projects made using Asp.Net Core 2.0 and above
 
 ------------
-### 1. [JustMonitor](https://github.com/msotiroff/Asp.Net-Core-Projects/tree/master/VehicleCostsMonitor "JustMonitor")(under construction)
-The application represents a system for monitoring vehicle costs(fuel, maintenance, tax, insuranse, ect.) in which the users can register and login in order to add vehicles to their garage, for each vehicle its owner can add a picture, fuel and another cost entries. Vehicle details page show many statistics about it. In the project are also implemented different user roles and areas separated in private sections for admins and regular users. Depending on its role every user can access different sections of the application and has specific permissions of what can or cannot do.
+### 1. [VehicleCostsMonitor](https://github.com/msotiroff/Asp.Net-Core-Projects/tree/master/VehicleCostsMonitor "JustMonitor") or [JustMonitor](https://github.com/msotiroff/Asp.Net-Core-Projects/tree/master/VehicleCostsMonitor "JustMonitor")(under construction)
+The application represents a system for monitoring vehicle costs(fuel, maintenance, tax, insuranse, ect.) in which the users can register and login in order to add vehicles to their garage, for each vehicle its owner can add a picture, fuel and another cost entries. Vehicle details page show many statistics about it displayed in different charts. In the project are also implemented different user roles and areas separated in private sections for admins and regular users. Depending on its role every user can access different sections of the application and has specific permissions of what can or cannot do.
 
 
 Used technologies:
-- Asp.Net Core 2.1.1
+- Asp.Net Core 2.1
 - Entity Framework Core
 
 Some features:
 - Guest users can view vehicles profile page
 - Guest users can search vehicles
-- Guest users can register and login
+- Guest users can register and login (incl. Facebook and Google+ authentication)
 - Registered users can add vehicles to their profile
-- Registered users can add fuel and cost entries to their vehicles
-- Registered users can create/update/delete their vehicles
+- Registered users can add fuel and cost entries to their vehicles choosing of over 30 currencies
+- Registered users can create/update/delete their vehicles and entries
+- Registered users can set up the display currency for showing their statistics
 - Admin users can create/update/delete all vehicle manufacturers and models
 - Admin users can see all users details (incl. vehicles, roles, ect.)
 - Admin users can add/remove users to roles
 - All Admin actions are logged
 
 #### Getting started:
-Just type your server name in the ConnectionStrings section at appsettings.json and run! There is a seed method, which will insert all manufacturers, models, vehicle elements and about 500 sample users, 1000 vehicles with more than 30'000 fuel entries and nearly 8'000 cost entries. The seed method should take about 0.5-1 minute, depending on your machine.
+Just type your server name in the ConnectionStrings section at appsettings.json and run! There is a seed method, which will insert all manufacturers, models, vehicle elements and about 100 sample users, 800 vehicles with more than 30'000 fuel and cost entries. Database seeding should take about 2-3 minutes, depending on your machine.
+
 #### Enjoy :)
 
 ### 2. [OnlineStore](https://github.com/msotiroff/Asp.Net-Core-Projects/tree/master/OnlineStore "OnlineStore")
