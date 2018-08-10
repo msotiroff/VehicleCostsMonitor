@@ -29,7 +29,7 @@ Just type your server name in the ConnectionStrings section at appsettings.json 
 #### Enjoy :)
 
 ### 2. [OnlineStore](https://github.com/msotiroff/Asp.Net-Core-Projects/tree/master/OnlineStore "OnlineStore")
-E-Commerce system, made using ASP.NET Web API. The Asp.Net MVC application in this solution has made only to demonstrate how WEB API can be consumed by another Asp.Net Core application. The API is absolutely decoupled by the MVC project and it can be consumed by any client-side application.
+E-Commerce system, made using Asp.Net Core 2.0 and Entity Framework Core.
 
 Some features:
 - Guest users can view categories and products in them.
