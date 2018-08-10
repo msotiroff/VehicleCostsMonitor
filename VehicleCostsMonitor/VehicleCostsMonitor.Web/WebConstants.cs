@@ -39,7 +39,6 @@
 
         public const int StaticElementsCacheExpirationInDays = 7;
 
-        public const string CurrencyConverterApiBaseUri = "https://free.currencyconverterapi.com/api/v6/";
         public const string BadRequestErrorMsg = "Ops! Something went wrong while processing your request!";
     }
 }

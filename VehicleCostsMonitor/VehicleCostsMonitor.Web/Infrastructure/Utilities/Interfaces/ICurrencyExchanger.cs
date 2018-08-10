@@ -1,9 +1,9 @@
 ﻿namespace VehicleCostsMonitor.Web.Infrastructure.Utilities.Interfaces
 {
+    using System.Threading.Tasks;
+
     public interface ICurrencyExchanger
     {
-        decimal GetRate(string inputCurrency, string outputCurrency);
-
-        decimal Convert(string inputCurrency, decimal amount, string outputCurrency);
+        Task<decimal> Convert(string inputCurrency, decimal amount, string outputCurrency);
     }
 }

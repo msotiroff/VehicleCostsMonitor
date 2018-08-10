@@ -101,7 +101,7 @@
                 return RedirectToHome();
             }
 
-            var model = this.InitializeDetailedModel(vehicle, pageIndex);
+            var model = await this.InitializeDetailedModel(vehicle, pageIndex);
 
             return View(model);
         }
@@ -200,7 +200,7 @@
             return model;
         }
 
-        private VehicleDetailsViewModel InitializeDetailedModel(VehicleDetailsServiceModel vehicle, int pageIndex)
+        private async Task<VehicleDetailsViewModel> InitializeDetailedModel(VehicleDetailsServiceModel vehicle, int pageIndex)
         {
             var allEntries = vehicle
                 .FuelEntries
@@ -221,8 +221,11 @@
                 .ToDictionary(x => x.Key, x => x.Sum(fe => fe.Price));
 
             var fuelEntriesConverted = new Dictionary<string, decimal>();
-            fuelEntriesToConvert
-                .ForEach(kvp => fuelEntriesConverted[kvp.Key] = this.currencyExchanger.Convert(kvp.Key, kvp.Value, displayCurrency));
+            foreach (var kvp in fuelEntriesToConvert)
+            {
+                fuelEntriesConverted[kvp.Key] = await this.currencyExchanger.Convert(kvp.Key, kvp.Value, displayCurrency);
+            }
+
             var totalFuelCosts = fuelEntriesConverted.Sum(fe => fe.Value);
 
             var costEntriesToConvert = vehicle.CostEntries
@@ -230,17 +233,25 @@
                 .ToDictionary(x => x.Key, x => x.Sum(fe => fe.Price));
 
             var costEntriesConverted = new Dictionary<string, decimal>();
-            costEntriesToConvert
-                .ForEach(kvp => costEntriesConverted[kvp.Key] = this.currencyExchanger.Convert(kvp.Key, kvp.Value, displayCurrency));
+            foreach (var kvp in costEntriesToConvert)
+            {
+                costEntriesConverted[kvp.Key] = await this.currencyExchanger.Convert(kvp.Key, kvp.Value, displayCurrency);
+            }
+
             var totalOtherCosts = costEntriesConverted.Sum(kvp => kvp.Value);
 
-            var costs = vehicle.CostEntries
-                .ForEach(ce => ce.Price = this.currencyExchanger.Convert(ce.CurrencyCode, ce.Price, displayCurrency))
-                .GroupBy(e => e.ToString())
-                .ToDictionary(x => x.Key, y => y.Sum(e => e.Price));            
-            costs.Add("Fuel", totalFuelCosts);
+            var costsExchanged = vehicle.CostEntries;
+            foreach (var cost in costsExchanged)
+            {
+                cost.Price = await this.currencyExchanger.Convert(cost.CurrencyCode, cost.Price, displayCurrency);
+            }
 
-            var routes = vehicle.FuelEntries.SelectMany(fe => fe.Routes).GroupBy(r => r).ToDictionary(x => x.Key, x => x.Count());
+            var costsGrouped = costsExchanged
+                .GroupBy(e => e.ToString())
+                .ToDictionary(x => x.Key, y => y.Sum(e => e.Price));
+            costsGrouped.Add("Fuel", totalFuelCosts);
+            
+            var routesGrouped = vehicle.FuelEntries.SelectMany(fe => fe.Routes).GroupBy(r => r).ToDictionary(x => x.Key, x => x.Count());
 
             var minConsumption = vehicle.FuelEntries.Any(fe => fe.Average.Value > 0)
                 ? vehicle.FuelEntries.Where(fe => fe.Average > 0).Min(fe => fe.Average.Value)
@@ -255,8 +266,8 @@
             var model = Mapper.Map<VehicleDetailsViewModel>(vehicle);
             model.Stats = new Statistics
             {
-                Costs = costs,
-                Routes = routes,
+                Costs = costsGrouped,
+                Routes = routesGrouped,
                 MinConsumption = minConsumption,
                 MaxConsumption = maxConsumption,
                 ConsumptionRanges = new List<ConsumptionInRange>()

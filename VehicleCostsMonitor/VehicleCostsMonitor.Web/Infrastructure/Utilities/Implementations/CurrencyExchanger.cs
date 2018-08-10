@@ -9,6 +9,7 @@
 
     public class CurrencyExchanger : ICurrencyExchanger
     {
+        private const string CurrencyConverterApiBaseUri = "https://free.currencyconverterapi.com/api/v6/";
         private const string RequestUrl = "convert?q={0}_{1}&compact=ultra";
 
         private IDictionary<string, decimal> rates;
@@ -20,16 +21,16 @@
             this.rates = new Dictionary<string, decimal>();
         }
 
-        public decimal Convert(string inputCurrency, decimal amount, string outputCurrency)
+        public async Task<decimal> Convert(string inputCurrency, decimal amount, string outputCurrency)
         {
-            var rate = this.GetRate(inputCurrency, outputCurrency);
+            var rate = await this.GetRate(inputCurrency, outputCurrency);
 
             var convertedAmount = amount * rate;
 
             return convertedAmount;
         }
 
-        public decimal GetRate(string inputCurrency, string outputCurrency)
+        private async Task<decimal> GetRate(string inputCurrency, string outputCurrency)
         {
             if (this.rates.ContainsKey(inputCurrency))
             {
@@ -37,15 +38,8 @@
             }
 
             var exchangeUrl = string.Format(RequestUrl, inputCurrency, outputCurrency);
-            string response = string.Empty;
-
-            Task.Run(async () =>
-            {
-                response = await this.client.GetStringAsync(exchangeUrl);
-            })
-            .GetAwaiter()
-            .GetResult();
-
+            string response = await this.client.GetStringAsync(exchangeUrl);
+            
             var jsonObject = JObject.Parse(response);
 
             var rate = jsonObject.GetValue($"{inputCurrency}_{outputCurrency}").ToObject<decimal>();
@@ -57,7 +51,7 @@
 
         private HttpClient InitializeHttpClient(HttpClient client)
         {
-            client.BaseAddress = new Uri(WebConstants.CurrencyConverterApiBaseUri);
+            client.BaseAddress = new Uri(CurrencyConverterApiBaseUri);
             client.DefaultRequestHeaders.Clear();
 
             return client;
