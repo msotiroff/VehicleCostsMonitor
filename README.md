@@ -2,7 +2,7 @@
 Projects made using Asp.Net Core 2.0 and above
 
 ------------
-### 1. [VehicleCostsMonitor](https://github.com/msotiroff/Asp.Net-Core-Projects/tree/master/VehicleCostsMonitor "JustMonitor") or [JustMonitor](https://github.com/msotiroff/Asp.Net-Core-Projects/tree/master/VehicleCostsMonitor "JustMonitor")(under construction)
+### 1. [VehicleCostsMonitor](https://github.com/msotiroff/Asp.Net-Core-Projects/tree/master/VehicleCostsMonitor "JustMonitor") or [JustMonitor](https://github.com/msotiroff/Asp.Net-Core-Projects/tree/master/VehicleCostsMonitor "JustMonitor")
 The application represents a system for monitoring vehicle costs(fuel, maintenance, tax, insuranse, ect.) in which the users can register and login in order to add vehicles to their garage, for each vehicle its owner can add a picture, fuel and another cost entries. Vehicle details page show many statistics about it displayed in different charts. In the project are also implemented different user roles and areas separated in private sections for admins and regular users. Depending on its role every user can access different sections of the application and has specific permissions of what can or cannot do.
 
 
