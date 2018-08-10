@@ -7,8 +7,8 @@
 
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="5.0.1" />
     <PackageReference Include="CoreCompat.System.Drawing.v2" Version="5.2.0-preview1-r131" />
-    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.6" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.3" PrivateAssets="All" />
   </ItemGroup>
@@ -20,8 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\OnlineStore.Common\OnlineStore.Common.csproj" />
+    <ProjectReference Include="..\OnlineStore.Data\OnlineStore.Data.csproj" />
     <ProjectReference Include="..\OnlineStore.Models\OnlineStore.Models.csproj" />
-    <ProjectReference Include="..\OnlineStore.Api\OnlineStore.Api.csproj" />
+    <ProjectReference Include="..\OnlineStore.Services\OnlineStore.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>

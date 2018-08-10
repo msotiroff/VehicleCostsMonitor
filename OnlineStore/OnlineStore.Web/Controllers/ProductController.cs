@@ -2,7 +2,7 @@
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using OnlineStore.Api.Models.ProductModels;
+    using OnlineStore.Services.Models.ProductModels;
     using OnlineStore.Common.Notifications;
     using OnlineStore.Web.Infrastructure.Extensions;
     using OnlineStore.Web.Infrastructure.Helpers;
@@ -10,16 +10,17 @@
     using System.Net.Http;
     using System.Threading.Tasks;
     using static WebConstants;
+    using OnlineStore.Services.Interfaces;
 
-    public class ProductController : ApiClientController
+    public class ProductController : BaseController
     {
-        private const string RequestUri = "api/Products/";
-
         private readonly IFileProcessor fileProcessor;
+        private readonly IProductService productService;
 
-        public ProductController(IFileProcessor fileProcessor)
+        public ProductController(IFileProcessor fileProcessor, IProductService productService)
         {
             this.fileProcessor = fileProcessor;
+            this.productService = productService;
         }
 
         [HttpGet]
@@ -30,14 +31,7 @@
                 return BadRequest();
             }
 
-            var response = await this.HttpClient.GetAsync(RequestUri);
-
-            var models = await response
-                .Content
-                .ReadAsJsonAsync<ProductViewModel[]>();
-
-            var model = models
-                .FirstOrDefault(p => p.Id == id);
+            var model = await this.GetProductById(id.Value);
 
             return View(model);
         }
@@ -55,13 +49,8 @@
         [Authorize(Roles = AdministratorRole)]
         public async Task<IActionResult> Create(ProductCreateServiceModel model)
         {
-            var postTask = await this.HttpClient.PostAsJsonAsync(RequestUri, model);
-
-            if (!postTask.IsSuccessStatusCode)
-            {
-                return BadRequest();
-            }
-
+            await this.productService.CreateAsync(model);
+            
             this.ShowNotification(NotificationMessages.ProductCreatedSuccessfull, NotificationType.Info);
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
@@ -75,10 +64,8 @@
             {
                 return BadRequest();
             }
-            
-            var response = await this.HttpClient.GetAsync($"{RequestUri}{id}");
 
-            var product = await response.Content.ReadAsJsonAsync<ProductUpdateServiceModel>();
+            var product = await this.GetProductById(id.Value);
 
             return View(product);
         }
@@ -87,12 +74,7 @@
         [Authorize(Roles = AdministratorRole)]
         public async Task<IActionResult> Edit(ProductUpdateServiceModel model)
         {
-            var putTask = await this.HttpClient.PutAsJsonAsync(RequestUri, model);
-
-            if (!putTask.IsSuccessStatusCode)
-            {
-                return BadRequest();
-            }
+            await this.productService.UpdateAsync(model);
 
             this.ShowNotification(NotificationMessages.ProductUpdatedSuccessfull, NotificationType.Info);
 
@@ -121,13 +103,8 @@
             // Delete all pictures of this product from file system:
             var productDirectoryPath = $"{WebConstants.ProductPicturesServerPath}{WebConstants.ProductPicturesDirectoryNamePrefix}{id}";
             this.fileProcessor.DeleteDirectory(productDirectoryPath);
-            
-            var deleteTask = await this.HttpClient.DeleteAsync($"{RequestUri}{id}");
 
-            if (!deleteTask.IsSuccessStatusCode)
-            {
-                return BadRequest();
-            }
+            await productService.DeleteAsync(id);
 
             this.ShowNotification(NotificationMessages.ProductDeletedSuccessfull, NotificationType.Info);
 
@@ -136,9 +113,7 @@
         
         private async Task<ProductViewModel> GetProductById(int id)
         {
-            var response = await this.HttpClient.GetAsync($"{RequestUri}{id}");
-
-            var product = await response.Content.ReadAsJsonAsync<ProductViewModel>();
+            var product = await this.productService.GetAsync(id);
 
             return product;
         }

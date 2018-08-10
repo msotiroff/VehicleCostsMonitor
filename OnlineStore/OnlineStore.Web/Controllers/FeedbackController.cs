@@ -3,7 +3,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using OnlineStore.Api.Models.FeedbackModels;
+    using OnlineStore.Services.Models.FeedbackModels;
     using OnlineStore.Common.Notifications;
     using OnlineStore.Models;
     using OnlineStore.Web.Infrastructure.Extensions;
@@ -11,16 +11,17 @@
     using System.Net.Http;
     using System.Threading.Tasks;
     using static WebConstants;
+    using OnlineStore.Services.Interfaces;
 
-    public class FeedbackController : ApiClientController
+    public class FeedbackController : BaseController
     {
-        private const string RequestUri = "api/Feedbacks/";
-
         private readonly UserManager<User> userManager;
+        private readonly IFeedbackService feedbackService;
 
-        public FeedbackController(UserManager<User> userManager)
+        public FeedbackController(UserManager<User> userManager, IFeedbackService feedbackService)
         {
             this.userManager = userManager;
+            this.feedbackService = feedbackService;
         }
 
         [HttpGet]
@@ -32,12 +33,7 @@
         public async Task<IActionResult> Add(FeedbackCreateServiceModel model)
         {
             model.SenderId = this.userManager.GetUserId(User);
-
-            var postTask = await this.HttpClient.PostAsJsonAsync(RequestUri, model);
-            if (!postTask.IsSuccessStatusCode)
-            {
-                return BadRequest();
-            }
+            await this.feedbackService.CreateAsync(model);
 
             this.ShowNotification(NotificationMessages.FeedbackSentSuccessfull, NotificationType.Info);
 
@@ -48,9 +44,7 @@
         [Authorize(Roles = AdministratorRole)]
         public async Task<IActionResult> All()
         {
-            var response = await this.HttpClient.GetAsync(RequestUri);
-
-            var model = await response.Content.ReadAsJsonAsync<IEnumerable<FeedbackListingViewModel>>();
+            var model = await this.feedbackService.GetAllAsync();
 
             return View(model);
         }
@@ -59,9 +53,7 @@
         [Authorize(Roles = AdministratorRole)]
         public async Task<IActionResult> Details(int id)
         {
-            var response = await this.HttpClient.GetAsync(RequestUri + id);
-
-            var model = await response.Content.ReadAsJsonAsync<FeedbackDetailsServiceModel>();
+            var model = await this.feedbackService.GetAsync(id);
             model.SenderEmail = this.userManager.GetUserName(User);
 
             return View(model);

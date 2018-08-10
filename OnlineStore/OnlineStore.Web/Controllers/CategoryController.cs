@@ -3,39 +3,34 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-    using Newtonsoft.Json;
-    using OnlineStore.Api.Models.CategoryModels;
-    using OnlineStore.Common.Notifications;
-    using OnlineStore.Web.Infrastructure.Extensions;
     using OnlineStore.Web.Infrastructure.Helpers;
-    using System.Collections.Generic;
-    using System.IO;
+    using OnlineStore.Services.Interfaces;
     using System.Linq;
-    using System.Net.Http;
     using System.Threading.Tasks;
     using static WebConstants;
+    using OnlineStore.Common.Notifications;
+    using OnlineStore.Services.Models.CategoryModels;
 
-    public class CategoryController : ApiClientController
+    public class CategoryController : BaseController
     {
-        private const string RequestUri = "api/Categories/";
-
         private readonly IFileProcessor fileProcessor;
         private readonly IImageProcessor imageProcessor;
+        private readonly ICategoryService categoryService;
 
-        public CategoryController(IFileProcessor fileProcessor, IImageProcessor imageProcessor)
+        public CategoryController(
+            IFileProcessor fileProcessor, 
+            IImageProcessor imageProcessor,
+            ICategoryService categoryService)
         {
             this.fileProcessor = fileProcessor;
             this.imageProcessor = imageProcessor;
+            this.categoryService = categoryService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var response = await this.HttpClient.GetAsync(RequestUri);
-            
-            var jsonCategories = await response.Content.ReadAsStringAsync();
-            
-            var categories = JsonConvert.DeserializeObject<IEnumerable<CategoryViewModel>>(jsonCategories);
+            var categories = await this.categoryService.GetAllAsync();
 
             return View(categories);
         }
@@ -62,9 +57,9 @@
                 Thumbnail = this.imageProcessor.GetBytesFromImage(image),
             };
 
-            var postTask = await this.HttpClient.PostAsJsonAsync(RequestUri, model);
+            var newCategoryId = await this.categoryService.CreateAsync(model);
 
-            if (!postTask.IsSuccessStatusCode)
+            if (newCategoryId == default(int))
             {
                 return BadRequest();
             }
@@ -98,13 +93,8 @@
                     .fileProcessor
                     .DeleteDirectory($"{WebConstants.ProductPicturesServerPath}{WebConstants.ProductPicturesDirectoryNamePrefix}{productId}"));
 
-            var deleteTask = await this.HttpClient.DeleteAsync(RequestUri + id);
-
-            if (!deleteTask.IsSuccessStatusCode)
-            {
-                return BadRequest();
-            }
-
+            await this.categoryService.DeleteAsync(id);
+            
             this.ShowNotification(NotificationMessages.CategoryDeletedSuccessfull, NotificationType.Info);
             
             return RedirectToAction(nameof(Index));
@@ -112,9 +102,7 @@
 
         private async Task<CategoryViewModel> GetCategoryById(int id)
         {
-            var response = await this.HttpClient.GetAsync($"{RequestUri}{id}");
-
-            var category = await response.Content.ReadAsJsonAsync<CategoryViewModel>();
+            var category = await this.categoryService.GetAsync(id);
 
             return category;
         }

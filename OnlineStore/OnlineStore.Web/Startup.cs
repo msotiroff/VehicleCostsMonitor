@@ -11,8 +11,8 @@
     using Microsoft.Extensions.DependencyInjection;
     using OnlineStore.Data;
     using OnlineStore.Models;
+    using OnlineStore.Web.AutoMapperProfiles;
     using OnlineStore.Web.Infrastructure.Extensions;
-    using OnlineStore.Web.Infrastructure.Helpers;
 
     public class Startup
     {
@@ -26,7 +26,7 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<OnlineStoreDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("OnlineStoreConnection")));
 
             services.AddIdentity<User, IdentityRole>(options =>
                 
@@ -41,14 +41,9 @@
                 .AddEntityFrameworkStores<OnlineStoreDbContext>()
                 .AddDefaultTokenProviders();
             
-            services.AddTransient<IFileProcessor, FileProcessor>();
-            services.AddTransient<IImageProcessor, ImageProcessor>();
-
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped(sp => ShoppingCartExtensions.GetCart(sp));
-
-            services.AddAutoMapper(); // IMPORTANT: Comment this row, when create a new database migration
-
+            
             services.AddMvc(options =>
             {
                 options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
@@ -57,8 +52,13 @@
 
             services.AddMemoryCache();
             services.AddSession();
+
+            services
+                .AddApplicationServices()
+                .AddDomainServices()
+                .AddAutoMapper();
         }
-        
+
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -72,12 +72,12 @@
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            app.SeedDatabase(); // IMPORTANT: Comment this row, when create a new database migration
-            
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseSession();
             app.UseMvcWithDefaultRoute();
+
+            app.SeedDatabase();
         }
     }
 }

@@ -1,7 +1,5 @@
 ﻿namespace OnlineStore.Web.Controllers
 {
-    using Api.Models.OrderModels;
-    using Api.Models.ProductModels;
     using AutoMapper;
     using Infrastructure.Extensions;
     using Infrastructure.Filters;
@@ -12,24 +10,33 @@
     using Models.ShoppingCartModels;
     using OnlineStore.Common.Notifications;
     using OnlineStore.Models;
+    using OnlineStore.Services.Interfaces;
+    using Services.Models.OrderModels;
+    using Services.Models.ProductModels;
     using System;
     using System.Linq;
-    using System.Net.Http;
     using System.Threading.Tasks;
 
-    public class ShoppingController : ApiClientController
+    public class ShoppingController : BaseController
     {
-        private const string RequestUri = "api/Orders/";
-
         private readonly UserManager<User> userManager;
-        private readonly IHttpContextAccessor httpContext;
         private readonly ISession session;
+        private readonly IOrderService orderService;
+        private readonly IProductService productService;
+        private readonly IMapper mapper;
 
-        public ShoppingController(UserManager<User> userManager, IHttpContextAccessor httpContext)
+        public ShoppingController(
+            UserManager<User> userManager,
+            IHttpContextAccessor contextAccessor,
+            IOrderService orderService,
+            IProductService productService,
+            IMapper mapper)
         {
             this.userManager = userManager;
-            this.httpContext = httpContext;
-            this.session = this.httpContext.HttpContext.Session;
+            this.orderService = orderService;
+            this.productService = productService;
+            this.mapper = mapper;
+            this.session = contextAccessor.HttpContext.Session;
         }
 
         [HttpGet]
@@ -73,7 +80,7 @@
             {
                 return BadRequest();
             }
-            
+
             var success = this.RemoveProductFromSessionCart(productId);
             if (!success)
             {
@@ -123,7 +130,7 @@
                 this.ShowNotification(NotificationMessages.MissingData, NotificationType.Error);
                 return View();
             }
-            
+
             var productsInCart = this.session
                 .GetString(ShoppingCart.CartIdSessionKey)
                 .ToShoppingCart()
@@ -145,12 +152,8 @@
                     })
                     .ToArray()
             };
-            
-            var postTask = await this.HttpClient.PostAsJsonAsync(RequestUri, serviceModel);
-            if (!postTask.IsSuccessStatusCode)
-            {
-                return BadRequest();
-            }
+
+            await this.orderService.CreateAsync(serviceModel);
 
             this.ClearShoppingCart();
             this.ShowNotification(NotificationMessages.OrderSuccess, NotificationType.Success);
@@ -173,20 +176,14 @@
 
             if (productInCart == null)
             {
-                var response = await this.HttpClient.GetAsync($"api/Products/{productId}");
-                if (response.IsSuccessStatusCode)
-                {
-                    var product = await response.Content.ReadAsJsonAsync<ProductViewModel>();
-                    var productForCart = Mapper.Map<ProductShoppingCartModel>(product);
-                    productForCart.Amount++;
+                var dbProduct = await this.productService.GetAsync(productId);
 
-                    cart.Products
-                        .Add(productForCart);
-                }
-                else
-                {
-                    return false;
-                }
+                productInCart = this.mapper.Map<ProductShoppingCartModel>(dbProduct);
+
+                productInCart.Amount++;
+
+                cart.Products
+                    .Add(productInCart);
             }
             else
             {

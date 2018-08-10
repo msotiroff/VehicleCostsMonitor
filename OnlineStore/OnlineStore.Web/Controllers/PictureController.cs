@@ -3,30 +3,30 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-    using OnlineStore.Api.Models.PictureModels;
     using OnlineStore.Common.Notifications;
-    using OnlineStore.Web.Infrastructure.Extensions;
+    using OnlineStore.Services.Interfaces;
+    using OnlineStore.Services.Models.PictureModels;
     using OnlineStore.Web.Infrastructure.Helpers;
     using System.Collections.Generic;
     using System.IO;
-    using System.Net.Http;
     using System.Threading.Tasks;
     using static WebConstants;
 
     [Authorize(Roles = AdministratorRole)]
-    public class PictureController : ApiClientController
+    public class PictureController : BaseController
     {
-        private const string RequestUri = "api/Pictures/";
-
         private readonly IFileProcessor fileProcessor;
         private readonly IImageProcessor imageProcessor;
+        private readonly IPictureService pictureService;
 
         public PictureController(
             IFileProcessor fileProcessor,
-            IImageProcessor imageProcessor)
+            IImageProcessor imageProcessor,
+            IPictureService pictureService)
         {
             this.fileProcessor = fileProcessor;
             this.imageProcessor = imageProcessor;
+            this.pictureService = pictureService;
         }
 
         [HttpPost]
@@ -47,13 +47,8 @@
                 }
 
                 var uniqueFileName = this.fileProcessor.GetUniqueFileName(file.FileName);
-                var postTask = await this.SavePictureToDatabase(id, uniqueFileName);
-
-                if (!postTask.IsSuccessStatusCode)
-                {
-                    continue;
-                }
-
+                await this.SavePictureToDatabase(id, uniqueFileName);
+                
                 var task = this.SavePictureToServer(uploadDirectory, file, uniqueFileName);
                 imageTasks.Add(task);
             }
@@ -69,14 +64,7 @@
         [Authorize(Roles = AdministratorRole)]
         public async Task<IActionResult> Delete(int id)
         {
-            var response = await this.HttpClient.GetAsync(RequestUri + id);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                return BadRequest();
-            }
-
-            var pictureToBeDeleted = response.Content.ReadAsJsonAsync<PictureViewModel>().Result;
+            var pictureToBeDeleted = await this.pictureService.GetAsync(id);
 
             // Removes the picture from file system:
             var successfullyDeleted = this.fileProcessor.DeleteFile(pictureToBeDeleted.Path);
@@ -101,11 +89,11 @@
             this.imageProcessor.ProcessImage(fullPath);
         }
 
-        private async Task<HttpResponseMessage> SavePictureToDatabase(int productId, string uniqueFileName)
+        private async Task SavePictureToDatabase(int productId, string uniqueFileName)
         {
             // Add the current picture to database
-            var dbPath = "\\" + Path.Combine(WebConstants.ProductPicturesServerPath,
-                WebConstants.ProductPicturesDirectoryNamePrefix + productId.ToString(),
+            var dbPath = "\\" + Path.Combine(ProductPicturesServerPath,
+                ProductPicturesDirectoryNamePrefix + productId.ToString(),
                 uniqueFileName);
 
             var serviceModel = new PictureCreateServiceModel
@@ -114,8 +102,7 @@
                 ProductId = productId
             };
 
-            var postTask = await this.HttpClient.PostAsJsonAsync(RequestUri, serviceModel);
-            return postTask;
+            await this.pictureService.CreateAsync(serviceModel);
         }
     }
 }

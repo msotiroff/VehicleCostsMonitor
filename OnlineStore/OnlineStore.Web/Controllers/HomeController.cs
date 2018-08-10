@@ -4,7 +4,7 @@
     using OnlineStore.Web.Models;
     using System.Diagnostics;
 
-    public class HomeController : ApiClientController
+    public class HomeController : BaseController
     {
         public IActionResult Index() 
             => this.RedirectToAction(nameof(CategoryController.Index), "Category");

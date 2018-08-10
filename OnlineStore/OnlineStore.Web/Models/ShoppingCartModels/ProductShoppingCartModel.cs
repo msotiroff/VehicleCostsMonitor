@@ -1,7 +1,7 @@
 ﻿namespace OnlineStore.Web.Models.ShoppingCartModels
 {
     using AutoMapper;
-    using OnlineStore.Api.Models.ProductModels;
+    using OnlineStore.Services.Models.ProductModels;
     using OnlineStore.Common.AutoMapping;
     using System.Linq;
 
