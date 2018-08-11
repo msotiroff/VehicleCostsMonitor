@@ -2,6 +2,7 @@
 {
     using Areas.Vehicle.Models;
     using AutoMapper;
+    using AutoMapper.QueryableExtensions;
     using Infrastructure.Collections;
     using Infrastructure.Filters;
     using Infrastructure.Utilities.Interfaces;
@@ -20,7 +21,11 @@
     using System.Threading.Tasks;
     using VehicleCostsMonitor.Common.Notifications;
     using VehicleCostsMonitor.Models;
+    using VehicleCostsMonitor.Web.Areas.Vehicle.Models.CostEntry;
+    using VehicleCostsMonitor.Web.Areas.Vehicle.Models.FuelEntry;
     using VehicleCostsMonitor.Web.Infrastructure.Extensions;
+    using VehicleCostsMonitor.Web.Infrastructure.Extensions.ExcelExport.Implementations;
+    using VehicleCostsMonitor.Web.Infrastructure.Extensions.ExcelExport.Interfaces;
     using static VehicleCostsMonitor.Models.Common.ModelConstants;
     using static WebConstants;
 
@@ -168,6 +173,34 @@
 
             this.ShowNotification(NotificationMessages.VehicleDeletedSuccessfull, NotificationType.Success);
             return RedirectToAction("index", "profile", new { area = "user", id = this.userManager.GetUserId(User) });
+        }
+
+        [HttpGet]
+        [EnsureOwnership]
+        public async Task<IExcelResult> ExportFuelings(int id)
+        {
+            var fuelings = await this.vehicles.GetFuelEntries(id);
+            var model = fuelings.ProjectTo<FuelEntryExcelViewModel>().ToList();
+
+            var fileName = fuelings.Any()
+                ? $"Vehicle_{fuelings.First().VehicleId}_Fuelings"
+                : "Fuelings";
+
+            return Excel(model, fileName);
+        }
+
+        [HttpGet]
+        [EnsureOwnership]
+        public async Task<IExcelResult> ExportCosts(int id)
+        {
+            var costs = await this.vehicles.GetCostEntries(id);
+            var model = costs.ProjectTo<CostEntryExcelViewModel>().ToList();
+
+            var fileName = costs.Any()
+                ? $"Vehicle_{costs.First().VehicleId}_Costs"
+                : "Costs";
+
+            return Excel(model, fileName);
         }
 
         #region Private methods
@@ -318,13 +351,9 @@
             {
                 var gearingTypes = await this.vehicleElements.GetGearingTypes();
                 list = gearingTypes.Select(x => new SelectListItem(x.Name.ToString(), x.Id.ToString()));
+                var expiration = TimeSpan.FromDays(WebConstants.StaticElementsCacheExpirationInDays);
 
-                var options = new DistributedCacheEntryOptions
-                {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(WebConstants.StaticElementsCacheExpirationInDays)
-                };
-
-                await this.cache.SetStringAsync(GearingTypesCacheKey, JsonConvert.SerializeObject(list), options);
+                await this.cache.SetSerializableObject(GearingTypesCacheKey, list, expiration);
             }
             else
             {
@@ -343,13 +372,9 @@
             {
                 var fuelTypes = await this.vehicleElements.GetFuelTypes();
                 list = fuelTypes.Select(x => new SelectListItem(x.Name.ToString(), x.Id.ToString()));
+                var expiration = TimeSpan.FromDays(StaticElementsCacheExpirationInDays);
 
-                var options = new DistributedCacheEntryOptions
-                {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(WebConstants.StaticElementsCacheExpirationInDays)
-                };
-
-                await this.cache.SetStringAsync(FuelTypesCacheKey, JsonConvert.SerializeObject(list), options);
+                await this.cache.SetSerializableObject(FuelTypesCacheKey, list, expiration);
             }
             else
             {
@@ -368,13 +393,9 @@
             {
                 var vehicleTypes = await this.vehicleElements.GetVehicleTypes();
                 list = vehicleTypes.Select(x => new SelectListItem(x.Name.ToString(), x.Id.ToString()));
+                var expiration = TimeSpan.FromDays(WebConstants.StaticElementsCacheExpirationInDays);
 
-                var options = new DistributedCacheEntryOptions
-                {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(WebConstants.StaticElementsCacheExpirationInDays)
-                };
-
-                await this.cache.SetStringAsync(VehicleTypesCacheKey, JsonConvert.SerializeObject(list), options);
+                await this.cache.SetSerializableObject(VehicleTypesCacheKey, list, expiration);
             }
             else
             {

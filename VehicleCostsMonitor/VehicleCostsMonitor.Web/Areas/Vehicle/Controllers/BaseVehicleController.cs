@@ -5,7 +5,7 @@
     using static WebConstants;
 
     [Area(VehicleArea)]
-    public class BaseVehicleController : BaseController
+    public abstract class BaseVehicleController : BaseController
     {
         protected const string FuelTypesCacheKey = "_FuelTypes";
         

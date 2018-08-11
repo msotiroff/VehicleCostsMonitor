@@ -4,6 +4,11 @@
 
     public class FuelType : BaseType
     {
+        public FuelType()
+        {
+            this.FuelEntries = new HashSet<FuelEntry>();
+        }
+
         public IEnumerable<FuelEntry> FuelEntries { get; set; }
     }
 }

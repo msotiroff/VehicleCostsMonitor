@@ -34,6 +34,8 @@
 
         public string Owner { get; set; }
 
+        public string Note { get; set; }
+
         public ICollection<string> Routes { get; set; }
 
         public override string ToString() => this.FuelEntryTypeName;

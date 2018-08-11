@@ -18,6 +18,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using VehicleCostsMonitor.Models;
+    using VehicleCostsMonitor.Web.Infrastructure.Extensions;
 
     [Authorize]
     public class CostEntryController : BaseEntryController
@@ -146,11 +147,9 @@
             {
                 var costEntries = await this.costEntryService.GetEntryTypesAsync();
                 list = costEntries.Select(x => new SelectListItem(x.Name.ToString(), x.Id.ToString()));
+                var expiration = TimeSpan.FromDays(WebConstants.StaticElementsCacheExpirationInDays);
 
-                var options = new DistributedCacheEntryOptions();
-                options.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(WebConstants.StaticElementsCacheExpirationInDays);
-
-                await this.Cache.SetStringAsync(CostEntryTypesCacheKey, JsonConvert.SerializeObject(list), options);
+                await this.Cache.SetSerializableObject(CostEntryTypesCacheKey, list, expiration);
             }
             else
             {

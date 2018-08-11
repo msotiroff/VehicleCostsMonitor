@@ -131,6 +131,28 @@
             }
         }
 
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var fuelEntry = await this.db.FuelEntries.FirstOrDefaultAsync(fe => fe.Id == id);
+            if (fuelEntry == null)
+            {
+                return false;
+            }
+
+            try
+            {
+                this.db.Remove(fuelEntry);
+                await this.db.SaveChangesAsync();
+                await this.UpdateStatsOnFuelEntryChangedAsync(fuelEntry.VehicleId);
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         private async Task RemoveOldMappingEntities(FuelEntry fuelEntry)
         {
             var dbEntryRoutes = await this.db.FuelEntryRouteTypes.Where(fert => fert.FuelEntryId == fuelEntry.Id).ToListAsync();
@@ -176,28 +198,6 @@
             else
             {
                 fuelEntry.FuelEntryTypeId = firstFuelingType.Id;
-            }
-        }
-
-        public async Task<bool> DeleteAsync(int id)
-        {
-            var fuelEntry = await this.db.FuelEntries.FirstOrDefaultAsync(fe => fe.Id == id);
-            if (fuelEntry == null)
-            {
-                return false;
-            }
-
-            try
-            {
-                this.db.Remove(fuelEntry);
-                await this.db.SaveChangesAsync();
-                await this.UpdateStatsOnFuelEntryChangedAsync(fuelEntry.VehicleId);
-
-                return true;
-            }
-            catch
-            {
-                return false;
             }
         }
     }

@@ -1,12 +1,11 @@
 ﻿namespace VehicleCostsMonitor.Web.Controllers
 {
     using Common.Notifications;
-    using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using System.Collections.Generic;
     using System.Linq;
-    using VehicleCostsMonitor.Models;
     using VehicleCostsMonitor.Web.Areas.User.Controllers;
+    using VehicleCostsMonitor.Web.Infrastructure.Extensions.ExcelExport.Implementations;
     using static VehicleCostsMonitor.Common.Notifications.NotificationConstants;
 
     public abstract class BaseController : Controller
@@ -43,5 +42,14 @@
 
             return this.RedirectToHome();
         }
+
+        protected ExcelResult<T> Excel<T>(IEnumerable<T> data) where T : class
+            => new ExcelResult<T>(data);
+
+        protected ExcelResult<T> Excel<T>(IEnumerable<T> data, string fileName) where T : class
+            => new ExcelResult<T>(data, fileName);
+
+        protected ExcelResult<T> Excel<T>(IEnumerable<T> data, string fileName, string sheetName) where T : class
+            => new ExcelResult<T>(data, fileName, sheetName);
     }
 }

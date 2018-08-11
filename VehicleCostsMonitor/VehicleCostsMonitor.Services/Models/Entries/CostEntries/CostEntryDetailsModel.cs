@@ -20,6 +20,8 @@
 
         public string CurrencyCode { get; set; }
 
+        public string Note { get; set; }
+
         public int VehicleId { get; set; }
 
         public string Owner { get; set; }

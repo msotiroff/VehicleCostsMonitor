@@ -18,6 +18,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using VehicleCostsMonitor.Models;
+    using VehicleCostsMonitor.Web.Infrastructure.Extensions;
     using static WebConstants;
 
     [Authorize]
@@ -174,11 +175,9 @@
             {
                 var entryTypes = await this.fuelEntryService.GetEntryTypes();
                 list = entryTypes.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+                var expiration = TimeSpan.FromDays(StaticElementsCacheExpirationInDays);
 
-                var options = new DistributedCacheEntryOptions();
-                options.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(StaticElementsCacheExpirationInDays);
-
-                await this.Cache.SetStringAsync(FuelEntryTypesCacheKey, JsonConvert.SerializeObject(list), options);
+                await this.Cache.SetSerializableObject(FuelEntryTypesCacheKey, list, expiration);
             }
             else
             {
@@ -197,11 +196,9 @@
             {
                 var fuelTypes = await this.fuelEntryService.GetFuelTypes();
                 list = fuelTypes.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
-
-                var options = new DistributedCacheEntryOptions();
-                options.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(StaticElementsCacheExpirationInDays);
-
-                await this.Cache.SetStringAsync(FuelTypesCacheKey, JsonConvert.SerializeObject(list), options);
+                var expiration = TimeSpan.FromDays(StaticElementsCacheExpirationInDays);
+                
+                await this.Cache.SetSerializableObject(FuelTypesCacheKey, list, expiration);
             }
             else
             {
@@ -219,11 +216,9 @@
             if (listFromCache == null)
             {
                 list = await this.fuelEntryService.GetRouteTypes();
-
-                var options = new DistributedCacheEntryOptions();
-                options.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(StaticElementsCacheExpirationInDays);
-
-                await this.Cache.SetStringAsync(RouteTypesCacheKey, JsonConvert.SerializeObject(list), options);
+                var expiration = TimeSpan.FromDays(StaticElementsCacheExpirationInDays);
+                
+                await this.Cache.SetSerializableObject(RouteTypesCacheKey, list, expiration);
             }
             else
             {
@@ -241,11 +236,9 @@
             if (listFromCache == null)
             {
                 list = await this.fuelEntryService.GetExtraFuelConsumers();
-
-                var options = new DistributedCacheEntryOptions();
-                options.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(StaticElementsCacheExpirationInDays);
-
-                await this.Cache.SetStringAsync(ExtraFuelConsumersCacheKey, JsonConvert.SerializeObject(list), options);
+                var expiration = TimeSpan.FromDays(StaticElementsCacheExpirationInDays);
+                
+                await this.Cache.SetSerializableObject(ExtraFuelConsumersCacheKey, list, expiration);
             }
             else
             {

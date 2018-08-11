@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using VehicleCostsMonitor.Services.Models.Entries;
 
     public interface IVehicleService
     {
@@ -16,6 +17,10 @@
         Task<bool> UpdateAsync(VehicleUpdateServiceModel model);
 
         Task<bool> DeleteAsync(int id);
+
+        Task<IQueryable<FuelEntryDetailsModel>> GetFuelEntries(int id);
+
+        Task<IQueryable<CostEntryDetailsModel>> GetCostEntries(int id);
 
         Task<IEnumerable<VehicleStatisticServiceModel>> GetMostEconomicCars(string fuelType);
 

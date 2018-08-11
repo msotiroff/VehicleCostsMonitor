@@ -11,6 +11,7 @@
     using VehicleCostsMonitor.Common;
     using VehicleCostsMonitor.Data;
     using VehicleCostsMonitor.Models;
+    using VehicleCostsMonitor.Services.Models.Entries;
 
     public class VehicleService : DataAccessService, IVehicleService
     {
@@ -100,13 +101,35 @@
 
             return vehicle;
         }
-        
+
         public async Task<VehicleUpdateServiceModel> GetForUpdateAsync(int id)
             => await this.db
                 .Vehicles
                 .Where(v => v.Id == id)
                 .ProjectTo<VehicleUpdateServiceModel>()
                 .FirstOrDefaultAsync();
+
+        public async Task<IQueryable<CostEntryDetailsModel>> GetCostEntries(int id)
+        {
+            var costs = await this.db.CostEntries
+            .Where(ce => ce.VehicleId == id)
+            .OrderByDescending(ce => ce.DateCreated)
+            .ProjectTo<CostEntryDetailsModel>()
+            .ToListAsync();
+
+            return costs.AsQueryable();
+        }
+
+        public async Task<IQueryable<FuelEntryDetailsModel>> GetFuelEntries(int id)
+        {
+            var fuelings = await this.db.FuelEntries
+            .Where(fe => fe.VehicleId == id)
+            .OrderByDescending(fe => fe.DateCreated)
+            .ProjectTo<FuelEntryDetailsModel>()
+            .ToListAsync();
+
+            return fuelings.AsQueryable();
+        }
 
         public async Task<IEnumerable<VehicleStatisticServiceModel>> GetMostEconomicCars(string fuelType)
         {

@@ -9,6 +9,7 @@
     using System.Threading.Tasks;
     using VehicleCostsMonitor.Services.Interfaces;
     using VehicleCostsMonitor.Web.Areas.Vehicle.Models.Enums;
+    using VehicleCostsMonitor.Web.Infrastructure.Extensions;
     using static WebConstants;
 
     public abstract class BaseEntryController : BaseVehicleController
@@ -37,11 +38,9 @@
             {
                 var currencyList = await this.currencyService.GetAsync();
                 list = currencyList.Select(x => new SelectListItem(x.ToString(), x.Id.ToString()));
+                var expiration = TimeSpan.FromDays(StaticElementsCacheExpirationInDays);
 
-                var options = new DistributedCacheEntryOptions();
-                options.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(StaticElementsCacheExpirationInDays);
-
-                await this.Cache.SetStringAsync(CurrenciesCacheKey, JsonConvert.SerializeObject(list), options);
+                await this.Cache.SetSerializableObject(CurrenciesCacheKey, list, expiration);
             }
             else
             {
@@ -59,11 +58,9 @@
             if (listFromCache == null)
             {
                 list = Enum.GetNames(typeof(PricingType)).Select(pt => new SelectListItem(pt.ToString(), pt.ToString()));
+                var expiration = TimeSpan.FromDays(StaticElementsCacheExpirationInDays);
 
-                var options = new DistributedCacheEntryOptions();
-                options.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(StaticElementsCacheExpirationInDays);
-
-                await this.Cache.SetStringAsync(PricingTypesCacheKey, JsonConvert.SerializeObject(list), options);
+                await this.Cache.SetSerializableObject(PricingTypesCacheKey, list, expiration);
             }
             else
             {

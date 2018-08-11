@@ -15,6 +15,11 @@
     <p class="text-info">
         Data is updated daily !
     </p>
+    <p>
+        <a asp-action="exportvehicles" asp-route-fuelType="@Model.FirstOrDefault()?.FuelType" class="btn btn-success">
+            Export to Excel&nbsp;&nbsp;<i><img src="~/images/Excel.jpg" alt="Export vehicles to excel" title="Export vehicles to Excel worksheet" class="img-miniature" /></i>
+        </a>
+    </p>
 </div>
 
 <div class="container">

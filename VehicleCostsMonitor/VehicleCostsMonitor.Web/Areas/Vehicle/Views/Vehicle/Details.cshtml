@@ -71,6 +71,13 @@
                             <a asp-area="vehicle" asp-controller="vehicle" asp-action="delete" asp-route-id="@Model.Id">
                                 <img class="btn btn-default img-action" alt="Delete vehicle" title="Delete vehicle" src="@Url.Content("~/images/Delete.jpg")" />
                             </a>
+                            <br />
+                            <a asp-action="exportfuelings" asp-route-id="@Model.Id" class="btn btn-success">
+                                Export fuelings to Excel&nbsp;&nbsp;<i><img src="~/images/Excel.jpg" alt="Export fuelings to excel" title="Export fuelings to Excel worksheet" class="img-miniature" /></i>
+                            </a>
+                            <a asp-action="exportcosts" asp-route-id="@Model.Id" class="btn btn-success">
+                                Export costs to Excel&nbsp;&nbsp;<i><img src="~/images/Excel.jpg" alt="Export fuelings to excel" title="Export fuelings to Excel worksheet" class="img-miniature" /></i>
+                            </a>
                         </div>
                     </div>
                 }
@@ -176,7 +183,7 @@
             {
                 @: data.addRow([new Date(@mpg.Date.Year, @mpg.Date.Month, @mpg.Date.Day), @mpg.Consumption])
             }
-            
+
             var options = {
                 title: 'Monthly Consumption',
                 width: 800,
