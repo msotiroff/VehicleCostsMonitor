@@ -11,7 +11,6 @@
     using Microsoft.Extensions.DependencyInjection;
     using OnlineStore.Data;
     using OnlineStore.Models;
-    using OnlineStore.Web.AutoMapperProfiles;
     using OnlineStore.Web.Infrastructure.Extensions;
 
     public class Startup

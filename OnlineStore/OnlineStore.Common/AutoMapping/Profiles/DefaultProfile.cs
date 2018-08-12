@@ -1,4 +1,4 @@
-﻿namespace OnlineStore.Web.AutoMapperProfiles
+﻿namespace OnlineStore.Common.AutoMapping.Profiles
 {
     using AutoMapper;
     using Common.AutoMapping;
