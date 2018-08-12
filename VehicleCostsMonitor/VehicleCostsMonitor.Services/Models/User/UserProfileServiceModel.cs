@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using AutoMapper;
-    using Common.AutoMapping;
+    using Common.AutoMapping.Interfaces;
     using VehicleCostsMonitor.Models;
     using VehicleCostsMonitor.Services.Models.Vehicle;
 

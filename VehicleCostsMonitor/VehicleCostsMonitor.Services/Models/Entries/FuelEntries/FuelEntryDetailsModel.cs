@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using AutoMapper;
-    using Common.AutoMapping;
+    using Common.AutoMapping.Interfaces;
     using Interfaces;
     using VehicleCostsMonitor.Models;
 

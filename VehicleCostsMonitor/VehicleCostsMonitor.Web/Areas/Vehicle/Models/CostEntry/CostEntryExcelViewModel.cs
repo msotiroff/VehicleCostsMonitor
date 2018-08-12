@@ -1,7 +1,7 @@
 ﻿namespace VehicleCostsMonitor.Web.Areas.Vehicle.Models.CostEntry
 {
     using AutoMapper;
-    using Common.AutoMapping;
+    using Common.AutoMapping.Interfaces;
     using Infrastructure.Extensions.ExcelExport.Attributes;
     using Services.Models.Entries;
     using System;

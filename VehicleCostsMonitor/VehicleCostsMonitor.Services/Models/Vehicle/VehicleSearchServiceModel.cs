@@ -3,7 +3,7 @@
     using AutoMapper;
     using System.ComponentModel.DataAnnotations;
     using VehicleCostsMonitor.Common;
-    using VehicleCostsMonitor.Common.AutoMapping;
+    using VehicleCostsMonitor.Common.AutoMapping.Interfaces;
     using VehicleCostsMonitor.Models;
 
     public class VehicleSearchServiceModel : IAutoMapWith<Vehicle>, ICustomMappingConfiguration

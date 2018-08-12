@@ -1,9 +1,9 @@
-﻿namespace VehicleCostsMonitor.Web.Infrastructure.AutoMapperProfiles
+﻿namespace VehicleCostsMonitor.Common.AutoMapping.Profiles
 {
     using System;
     using System.Linq;
     using AutoMapper;
-    using VehicleCostsMonitor.Common.AutoMapping;
+    using Interfaces;
 
     public class DefaultProfile : Profile
     {

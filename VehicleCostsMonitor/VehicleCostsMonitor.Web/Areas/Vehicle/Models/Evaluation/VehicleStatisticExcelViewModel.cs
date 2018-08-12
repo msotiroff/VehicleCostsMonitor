@@ -1,7 +1,7 @@
 ﻿namespace VehicleCostsMonitor.Web.Areas.Vehicle.Models.Evaluation
 {
     using AutoMapper;
-    using Common.AutoMapping;
+    using Common.AutoMapping.Interfaces;
     using System;
     using VehicleCostsMonitor.Services.Models.Vehicle;
     using VehicleCostsMonitor.Web.Infrastructure.Extensions.ExcelExport.Attributes;

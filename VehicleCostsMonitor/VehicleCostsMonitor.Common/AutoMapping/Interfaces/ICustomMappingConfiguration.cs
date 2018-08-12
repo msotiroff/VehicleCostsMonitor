@@ -1,4 +1,4 @@
-﻿namespace VehicleCostsMonitor.Common.AutoMapping
+﻿namespace VehicleCostsMonitor.Common.AutoMapping.Interfaces
 {
     using AutoMapper;
 

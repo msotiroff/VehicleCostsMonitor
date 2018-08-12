@@ -1,7 +1,7 @@
 ﻿namespace VehicleCostsMonitor.Services.Models.Entries
 {
     using AutoMapper;
-    using Common.AutoMapping;
+    using Common.AutoMapping.Interfaces;
     using Interfaces;
     using System;
     using VehicleCostsMonitor.Models;

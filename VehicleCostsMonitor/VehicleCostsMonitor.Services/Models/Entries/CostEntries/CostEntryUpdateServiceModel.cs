@@ -1,6 +1,6 @@
 ﻿namespace VehicleCostsMonitor.Services.Models.Entries.CostEntries
 {
-    using Common.AutoMapping;
+    using Common.AutoMapping.Interfaces;
     using System;
     using System.ComponentModel.DataAnnotations;
     using VehicleCostsMonitor.Models;

@@ -1,6 +1,6 @@
 ﻿namespace VehicleCostsMonitor.Services.Models.Entries.FuelEntries
 {
-    using Common.AutoMapping;
+    using Common.AutoMapping.Interfaces;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;

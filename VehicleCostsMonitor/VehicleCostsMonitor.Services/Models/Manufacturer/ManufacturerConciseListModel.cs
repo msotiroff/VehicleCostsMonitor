@@ -1,7 +1,7 @@
 ﻿namespace VehicleCostsMonitor.Services.Models.Manufacturer
 {
     using System.ComponentModel.DataAnnotations;
-    using VehicleCostsMonitor.Common.AutoMapping;
+    using VehicleCostsMonitor.Common.AutoMapping.Interfaces;
     using VehicleCostsMonitor.Models;
 
     public class ManufacturerConciseListModel : IAutoMapWith<Manufacturer>

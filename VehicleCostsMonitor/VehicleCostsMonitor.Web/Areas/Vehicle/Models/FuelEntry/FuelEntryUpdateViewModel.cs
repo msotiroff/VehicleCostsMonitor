@@ -6,7 +6,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
-    using VehicleCostsMonitor.Common.AutoMapping;
+    using VehicleCostsMonitor.Common.AutoMapping.Interfaces;
     using VehicleCostsMonitor.Models;
     using VehicleCostsMonitor.Web.Infrastructure.Attributes;
 

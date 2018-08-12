@@ -2,7 +2,7 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
-    using VehicleCostsMonitor.Common.AutoMapping;
+    using VehicleCostsMonitor.Common.AutoMapping.Interfaces;
     using VehicleCostsMonitor.Models;
 
     public class UserActivityLogCreateModel : IAutoMapWith<UserActivityLog>

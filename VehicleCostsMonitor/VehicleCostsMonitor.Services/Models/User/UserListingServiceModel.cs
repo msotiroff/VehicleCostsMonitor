@@ -1,7 +1,7 @@
 ﻿namespace VehicleCostsMonitor.Services.Models.User
 {
     using System.Collections.Generic;
-    using VehicleCostsMonitor.Common.AutoMapping;
+    using VehicleCostsMonitor.Common.AutoMapping.Interfaces;
     using VehicleCostsMonitor.Models;
 
     public class UserListingServiceModel : IAutoMapWith<User>

@@ -1,6 +1,6 @@
 ﻿namespace VehicleCostsMonitor.Web.Areas.Vehicle.Models.CostEntry
 {
-    using Common.AutoMapping;
+    using Common.AutoMapping.Interfaces;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Services.Models.Entries.CostEntries;
     using System;

@@ -1,6 +1,6 @@
 ﻿namespace VehicleCostsMonitor.Services.Models.Picture
 {
-    using Common.AutoMapping;
+    using Common.AutoMapping.Interfaces;
     using System.ComponentModel.DataAnnotations;
     using VehicleCostsMonitor.Models;
 
