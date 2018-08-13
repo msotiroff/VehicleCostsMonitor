@@ -1,16 +1,14 @@
 ﻿namespace VehicleCostsMonitor.Web.Controllers
 {
+    using Infrastructure.Collections;
+    using Infrastructure.Utilities.Interfaces;
     using Microsoft.AspNetCore.Mvc;
+    using Services.Interfaces;
+    using Services.Models.Vehicle;
     using System;
-    using System.Collections;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using VehicleCostsMonitor.Services.Interfaces;
-    using VehicleCostsMonitor.Services.Models.Vehicle;
-    using VehicleCostsMonitor.Web.Infrastructure.Collections;
-    using VehicleCostsMonitor.Web.Infrastructure.Utilities.Interfaces;
-    using VehicleCostsMonitor.Web.Models.Search;
+    using Web.Models.Search;
     using static VehicleCostsMonitor.Models.Common.ModelConstants;
     using static WebConstants;
 

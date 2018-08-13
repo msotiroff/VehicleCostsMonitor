@@ -1,9 +1,14 @@
 ﻿namespace VehicleCostsMonitor.Web.Areas.Vehicle.Controllers
 {
     using Areas.Vehicle.Models;
+    using Areas.Vehicle.Models.CostEntry;
+    using Areas.Vehicle.Models.FuelEntry;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
+    using Common.Notifications;
     using Infrastructure.Collections;
+    using Infrastructure.Extensions;
+    using Infrastructure.Extensions.ExcelExport.Interfaces;
     using Infrastructure.Filters;
     using Infrastructure.Utilities.Interfaces;
     using Microsoft.AspNetCore.Authorization;
@@ -19,13 +24,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using VehicleCostsMonitor.Common.Notifications;
     using VehicleCostsMonitor.Models;
-    using VehicleCostsMonitor.Web.Areas.Vehicle.Models.CostEntry;
-    using VehicleCostsMonitor.Web.Areas.Vehicle.Models.FuelEntry;
-    using VehicleCostsMonitor.Web.Infrastructure.Extensions;
-    using VehicleCostsMonitor.Web.Infrastructure.Extensions.ExcelExport.Implementations;
-    using VehicleCostsMonitor.Web.Infrastructure.Extensions.ExcelExport.Interfaces;
     using static VehicleCostsMonitor.Models.Common.ModelConstants;
     using static WebConstants;
 

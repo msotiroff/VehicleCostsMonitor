@@ -11,7 +11,7 @@
     using System.Threading.Tasks;
     using VehicleCostsMonitor.Models;
 
-    public class ManufacturerService : DataAccessService, IManufacturerService
+    public class ManufacturerService : BaseService, IManufacturerService
     {
         public ManufacturerService(JustMonitorDbContext db) 
             : base(db) { }

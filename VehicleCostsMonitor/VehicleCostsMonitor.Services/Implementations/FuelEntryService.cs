@@ -12,7 +12,7 @@
     using VehicleCostsMonitor.Models;
     using VehicleCostsMonitor.Services.Models.Entries.FuelEntries;
 
-    public class FuelEntryService : DataAccessService, IFuelEntryService
+    public class FuelEntryService : BaseService, IFuelEntryService
     {
         public FuelEntryService(JustMonitorDbContext db)
             : base(db) { }

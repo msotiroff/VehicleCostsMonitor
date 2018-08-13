@@ -10,7 +10,7 @@
     using VehicleCostsMonitor.Models;
     using VehicleCostsMonitor.Services.Models.Log;
 
-    public class LogService : DataAccessService, ILogService
+    public class LogService : BaseService, ILogService
     {
         public LogService(JustMonitorDbContext db) 
             : base(db) { }

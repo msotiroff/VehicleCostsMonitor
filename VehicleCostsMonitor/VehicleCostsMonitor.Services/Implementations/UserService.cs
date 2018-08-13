@@ -8,7 +8,7 @@
     using System.Threading.Tasks;
     using VehicleCostsMonitor.Data;
 
-    public class UserService : DataAccessService, IUserService
+    public class UserService : BaseService, IUserService
     {
         public UserService(JustMonitorDbContext db) 
             : base(db) { }

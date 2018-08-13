@@ -10,7 +10,7 @@
     using System.Threading.Tasks;
     using VehicleCostsMonitor.Models;
 
-    public class VehicleModelService : DataAccessService, IVehicleModelService
+    public class VehicleModelService : BaseService, IVehicleModelService
     {
         public VehicleModelService(JustMonitorDbContext db) 
             : base(db) { }

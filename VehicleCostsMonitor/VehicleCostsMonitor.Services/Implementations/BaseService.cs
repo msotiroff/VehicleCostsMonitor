@@ -5,7 +5,7 @@
     using System.ComponentModel.DataAnnotations;
     using VehicleCostsMonitor.Data;
 
-    public class DataAccessService
+    public class BaseService
     {
         private const string EntityValidationErrorMsg = "Entity validation failed!";
         protected const string FirstFueling = "First fueling";
@@ -13,7 +13,7 @@
 
         protected JustMonitorDbContext db;
 
-        public DataAccessService(JustMonitorDbContext db)
+        public BaseService(JustMonitorDbContext db)
         {
             this.db = db;
         }

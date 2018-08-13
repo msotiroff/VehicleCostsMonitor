@@ -1,14 +1,14 @@
 ﻿namespace VehicleCostsMonitor.Web.Models.Search
 {
+    using Infrastructure.Attributes;
+    using Infrastructure.Collections;
     using Microsoft.AspNetCore.Mvc.Rendering;
+    using Services.Models.Manufacturer;
+    using Services.Models.Vehicle;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using VehicleCostsMonitor.Models;
-    using VehicleCostsMonitor.Services.Models.Manufacturer;
-    using VehicleCostsMonitor.Services.Models.Vehicle;
-    using VehicleCostsMonitor.Web.Infrastructure.Attributes;
-    using VehicleCostsMonitor.Web.Infrastructure.Collections;
     using static VehicleCostsMonitor.Models.Common.ModelConstants;
 
     public class SearchViewModel

@@ -13,7 +13,7 @@
     using VehicleCostsMonitor.Models;
     using VehicleCostsMonitor.Services.Models.Entries;
 
-    public class VehicleService : DataAccessService, IVehicleService
+    public class VehicleService : BaseService, IVehicleService
     {
         public VehicleService(JustMonitorDbContext db)
             : base(db) { }

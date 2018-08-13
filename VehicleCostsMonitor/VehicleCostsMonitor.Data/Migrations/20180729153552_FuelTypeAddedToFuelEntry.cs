@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-
-namespace VehicleCostsMonitor.Data.Migrations
+﻿namespace VehicleCostsMonitor.Data.Migrations
 {
+    using Microsoft.EntityFrameworkCore.Migrations;
+
     public partial class FuelTypeAddedToFuelEntry : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -11,7 +11,7 @@
     using VehicleCostsMonitor.Models;
     using VehicleCostsMonitor.Services.Models.Entries.CostEntries;
 
-    public class CostEntryService : DataAccessService, ICostEntryService
+    public class CostEntryService : BaseService, ICostEntryService
     {
         public CostEntryService(JustMonitorDbContext db) 
             : base(db) { }

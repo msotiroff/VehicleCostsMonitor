@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
-
-namespace VehicleCostsMonitor.Data.Migrations
+﻿namespace VehicleCostsMonitor.Data.Migrations
 {
+    using Microsoft.EntityFrameworkCore.Metadata;
+    using Microsoft.EntityFrameworkCore.Migrations;
+
     public partial class TableCurrencyAdded : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)

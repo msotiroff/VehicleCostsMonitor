@@ -7,7 +7,7 @@
     using VehicleCostsMonitor.Models;
     using VehicleCostsMonitor.Services.Interfaces;
 
-    public class CurrencyService : DataAccessService, ICurrencyService
+    public class CurrencyService : BaseService, ICurrencyService
     {
         public CurrencyService(JustMonitorDbContext db) 
             : base(db) { }

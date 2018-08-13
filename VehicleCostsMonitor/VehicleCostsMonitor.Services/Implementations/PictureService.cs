@@ -10,7 +10,7 @@
     using VehicleCostsMonitor.Models;
     using VehicleCostsMonitor.Services.Models.Picture;
 
-    public class PictureService : DataAccessService, IPictureService
+    public class PictureService : BaseService, IPictureService
     {
         public PictureService(JustMonitorDbContext db) 
             : base(db) { }
