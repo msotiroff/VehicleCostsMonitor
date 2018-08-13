@@ -41,11 +41,7 @@
         public string PricingType { get; set; }
 
         public IEnumerable<SelectListItem> PricingTypes { get; set; }
-
-        //public int CurrencyId { get; set; }
-
-        //public IEnumerable<SelectListItem> AllCurrencies { get; set; }
-
+        
         public string Note { get; set; }
 
         [Required]

@@ -146,8 +146,6 @@
 
                 dbContext.CostEntries.AddRange(costEntries);
                 dbContext.SaveChanges();
-
-                UpdateVehiclesStats(dbContext);
             }
         }
 
@@ -197,7 +195,11 @@
                         var fuelingDate = new DateTime(startDate.Year, startDate.Month, day);
                         var quantity = random.Next(fuelQuantityMinValue, fuelQuantityMaxValue);
                         var tripOdometer = random.Next(odometerMinStep, odometerMaxStep);
-
+                        if (hasAnyEntries)
+                        {
+                            odometer += tripOdometer;
+                        }
+                        
                         var model = new FuelEntryCreateServiceModel
                         {
                             DateCreated = fuelingDate,
@@ -224,7 +226,6 @@
                         var newFuelEntry = Mapper.Map<FuelEntry>(model);
                         fuelEntriesToBeCreated.Add(newFuelEntry);
 
-                        odometer += tripOdometer;
                         startDate = startDate.AddMonths(1);
                         hasAnyEntries = true;
                     }
@@ -232,6 +233,8 @@
 
                 dbContext.FuelEntries.AddRange(fuelEntriesToBeCreated);
                 dbContext.SaveChanges();
+
+                UpdateVehiclesStats(dbContext);
             }
         }
 

@@ -1,12 +1,8 @@
 ﻿namespace VehicleCostsMonitor.Services.Implementations
 {
-    using Interfaces;
-    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using System.Threading.Tasks;
     using VehicleCostsMonitor.Data;
 
     public class DataAccessService
@@ -33,53 +29,6 @@
             {
                 throw new InvalidOperationException(EntityValidationErrorMsg);
             }
-        }
-        
-        protected async Task<int> UpdateStatsOnFuelEntryChangedAsync(int vehicleId)
-        {
-            var vehicle = await this.db.Vehicles
-                .Where(v => v.Id == vehicleId)
-                .Include(v => v.FuelEntries)
-                .ThenInclude(fe => fe.FuelEntryType)
-                .FirstOrDefaultAsync();
-
-            var fuelEntries = vehicle.FuelEntries.OrderBy(fe => fe.DateCreated).ToArray();
-
-            vehicle.TotalDistance = fuelEntries.Sum(fe => fe.TripOdometer);
-            vehicle.TotalFuelAmount = fuelEntries.Sum(fe => fe.FuelQuantity);
-
-            var lastFullFuelEntry = fuelEntries.LastOrDefault(fe => fe.FuelEntryType.Name == FullFueling);
-            var indexOfLastFullFueling = Math.Max(0, Array.LastIndexOf(fuelEntries, lastFullFuelEntry));
-
-            var reducedCollection = fuelEntries.Take(indexOfLastFullFueling + 1).ToArray();
-            var firstFullFuelEntry = reducedCollection.FirstOrDefault(fe => fe.FuelEntryType.Name == FullFueling);
-            if (firstFullFuelEntry == null)
-            {
-                firstFullFuelEntry = reducedCollection.FirstOrDefault(fe => fe.FuelEntryType.Name == FirstFueling);
-            }
-            var indexOfFirstFullFueling = Math.Max(0, Array.IndexOf(reducedCollection, firstFullFuelEntry));
-
-            var validFuelEntries = fuelEntries
-                .Skip(indexOfFirstFullFueling)
-                .Take(indexOfLastFullFueling)
-                .ToList();
-
-            var quantitiesSum = validFuelEntries.Sum(fe => fe.FuelQuantity);
-            var distance = validFuelEntries.Sum(fe => fe.TripOdometer);
-
-            if (distance != 0)
-            {
-                vehicle.FuelConsumption = quantitiesSum / distance * 100.0;
-            }
-            else if (fuelEntries.Count() <= 1)
-            {
-                vehicle.FuelConsumption = 0;
-            }
-
-            this.db.Update(vehicle);
-            var affectedRows = await this.db.SaveChangesAsync();
-
-            return affectedRows;
         }
     }
 }

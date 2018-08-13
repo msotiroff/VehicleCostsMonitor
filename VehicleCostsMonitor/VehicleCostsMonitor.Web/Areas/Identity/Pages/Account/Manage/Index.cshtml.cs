@@ -163,6 +163,7 @@
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
 
+            [Display(Name = "Display currency")]
             public int? CurrencyId { get; set; }
 
             public IEnumerable<SelectListItem> AllCurrencies { get; set; }
