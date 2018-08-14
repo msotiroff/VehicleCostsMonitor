@@ -156,7 +156,7 @@
         private async Task<int> UpdateStatsOnFuelEntryChangedAsync(int vehicleId)
         {
             var vehicle = await this.db.Vehicles
-                .Where(v => v.Id == vehicleId)
+                .Where(v => v.Id == vehicleId && !v.IsDeleted)
                 .Include(v => v.FuelEntries)
                 .ThenInclude(fe => fe.FuelEntryType)
                 .FirstOrDefaultAsync();

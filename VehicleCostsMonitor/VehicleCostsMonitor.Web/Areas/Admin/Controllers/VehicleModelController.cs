@@ -31,7 +31,7 @@
                     NotificationType.Success);
             }
 
-            return RedirectToAction(nameof(ManufacturerController.Index), "Manufacturer");
+            return RedirectToAction(nameof(ManufacturerController.Details), "Manufacturer", new { id = manufacturerId });
         }
 
         [HttpGet]
@@ -60,8 +60,8 @@
             {
                 this.ShowNotification(string.Format(NotificationMessages.ModelUpdatedSuccessfull, model.Name), NotificationType.Success);
             }
-            
-            return RedirectToAction(nameof(ManufacturerController.Index), "manufacturer");
+
+            return RedirectToAction(nameof(ManufacturerController.Details), "manufacturer", new { id = model.ManufacturerId });
         }
 
         [HttpGet]
@@ -93,7 +93,7 @@
                 this.ShowNotification(NotificationMessages.InvalidOperation);
             }
 
-            return RedirectToAction(nameof(ManufacturerController.Index), "Manufacturer");
+            return RedirectToAction(nameof(ManufacturerController.Details), "Manufacturer", new { id = model.ManufacturerId });
         }
     }
 }

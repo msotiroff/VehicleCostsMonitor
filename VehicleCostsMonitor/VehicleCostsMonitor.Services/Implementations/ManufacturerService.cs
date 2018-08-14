@@ -30,11 +30,11 @@
         public async Task<bool> CreateAsync(string name)
         {
             var manufacturer = new Manufacturer { Name = name };
-
-            this.ValidateEntityState(manufacturer);
-
+            
             try
             {
+                this.ValidateEntityState(manufacturer);
+
                 await this.db.AddAsync(manufacturer);
                 await this.db.SaveChangesAsync();
 
@@ -88,12 +88,19 @@
 
             manufacturer.Name = name;
 
-            this.ValidateEntityState(manufacturer);
+            try
+            {
+                this.ValidateEntityState(manufacturer);
 
-            this.db.Manufacturers.Update(manufacturer);
-            await this.db.SaveChangesAsync();
+                this.db.Manufacturers.Update(manufacturer);
+                await this.db.SaveChangesAsync();
 
-            return true;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

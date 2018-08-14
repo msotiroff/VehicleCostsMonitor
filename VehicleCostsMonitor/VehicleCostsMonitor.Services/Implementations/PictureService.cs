@@ -25,7 +25,7 @@
 
             try
             {
-                var vehicle = await this.db.Vehicles.FirstOrDefaultAsync(v => v.Id == vehicleId);
+                var vehicle = await this.db.Vehicles.FirstOrDefaultAsync(v => v.Id == vehicleId && !v.IsDeleted);
                 if (vehicle == null)
                 {
                     return false;

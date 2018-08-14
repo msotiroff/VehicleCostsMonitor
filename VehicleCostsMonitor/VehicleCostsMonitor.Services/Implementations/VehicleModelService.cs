@@ -17,17 +17,17 @@
 
         public async Task<bool> CreateAsync(string modelName, int manufacturerId)
         {
-            var model = new Model
+            var newModel = new Model
             {
                 Name = modelName,
                 ManufacturerId = manufacturerId
             };
-
-            this.ValidateEntityState(model);
-
+            
             try
             {
-                await this.db.Models.AddAsync(model);
+                this.ValidateEntityState(newModel);
+
+                await this.db.Models.AddAsync(newModel);
                 await this.db.SaveChangesAsync();
 
                 return true;

@@ -5,13 +5,13 @@
     using Interfaces;
     using Microsoft.EntityFrameworkCore;
     using Models.Vehicle;
+    using Services.Models.Entries;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using VehicleCostsMonitor.Common;
     using VehicleCostsMonitor.Data;
     using VehicleCostsMonitor.Models;
-    using VehicleCostsMonitor.Services.Models.Entries;
 
     public class VehicleService : BaseService, IVehicleService
     {
@@ -24,10 +24,17 @@
             newVehicle.Model = await this.db.Models
                 .FirstOrDefaultAsync(m => m.ManufacturerId == model.ManufacturerId && m.Name == model.ModelName);
 
-            this.ValidateEntityState(newVehicle);
+            try
+            {
+                this.ValidateEntityState(newVehicle);
 
-            await this.db.AddAsync(newVehicle);
-            await this.db.SaveChangesAsync();
+                await this.db.AddAsync(newVehicle);
+                await this.db.SaveChangesAsync();
+            }
+            catch
+            {
+                return default(int);
+            }
 
             return newVehicle.Id;
         }
@@ -64,8 +71,9 @@
             var vehicles = this.db
                 .Vehicles
                 .Where(v =>
+                    !v.IsDeleted &&
                     v.ManufacturerId == manufacturerId &&
-                    v.Model.Name.ToLower() == modelNameSearchSubstring.ToLower() &&
+                    v.Model.Name.ToLower().Contains(modelNameSearchSubstring.ToLower()) &&
                     v.ExactModelname.Contains(exaxtModelNameSearchSubstring) &&
                     v.EngineHorsePower >= engineHorsePowerMin &&
                     v.EngineHorsePower <= engineHorsePowerMax &&
@@ -95,7 +103,7 @@
         {
             var vehicle = await this.db
                 .Vehicles
-                .Where(v => v.Id == id)
+                .Where(v => v.Id == id && !v.IsDeleted)
                 .ProjectTo<VehicleDetailsServiceModel>()
                 .FirstOrDefaultAsync();
 
@@ -105,14 +113,14 @@
         public async Task<VehicleUpdateServiceModel> GetForUpdateAsync(int id)
             => await this.db
                 .Vehicles
-                .Where(v => v.Id == id)
+                .Where(v => v.Id == id && !v.IsDeleted)
                 .ProjectTo<VehicleUpdateServiceModel>()
                 .FirstOrDefaultAsync();
 
         public async Task<IQueryable<CostEntryDetailsModel>> GetCostEntries(int id)
         {
             var costs = await this.db.CostEntries
-            .Where(ce => ce.VehicleId == id)
+            .Where(ce => ce.VehicleId == id && !ce.Vehicle.IsDeleted)
             .OrderByDescending(ce => ce.DateCreated)
             .ProjectTo<CostEntryDetailsModel>()
             .ToListAsync();
@@ -123,7 +131,7 @@
         public async Task<IQueryable<FuelEntryDetailsModel>> GetFuelEntries(int id)
         {
             var fuelings = await this.db.FuelEntries
-            .Where(fe => fe.VehicleId == id)
+            .Where(fe => fe.VehicleId == id && !fe.Vehicle.IsDeleted)
             .OrderByDescending(fe => fe.DateCreated)
             .ProjectTo<FuelEntryDetailsModel>()
             .ToListAsync();
@@ -134,7 +142,7 @@
         public async Task<IEnumerable<VehicleStatisticServiceModel>> GetMostEconomicCars(string fuelType)
         {
             var vehicles = await this.db.Vehicles
-                .Where(v => v.FuelType.Name.ToLower() == fuelType)
+                .Where(v => v.FuelType.Name.ToLower() == fuelType && !v.IsDeleted)
                 .GroupBy(v => v.ModelId)
                 .OrderBy(vg => vg.Sum(v => v.FuelConsumption) / vg.Count())
                 .Take(GlobalConstants.MostEconomicVehiclesListCount)

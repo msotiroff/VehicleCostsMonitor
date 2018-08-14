@@ -1,9 +1,5 @@
 ﻿@model VehicleDetailsViewModel
 
-@{
-    ViewData["Title"] = "Details";
-}
-
 <h2 class="text-center">Details</h2>
 <hr />
 <div class="container">
@@ -147,7 +143,7 @@
             <th class="text-center">Trip Odometer</th>
             <th class="text-center">Quantity</th>
             <th class="text-center">Fuel</th>
-            <th class="text-center">Price</th>
+            <th class="text-center">Price (@Model.OwnerDisplayCurrency)</th>
             <th class="text-center">Average</th>
             <th class="text-center">Type</th>
             <th class="text-center">Options</th>

@@ -25,6 +25,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using VehicleCostsMonitor.Models;
+    using VehicleCostsMonitor.Services.Models.Entries;
     using static VehicleCostsMonitor.Models.Common.ModelConstants;
     using static WebConstants;
 
@@ -234,6 +235,8 @@
 
         private async Task<VehicleDetailsViewModel> InitializeDetailedModel(VehicleDetailsServiceModel vehicle, int pageIndex)
         {
+            var displayCurrency = vehicle.OwnerDisplayCurrency;
+
             var allEntries = vehicle
                 .FuelEntries
                 .Cast<IEntryModel>()
@@ -242,46 +245,29 @@
                 .OrderByDescending(e => e.DateCreated)
                 .ToList();
 
-            pageIndex = Math.Max(1, pageIndex);
-            var totalPages = (int)(Math.Ceiling(allEntries.Count() / (double)EntriesListPageSize));
-            pageIndex = Math.Min(pageIndex, Math.Max(1, totalPages));
-
-            var displayCurrency = vehicle.OwnerDisplayCurrency;
-
-            var fuelEntriesToConvert = vehicle.FuelEntries
-                .GroupBy(fe => fe.CurrencyCode)
-                .ToDictionary(x => x.Key, x => x.Sum(fe => fe.Price));
-
-            var fuelEntriesConverted = new Dictionary<string, decimal>();
-            foreach (var kvp in fuelEntriesToConvert)
-            {
-                fuelEntriesConverted[kvp.Key] = await this.currencyExchanger.Convert(kvp.Key, kvp.Value, displayCurrency);
-            }
-
-            var totalFuelCosts = fuelEntriesConverted.Sum(fe => fe.Value);
-
-            var costEntriesToConvert = vehicle.CostEntries
-                .GroupBy(fe => fe.CurrencyCode)
-                .ToDictionary(x => x.Key, x => x.Sum(fe => fe.Price));
-
-            var costEntriesConverted = new Dictionary<string, decimal>();
-            foreach (var kvp in costEntriesToConvert)
-            {
-                costEntriesConverted[kvp.Key] = await this.currencyExchanger.Convert(kvp.Key, kvp.Value, displayCurrency);
-            }
-
-            var totalOtherCosts = costEntriesConverted.Sum(kvp => kvp.Value);
-
-            var costsExchanged = vehicle.CostEntries;
+            var costsExchanged = vehicle.CostEntries.ToList();
             foreach (var cost in costsExchanged)
             {
                 cost.Price = await this.currencyExchanger.Convert(cost.CurrencyCode, cost.Price, displayCurrency);
             }
 
+            var fuelingsExchanged = vehicle.FuelEntries.ToList();
+            foreach (var fueling in fuelingsExchanged)
+            {
+                fueling.Price = await this.currencyExchanger.Convert(fueling.CurrencyCode, fueling.Price, displayCurrency);
+            }
+
+            var totalFuelCosts = vehicle.FuelEntries.Sum(fe => fe.Price);
+            var totalOtherCosts = vehicle.CostEntries.Sum(ce => ce.Price);
+            
             var costsGrouped = costsExchanged
                 .GroupBy(e => e.ToString())
                 .ToDictionary(x => x.Key, y => y.Sum(e => e.Price));
             costsGrouped.Add("Fuel", totalFuelCosts);
+
+            pageIndex = Math.Max(1, pageIndex);
+            var totalPages = (int)(Math.Ceiling(allEntries.Count() / (double)EntriesListPageSize));
+            pageIndex = Math.Min(pageIndex, Math.Max(1, totalPages));
             
             var routesGrouped = vehicle.FuelEntries.SelectMany(fe => fe.Routes).GroupBy(r => r).ToDictionary(x => x.Key, x => x.Count());
 
