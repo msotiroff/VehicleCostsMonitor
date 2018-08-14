@@ -30,7 +30,7 @@
                         <div>
                             Price: @product.Price.ToString("f2")
                         </div>
-                        <a asp-controller="Shopping" asp-action="AddToCart" asp-route-productId="@Model.Id" asp-route-returnUrl="/Shopping/Cart" 
+                        <a asp-controller="Shopping" asp-action="AddToCart" asp-route-productId="@product.Id" asp-route-returnUrl="/Shopping/Cart" 
                             class="btn btn-default">Buy</a>
                     </div>
                 </div>
