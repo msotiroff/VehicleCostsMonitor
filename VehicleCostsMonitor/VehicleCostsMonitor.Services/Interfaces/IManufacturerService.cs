@@ -6,7 +6,7 @@
 
     public interface IManufacturerService
     {
-        Task<ManufacturerUpdateServiceModel> GetAsync(int id);
+        Task<ManufacturerUpdateServiceModel> GetForUpdateAsync(int id);
 
         Task<IEnumerable<ManufacturerConciseListModel>> AllAsync();
 

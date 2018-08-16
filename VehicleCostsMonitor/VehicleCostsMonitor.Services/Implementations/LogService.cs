@@ -15,12 +15,23 @@
         public LogService(JustMonitorDbContext db) 
             : base(db) { }
 
-        public void CreateUserActivityLog(UserActivityLogCreateModel model)
+        public bool CreateUserActivityLog(UserActivityLogCreateModel model)
         {
             var log = Mapper.Map<UserActivityLog>(model);
 
-            this.db.UserActivityLogs.Add(log);
-            this.db.SaveChanges();
+            try
+            {
+                this.ValidateEntityState(log);
+
+                this.db.UserActivityLogs.Add(log);
+                this.db.SaveChanges();
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }            
         }
 
         public IQueryable<UserActivityLogConciseServiceModel> GetAll()

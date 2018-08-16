@@ -58,7 +58,7 @@
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var model = await this.manufacturers.GetAsync(id);
+            var model = await this.manufacturers.GetForUpdateAsync(id);
             if (model == null)
             {
                 this.ShowNotification(string.Format(NotificationMessages.ManufacturerDoesNotExist, id));
@@ -90,7 +90,7 @@
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            var model = await this.manufacturers.GetAsync(id);
+            var model = await this.manufacturers.GetForUpdateAsync(id);
             if (model == null)
             {
                 this.ShowNotification(string.Format(NotificationMessages.ManufacturerDoesNotExist, id));

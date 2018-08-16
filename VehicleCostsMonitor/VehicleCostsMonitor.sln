@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VehicleCostsMonitor.Service
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VehicleCostsMonitor.Common", "VehicleCostsMonitor.Common\VehicleCostsMonitor.Common.csproj", "{7EF09569-B015-4C87-A7B8-9DC0A8BAE74C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleCostsMonitor.Tests", "VehicleCostsMonitor.Tests\VehicleCostsMonitor.Tests.csproj", "{629790D3-544B-4244-B47B-492FF6259BC3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{7EF09569-B015-4C87-A7B8-9DC0A8BAE74C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EF09569-B015-4C87-A7B8-9DC0A8BAE74C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7EF09569-B015-4C87-A7B8-9DC0A8BAE74C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{629790D3-544B-4244-B47B-492FF6259BC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{629790D3-544B-4244-B47B-492FF6259BC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{629790D3-544B-4244-B47B-492FF6259BC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{629790D3-544B-4244-B47B-492FF6259BC3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

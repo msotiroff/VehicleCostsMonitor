@@ -35,11 +35,14 @@
                     options.CheckConsentNeeded = context => true;
                     options.MinimumSameSitePolicy = SameSiteMode.None;
                 });
-            
+
             services
-                .AddDbContext<JustMonitorDbContext>(options =>
-                    options.UseSqlServer(
-                        this.Configuration.GetConnectionString("JustMonitor")));
+                .AddDbContext<JustMonitorDbContext>();
+            
+            //services
+            //    .AddDbContext<JustMonitorDbContext>(options =>
+            //        options.UseSqlServer(
+            //            this.Configuration.GetConnectionString("JustMonitor")));
             
             services.AddTransient<HttpClient>();
 

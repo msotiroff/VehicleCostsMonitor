@@ -60,7 +60,7 @@
             return true;
         }
 
-        public async Task<ManufacturerUpdateServiceModel> GetAsync(int id)
+        public async Task<ManufacturerUpdateServiceModel> GetForUpdateAsync(int id)
         {
             var manufacturer = await this.db.Manufacturers.FindAsync(id);
             if (manufacturer == null)

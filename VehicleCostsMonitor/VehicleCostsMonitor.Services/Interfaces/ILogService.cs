@@ -6,7 +6,7 @@
 
     public interface ILogService
     {
-        void CreateUserActivityLog(UserActivityLogCreateModel model);
+        bool CreateUserActivityLog(UserActivityLogCreateModel model);
 
         IQueryable<UserActivityLogConciseServiceModel> GetAll();
 

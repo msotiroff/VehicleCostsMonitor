@@ -17,7 +17,7 @@ $(document).ready(function () {
         "hideEasing": "linear",
         "showMethod": "fadeIn",
         "hideMethod": "fadeOut"
-    }
+    };
 });
 
 
@@ -39,16 +39,16 @@ notifier.showMessage = function (message, type) {
             notifier.showInfo(message);
             break;
     }
-}
+};
 notifier.showInfo = function (message) {
     toastr.info(message);
-}
+};
 notifier.showError = function (message) {
     toastr.error(message);
-}
+};
 notifier.showSuccess = function (message) {
     toastr.success(message);
-}
+};
 notifier.showWarning = function (message) {
     toastr.warning(message);
-}
+};
