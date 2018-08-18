@@ -30,7 +30,7 @@
             // Assert
             result
                 .Should()
-                .HaveCount(0);
+                .BeEmpty();
         }
 
         [Theory]

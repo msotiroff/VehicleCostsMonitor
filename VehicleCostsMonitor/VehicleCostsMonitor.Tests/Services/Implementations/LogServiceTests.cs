@@ -98,7 +98,7 @@
 
             // Assert
             result.Should().BeFalse();
-            this.dbContext.UserActivityLogs.Should().HaveCount(0);
+            this.dbContext.UserActivityLogs.Should().BeEmpty();
         }
 
         [Fact]
@@ -122,7 +122,7 @@
 
             // Assert
             result.Should().BeFalse();
-            this.dbContext.UserActivityLogs.Should().HaveCount(0);
+            this.dbContext.UserActivityLogs.Should().BeEmpty();
         }
 
         [Fact]
@@ -146,7 +146,7 @@
 
             // Assert
             result.Should().BeFalse();
-            this.dbContext.UserActivityLogs.Should().HaveCount(0);
+            this.dbContext.UserActivityLogs.Should().BeEmpty();
         }
 
         [Fact]
@@ -170,7 +170,7 @@
 
             // Assert
             result.Should().BeFalse();
-            this.dbContext.UserActivityLogs.Should().HaveCount(0);
+            this.dbContext.UserActivityLogs.Should().BeEmpty();
         }
 
         #endregion

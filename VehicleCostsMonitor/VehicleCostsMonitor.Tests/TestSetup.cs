@@ -14,7 +14,10 @@
             {
                 if (!mapperInitialized)
                 {
-                    Mapper.Initialize(config => config.AddProfile<DefaultProfile>());
+                    Mapper.Initialize(config =>
+                    {
+                        config.AddProfile<DefaultProfile>();
+                    });
 
                     mapperInitialized = true;
                 }

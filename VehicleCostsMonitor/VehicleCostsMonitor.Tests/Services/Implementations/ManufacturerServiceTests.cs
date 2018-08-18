@@ -47,7 +47,7 @@
             // Assert
             result
                 .Should()
-                .HaveCount(0);
+                .BeEmpty();
         }
 
         [Fact]
@@ -90,7 +90,7 @@
             this.dbContext
                 .Manufacturers
                 .Should()
-                .HaveCount(0);
+                .BeEmpty();
         }
 
         [Theory]
