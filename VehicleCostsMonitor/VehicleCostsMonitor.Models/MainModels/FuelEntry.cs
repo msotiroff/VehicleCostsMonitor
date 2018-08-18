@@ -6,26 +6,6 @@
 
     public class FuelEntry
     {
-        public FuelEntry(DateTime dateCreated, int odometer, double fuelQuantity, decimal price,/*int currencyId,*/ int fuelEntryTypeId, int vehicleId)
-        {
-            this.DateCreated = dateCreated;
-            this.Odometer = odometer;
-            this.FuelQuantity = fuelQuantity;
-            this.Price = price;
-            this.FuelEntryTypeId = fuelEntryTypeId;
-            this.VehicleId = vehicleId;
-
-            this.Routes = new HashSet<FuelEntryRouteType>();
-            this.ExtraFuelConsumers = new HashSet<FuelEntryExtraFuelConsumer>();
-        }
-
-        public FuelEntry(DateTime dateCreated, int odometer, double fuelQuantity, decimal price,/*int currencyId,*/ int fuelEntryTypeId, int vehicleId, string note = null)
-            : this(dateCreated, odometer, fuelQuantity, price, fuelEntryTypeId, vehicleId)
-        {
-            this.Note = note;
-        }
-
-
         [Key]
         public int Id { get; set; }
 
@@ -33,6 +13,7 @@
         public DateTime DateCreated { get; set; }
         
         [Required]
+        [Range(0, int.MaxValue)]
         public int Odometer { get; set; }
 
         [Required]
@@ -43,6 +24,7 @@
         public double FuelQuantity { get; set; }
 
         [Required]
+        [Range(0, double.MaxValue)]
         public decimal Price { get; set; }
 
         [Required]

@@ -37,13 +37,10 @@
                 });
 
             services
-                .AddDbContext<JustMonitorDbContext>();
-            
-            //services
-            //    .AddDbContext<JustMonitorDbContext>(options =>
-            //        options.UseSqlServer(
-            //            this.Configuration.GetConnectionString("JustMonitor")));
-            
+                .AddDbContext<JustMonitorDbContext>(options =>
+                    options.UseSqlServer(
+                        this.Configuration.GetConnectionString("JustMonitor")));
+
             services.AddTransient<HttpClient>();
 
             services.AddAuthentication()

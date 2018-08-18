@@ -1,18 +1,17 @@
 ﻿namespace VehicleCostsMonitor.Services.Implementations
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
     using AutoMapper.QueryableExtensions;
     using Interfaces;
     using Microsoft.EntityFrameworkCore;
+    using System.Linq;
+    using System.Threading.Tasks;
     using VehicleCostsMonitor.Data;
     using VehicleCostsMonitor.Models;
     using VehicleCostsMonitor.Services.Models.Picture;
 
     public class PictureService : BaseService, IPictureService
     {
-        public PictureService(JustMonitorDbContext db) 
+        public PictureService(JustMonitorDbContext db)
             : base(db) { }
 
         public async Task<bool> CreateAsync(string path, int vehicleId)
@@ -23,17 +22,19 @@
                 VehicleId = vehicleId
             };
 
+            var vehicle = await this.db.Vehicles.FirstOrDefaultAsync(v => v.Id == vehicleId && !v.IsDeleted);
+            if (vehicle == null)
+            {
+                return false;
+            }
+
             try
             {
-                var vehicle = await this.db.Vehicles.FirstOrDefaultAsync(v => v.Id == vehicleId && !v.IsDeleted);
-                if (vehicle == null)
-                {
-                    return false;
-                }
+                this.ValidateEntityState(picture);
 
                 await this.db.Pictures.AddAsync(picture);
                 vehicle.PictureId = picture.Id;
-                                
+
                 await this.db.SaveChangesAsync();
 
                 return true;
@@ -61,7 +62,7 @@
         public async Task<PictureUpdateServiceModel> GetByVehicleId(int vehicleId)
             => await this.db
                 .Pictures
-                .Where(p => p.VehicleId == vehicleId)
+                .Where(p => p.VehicleId == vehicleId && !p.Vehicle.IsDeleted)
                 .ProjectTo<PictureUpdateServiceModel>()
                 .FirstOrDefaultAsync();
 

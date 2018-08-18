@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using AutoMapper;
     using AutoMapper.QueryableExtensions;
     using Interfaces;
     using Microsoft.EntityFrameworkCore;
@@ -52,12 +53,12 @@
             => await this.db.CostEntryTypes.ToListAsync();
 
         public async Task<CostEntryDeleteServiceModel> GetForDeleteAsync(int id)
-            => await this.db.CostEntries.Where(ce => ce.Id == id).ProjectTo<CostEntryDeleteServiceModel>().FirstOrDefaultAsync();
+            => Mapper.Map<CostEntryDeleteServiceModel>(await this.db.CostEntries.FirstOrDefaultAsync(ce => ce.Id == id));
 
         public async Task<CostEntryUpdateServiceModel> GetForUpdateAsync(int id)
-            => await this.db.CostEntries.Where(ce => ce.Id == id).ProjectTo<CostEntryUpdateServiceModel>().FirstOrDefaultAsync();
+            => Mapper.Map<CostEntryUpdateServiceModel>(await this.db.CostEntries.FirstOrDefaultAsync(ce => ce.Id == id));
 
-        public async Task<bool> UpdateAsync(int id, DateTime dateCreated, int costEntryTypeId, int vehicleId, decimal price, int currencyId, string note, int? odometer)
+        public async Task<bool> UpdateAsync(int id, DateTime dateCreated, int costEntryTypeId, decimal price, int currencyId, string note, int? odometer)
         {
             var costEntry = await this.db.CostEntries.FirstOrDefaultAsync(ce => ce.Id == id);
             if (costEntry == null)

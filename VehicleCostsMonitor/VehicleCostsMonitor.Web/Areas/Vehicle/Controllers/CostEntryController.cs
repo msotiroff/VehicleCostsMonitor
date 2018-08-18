@@ -99,7 +99,7 @@
         public async Task<IActionResult> Edit(CostEntryUpdateViewModel model)
         {
             var success = await this.costEntryService
-                .UpdateAsync(model.Id, model.DateCreated, model.CostEntryTypeId, model.VehicleId, model.Price, model.CurrencyId, model.Note, model.Odometer);
+                .UpdateAsync(model.Id, model.DateCreated, model.CostEntryTypeId, model.Price, model.CurrencyId, model.Note, model.Odometer);
 
             if (!success)
             {

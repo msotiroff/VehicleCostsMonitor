@@ -19,6 +19,11 @@
 
         public async Task<bool> CreateAsync(FuelEntryCreateServiceModel model)
         {
+            if (model == null)
+            {
+                return false;
+            }
+
             var modelOdometer = model.Odometer;
             var fuelEntry = Mapper.Map<FuelEntry>(model);
 
@@ -68,11 +73,11 @@
         public async Task<IEnumerable<FuelType>> GetFuelTypes()
             => await this.db.FuelTypes.ToListAsync();
 
+        public async Task<IEnumerable<RouteType>> GetRouteTypes()
+            => await this.db.RouteTypes.ToListAsync();
+
         public async Task<FuelEntryDeleteServiceModel> GetForDeleteAsync(int id)
-            => await this.db.FuelEntries
-            .Where(fe => fe.Id == id)
-            .ProjectTo<FuelEntryDeleteServiceModel>()
-            .FirstOrDefaultAsync();
+            => Mapper.Map<FuelEntryDeleteServiceModel>(await this.db.FuelEntries.FirstOrDefaultAsync(fe => fe.Id == id));
 
         public async Task<int> GetPreviousOdometerValue(int vehicleId, DateTime currentEntryDate)
         {
@@ -89,16 +94,18 @@
 
             var fuelEntries = vehicle.FuelEntries.OrderBy(fe => fe.DateCreated);
 
-            var lastOdometer = fuelEntries.LastOrDefault(fe => fe.DateCreated < currentEntryDate)?.Odometer;
+            var lastOdometer = fuelEntries.LastOrDefault(fe => fe.DateCreated <= currentEntryDate)?.Odometer;
             
             return lastOdometer ?? default(int);
         }
 
-        public async Task<IEnumerable<RouteType>> GetRouteTypes()
-            => await this.db.RouteTypes.ToListAsync();
-
         public async Task<bool> UpdateAsync(FuelEntry fuelEntry)
         {
+            if (fuelEntry == null)
+            {
+                return false;
+            }
+
             var vehicle = await this.db
                 .Vehicles
                 .Where(v => v.Id == fuelEntry.VehicleId && !v.IsDeleted)

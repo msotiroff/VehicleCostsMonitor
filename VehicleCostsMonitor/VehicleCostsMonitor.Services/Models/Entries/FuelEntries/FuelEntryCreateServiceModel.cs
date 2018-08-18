@@ -12,6 +12,7 @@
         public DateTime DateCreated { get; set; }
 
         [Required]
+        [Range(0, int.MaxValue)]
         public int Odometer { get; set; }
 
         [Required]
@@ -21,6 +22,7 @@
         public double FuelQuantity { get; set; }
 
         [Required]
+        [Range(0, double.MaxValue)]
         public decimal Price { get; set; }
 
         [Required]

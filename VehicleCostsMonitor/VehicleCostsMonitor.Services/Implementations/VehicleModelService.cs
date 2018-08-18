@@ -1,6 +1,6 @@
 ﻿namespace VehicleCostsMonitor.Services.Implementations
 {
-    using AutoMapper.QueryableExtensions;
+    using AutoMapper;
     using Data;
     using Interfaces;
     using Microsoft.EntityFrameworkCore;
@@ -22,6 +22,12 @@
                 Name = modelName,
                 ManufacturerId = manufacturerId
             };
+
+            var modelExist = await this.db.Models.AnyAsync(m => m.ManufacturerId == manufacturerId && m.Name == modelName);
+            if (modelExist)
+            {
+                return false;
+            }
             
             try
             {
@@ -53,10 +59,10 @@
         }
 
         public async Task<ModelConciseServiceModel> GetAsync(int id)
-            => await this.db.Models
-                .Where(m => m.Id == id)
-                .ProjectTo<ModelConciseServiceModel>()
-                .FirstOrDefaultAsync();
+        => Mapper
+            .Map<ModelConciseServiceModel>(await this.db
+                .Models
+                .FirstOrDefaultAsync(m => m.Id == id));
 
         public async Task<IEnumerable<string>> GetByManufacturerIdAsync(int manufacturerId)
             => await this.db.Models
@@ -75,6 +81,8 @@
             try
             {
                 model.Name = name;
+                this.ValidateEntityState(model);
+
                 this.db.Update(model);
                 await this.db.SaveChangesAsync();
 
