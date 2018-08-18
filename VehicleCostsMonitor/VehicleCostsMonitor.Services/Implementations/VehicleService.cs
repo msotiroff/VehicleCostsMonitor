@@ -20,9 +20,26 @@
 
         public async Task<int> CreateAsync(VehicleCreateServiceModel model)
         {
+            if (model == null)
+            {
+                return default(int);
+            }
+
+            var manufacturerExist = await this.db.Manufacturers.AnyAsync(m => m.Id == model.ManufacturerId);
+            if (!manufacturerExist)
+            {
+                return default(int);
+            }
+
             var newVehicle = Mapper.Map<Vehicle>(model);
+
             newVehicle.Model = await this.db.Models
                 .FirstOrDefaultAsync(m => m.ManufacturerId == model.ManufacturerId && m.Name == model.ModelName);
+
+            if (newVehicle.Model == null)
+            {
+                return default(int);
+            }
 
             try
             {

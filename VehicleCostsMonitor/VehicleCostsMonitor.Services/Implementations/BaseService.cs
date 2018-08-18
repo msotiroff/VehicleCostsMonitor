@@ -5,7 +5,7 @@
     using System.ComponentModel.DataAnnotations;
     using VehicleCostsMonitor.Data;
 
-    public class BaseService
+    public abstract class BaseService
     {
         private const string EntityValidationErrorMsg = "Entity validation failed!";
         protected const string FirstFueling = "First fueling";

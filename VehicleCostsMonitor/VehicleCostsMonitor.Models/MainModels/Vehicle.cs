@@ -28,6 +28,7 @@
         public string ExactModelname { get; set; }
 
         [Required]
+        [Range(YearOfManufactureMinValue, int.MaxValue)]
         public int YearOfManufacture { get; set; }
 
         [Required]
