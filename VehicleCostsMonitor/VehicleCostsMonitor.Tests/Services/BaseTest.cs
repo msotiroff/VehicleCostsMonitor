@@ -17,8 +17,9 @@
             {
                 var options = new DbContextOptionsBuilder<JustMonitorDbContext>()
                    .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                   .EnableSensitiveDataLogging()
                    .Options;
-
+                
                 return new JustMonitorDbContext(options);
             }
         }

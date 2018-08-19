@@ -25,7 +25,6 @@
     using System.Linq;
     using System.Threading.Tasks;
     using VehicleCostsMonitor.Models;
-    using VehicleCostsMonitor.Services.Models.Entries;
     using static VehicleCostsMonitor.Models.Common.ModelConstants;
     using static WebConstants;
 
@@ -177,9 +176,9 @@
 
         [HttpGet]
         [EnsureOwnership]
-        public async Task<IExcelResult> ExportFuelings(int id)
+        public IExcelResult ExportFuelings(int id)
         {
-            var fuelings = await this.vehicles.GetFuelEntries(id);
+            var fuelings = this.vehicles.GetFuelEntries(id);
             var model = fuelings.ProjectTo<FuelEntryExcelViewModel>().ToList();
 
             var fileName = fuelings.Any()
@@ -191,9 +190,9 @@
 
         [HttpGet]
         [EnsureOwnership]
-        public async Task<IExcelResult> ExportCosts(int id)
+        public IExcelResult ExportCosts(int id)
         {
-            var costs = await this.vehicles.GetCostEntries(id);
+            var costs = this.vehicles.GetCostEntries(id);
             var model = costs.ProjectTo<CostEntryExcelViewModel>().ToList();
 
             var fileName = costs.Any()

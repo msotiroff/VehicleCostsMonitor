@@ -53,10 +53,10 @@
             => await this.db.CostEntryTypes.ToListAsync();
 
         public async Task<CostEntryDeleteServiceModel> GetForDeleteAsync(int id)
-            => Mapper.Map<CostEntryDeleteServiceModel>(await this.db.CostEntries.FirstOrDefaultAsync(ce => ce.Id == id));
+            => await this.db.CostEntries.Where(ce => ce.Id == id).ProjectTo<CostEntryDeleteServiceModel>().FirstOrDefaultAsync();
 
         public async Task<CostEntryUpdateServiceModel> GetForUpdateAsync(int id)
-            => Mapper.Map<CostEntryUpdateServiceModel>(await this.db.CostEntries.FirstOrDefaultAsync(ce => ce.Id == id));
+            => await this.db.CostEntries.Where(ce => ce.Id == id).ProjectTo<CostEntryUpdateServiceModel>().FirstOrDefaultAsync();
 
         public async Task<bool> UpdateAsync(int id, DateTime dateCreated, int costEntryTypeId, decimal price, int currencyId, string note, int? odometer)
         {

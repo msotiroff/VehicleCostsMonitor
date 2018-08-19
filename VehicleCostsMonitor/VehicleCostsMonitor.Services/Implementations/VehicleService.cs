@@ -81,7 +81,7 @@
                     : "" 
                     : "";
             
-            var exaxtModelNameSearchSubstring = string.IsNullOrWhiteSpace(exactModelName) ? "" : exactModelName;
+            var exaxtModelNameSearchSubstring = string.IsNullOrWhiteSpace(exactModelName) ? "" : exactModelName.ToLower();
             engineHorsePowerMax = engineHorsePowerMax != default(int) ? engineHorsePowerMax : int.MaxValue;
             yearOfManufactureMax = yearOfManufactureMax != default(int) ? yearOfManufactureMax : int.MaxValue;
 
@@ -91,7 +91,8 @@
                     !v.IsDeleted &&
                     v.ManufacturerId == manufacturerId &&
                     v.Model.Name.ToLower().Contains(modelNameSearchSubstring.ToLower()) &&
-                    v.ExactModelname.Contains(exaxtModelNameSearchSubstring) &&
+                    (string.IsNullOrWhiteSpace(v.ExactModelname) ||
+                        v.ExactModelname.ToLower().Contains(exaxtModelNameSearchSubstring)) &&
                     v.EngineHorsePower >= engineHorsePowerMin &&
                     v.EngineHorsePower <= engineHorsePowerMax &&
                     v.YearOfManufacture >= yearOfManufactureMin &&
@@ -117,49 +118,39 @@
         }
 
         public async Task<VehicleDetailsServiceModel> GetAsync(int id)
-        {
-            var vehicle = await this.db
-                .Vehicles
-                .Where(v => v.Id == id && !v.IsDeleted)
-                .ProjectTo<VehicleDetailsServiceModel>()
-                .FirstOrDefaultAsync();
-
-            return vehicle;
-        }
+            => await this.db
+            .Vehicles
+            .Where(v => v.Id == id && !v.IsDeleted)
+            .ProjectTo<VehicleDetailsServiceModel>()
+            .FirstOrDefaultAsync();
 
         public async Task<VehicleUpdateServiceModel> GetForUpdateAsync(int id)
-            => await this.db
-                .Vehicles
-                .Where(v => v.Id == id && !v.IsDeleted)
-                .ProjectTo<VehicleUpdateServiceModel>()
-                .FirstOrDefaultAsync();
+            => await this.db.Vehicles.Where(v => v.Id == id).ProjectTo<VehicleUpdateServiceModel>().FirstOrDefaultAsync();
 
-        public async Task<IQueryable<CostEntryDetailsModel>> GetCostEntries(int id)
+        public IQueryable<CostEntryDetailsModel> GetCostEntries(int id)
         {
-            var costs = await this.db.CostEntries
+            var costs = this.db.CostEntries
             .Where(ce => ce.VehicleId == id && !ce.Vehicle.IsDeleted)
             .OrderByDescending(ce => ce.DateCreated)
-            .ProjectTo<CostEntryDetailsModel>()
-            .ToListAsync();
+            .ProjectTo<CostEntryDetailsModel>();
 
-            return costs.AsQueryable();
+            return costs;
         }
 
-        public async Task<IQueryable<FuelEntryDetailsModel>> GetFuelEntries(int id)
+        public IQueryable<FuelEntryDetailsModel> GetFuelEntries(int id)
         {
-            var fuelings = await this.db.FuelEntries
+            var fuelings = this.db.FuelEntries
             .Where(fe => fe.VehicleId == id && !fe.Vehicle.IsDeleted)
             .OrderByDescending(fe => fe.DateCreated)
-            .ProjectTo<FuelEntryDetailsModel>()
-            .ToListAsync();
+            .ProjectTo<FuelEntryDetailsModel>();
 
-            return fuelings.AsQueryable();
+            return fuelings;
         }
 
         public async Task<IEnumerable<VehicleStatisticServiceModel>> GetMostEconomicCars(string fuelType)
         {
             var vehicles = await this.db.Vehicles
-                .Where(v => v.FuelType.Name.ToLower() == fuelType && !v.IsDeleted)
+                .Where(v => v.FuelType.Name.ToLower() == fuelType.ToLower() && !v.IsDeleted)
                 .GroupBy(v => v.ModelId)
                 .OrderBy(vg => vg.Sum(v => v.FuelConsumption) / vg.Count())
                 .Take(GlobalConstants.MostEconomicVehiclesListCount)
@@ -179,6 +170,11 @@
 
         public async Task<bool> UpdateAsync(VehicleUpdateServiceModel model)
         {
+            if (model == null)
+            {
+                return false;
+            }
+
             try
             {
                 var vehicle = Mapper.Map<Vehicle>(model);
@@ -187,6 +183,8 @@
                         .FirstOrDefaultAsync(m => m.ManufacturerId == model.ManufacturerId && m.Name == model.ModelName);
 
                 vehicle.ModelId = dbModel.Id;
+
+                this.ValidateEntityState(vehicle);
 
                 this.db.Update(vehicle);
                 await this.db.SaveChangesAsync();

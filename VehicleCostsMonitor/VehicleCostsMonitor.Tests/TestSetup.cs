@@ -1,7 +1,7 @@
 ﻿namespace VehicleCostsMonitor.Tests
 {
     using AutoMapper;
-    using Common.AutoMapping.Profiles;
+    using VehicleCostsMonitor.Tests.Helpers;
 
     public class TestSetup
     {
@@ -16,7 +16,7 @@
                 {
                     Mapper.Initialize(config =>
                     {
-                        config.AddProfile<DefaultProfile>();
+                        config.AddProfile<TestProfile>();
                     });
 
                     mapperInitialized = true;

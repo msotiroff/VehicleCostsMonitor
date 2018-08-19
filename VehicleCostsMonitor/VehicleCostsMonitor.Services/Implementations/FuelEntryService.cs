@@ -77,7 +77,7 @@
             => await this.db.RouteTypes.ToListAsync();
 
         public async Task<FuelEntryDeleteServiceModel> GetForDeleteAsync(int id)
-            => Mapper.Map<FuelEntryDeleteServiceModel>(await this.db.FuelEntries.FirstOrDefaultAsync(fe => fe.Id == id));
+            => await this.db.CostEntries.Where(fe => fe.Id == id).ProjectTo<FuelEntryDeleteServiceModel>().FirstOrDefaultAsync();
 
         public async Task<int> GetPreviousOdometerValue(int vehicleId, DateTime currentEntryDate)
         {

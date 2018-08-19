@@ -71,7 +71,9 @@
                 var items = '';
                 $('#ModelName').empty();
                 $.each(data, function (i, vehModel) {
-                    items += "<option>" + vehModel.text + "</option>"
+                    let vehicleCurrentModel = '@Model.ModelName';
+                    let selected = vehicleCurrentModel === vehModel.text ? " selected" : "";
+                    items += "<option" + selected + ">" + vehModel.text + "</option>";
                 });
                 $('#ModelName').html(items);
             });
@@ -87,7 +89,7 @@
                 var items = '';
                 $('#ModelName').empty();
                 $.each(data, function (i, vehModel) {
-                    items += "<option>" + vehModel.text + "</option>"
+                    items += "<option>" + vehModel.text + "</option>";
                 });
                 $('#ModelName').html(items);
             });

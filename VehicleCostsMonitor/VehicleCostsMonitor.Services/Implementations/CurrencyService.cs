@@ -13,5 +13,8 @@
             : base(db) { }
 
         public async Task<IEnumerable<Currency>> GetAsync() => await this.db.Currencies.ToListAsync();
+
+        public Task<Currency> GetByCodeAsync(string currencyCode)
+            => this.db.Currencies.SingleOrDefaultAsync(c => c.Code == currencyCode);
     }
 }

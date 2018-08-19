@@ -11,7 +11,10 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
     using Microsoft.Extensions.Logging;
+    using VehicleCostsMonitor.Common;
     using VehicleCostsMonitor.Models;
+    using VehicleCostsMonitor.Services.Interfaces;
+    using VehicleCostsMonitor.Web.Infrastructure.Extensions;
 
     [AllowAnonymous]
     public class RegisterModel : PageModel
@@ -20,17 +23,20 @@
         private readonly UserManager<User> userManager;
         private readonly ILogger<RegisterModel> logger;
         private readonly IEmailSender emailSender;
+        private readonly ICurrencyService currencyService;
 
         public RegisterModel(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            ICurrencyService currencyService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.logger = logger;
             this.emailSender = emailSender;
+            this.currencyService = currencyService;
         }
 
         [BindProperty]
@@ -73,7 +79,8 @@
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = Input.UserName, Email = Input.Email };
+                var defaultCurrency = await this.currencyService.GetByCodeAsync(GlobalConstants.DefaultCurrencyCode);
+                var user = new User { UserName = Input.UserName, Email = Input.Email, DisplayCurrency = defaultCurrency };
                 var result = await userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
