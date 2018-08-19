@@ -10,7 +10,9 @@
     using System.Security.Claims;
     using System.Text.Encodings.Web;
     using System.Threading.Tasks;
+    using VehicleCostsMonitor.Common;
     using VehicleCostsMonitor.Models;
+    using VehicleCostsMonitor.Services.Interfaces;
 
     [AllowAnonymous]
     public class ExternalLoginModel : PageModel
@@ -19,17 +21,20 @@
         private readonly UserManager<User> userManager;
         private readonly ILogger<ExternalLoginModel> logger;
         private readonly IEmailSender emailSender;
+        private readonly ICurrencyService currencyService;
 
         public ExternalLoginModel(
             SignInManager<User> signInManager,
             UserManager<User> userManager,
             ILogger<ExternalLoginModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            ICurrencyService currencyService)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
             this.logger = logger;
             this.emailSender = emailSender;
+            this.currencyService = currencyService;
         }
 
         [BindProperty]
@@ -117,7 +122,8 @@
 
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = Input.Email, Email = Input.Email };
+                var defaultCurrency = await this.currencyService.GetByCodeAsync(GlobalConstants.DefaultCurrencyCode);
+                var user = new User { UserName = Input.Email, Email = Input.Email, DisplayCurrency = defaultCurrency };
                 var result = await userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
