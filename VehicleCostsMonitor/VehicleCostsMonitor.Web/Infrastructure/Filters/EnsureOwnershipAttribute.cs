@@ -53,7 +53,7 @@
                 switch (controllerTypeName)
                 {
                     case nameof(VehicleController):
-                        return entityId.HasValue ? entityId.Value : default(int);
+                        return entityId ?? default(int);
 
                     case nameof(CostEntryController):
                         return database.CostEntries.AsNoTracking().FirstOrDefault(ce => ce.Id == entityId)?.VehicleId ?? default(int);
@@ -82,8 +82,7 @@
 
                     if (vehicleIdProperty != null)
                     {
-                        int vehicleId = default(int);
-                        if (int.TryParse(vehicleIdProperty.GetValue(model).ToString(), out vehicleId))
+                        if (int.TryParse(vehicleIdProperty.GetValue(model).ToString(), out int vehicleId))
                         {
                             return vehicleId;
                         }

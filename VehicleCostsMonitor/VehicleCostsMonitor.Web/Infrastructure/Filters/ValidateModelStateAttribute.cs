@@ -25,7 +25,7 @@
                 var actionArguments = context.ActionArguments.Values;
 
                 var model = actionArguments.FirstOrDefault(aa => !aa.GetType().IsPrimitive && aa.GetType() != typeof(string));
-                var modelProperties = model.GetType().GetProperties();
+                var modelProperties = model?.GetType().GetProperties();
 
                 var getMethod = context.Controller
                     .GetType()
@@ -39,8 +39,8 @@
                     .GetParameters()
                     .ToDictionary(
                         pi => pi.Name,
-                        pi => modelProperties.
-                            FirstOrDefault(prop => prop.Name.ToLower() == pi.Name.ToLower())
+                        pi => modelProperties
+                        ?.FirstOrDefault(prop => prop.Name.ToLower() == pi.Name.ToLower())
                             ?.GetValue(model));
 
                 getMethodArguments.Add("area", areaName);

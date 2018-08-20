@@ -12,7 +12,7 @@
         private const string CurrencyConverterApiBaseUri = "https://free.currencyconverterapi.com/api/v6/";
         private const string RequestUrl = "convert?q={0}_{1}&compact=ultra";
 
-        private IDictionary<string, decimal> rates;
+        private readonly IDictionary<string, decimal> rates;
         private readonly HttpClient client;
 
         public CurrencyExchanger(HttpClient client)

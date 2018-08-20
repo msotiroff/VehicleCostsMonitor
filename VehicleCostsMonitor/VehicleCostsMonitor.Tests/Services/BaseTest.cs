@@ -4,7 +4,7 @@
     using System;
     using VehicleCostsMonitor.Data;
 
-    public class BaseTest
+    public abstract class BaseTest
     {
         protected BaseTest()
         {
@@ -16,10 +16,10 @@
             get
             {
                 var options = new DbContextOptionsBuilder<JustMonitorDbContext>()
-                   .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                   .EnableSensitiveDataLogging()
-                   .Options;
-                
+               .UseInMemoryDatabase(Guid.NewGuid().ToString())
+               .EnableSensitiveDataLogging()
+               .Options;
+
                 return new JustMonitorDbContext(options);
             }
         }
