@@ -85,7 +85,7 @@
             // Assert
             result
                 .Should()
-                .BeFalse();
+                .Be(default(int));
 
             this.dbContext
                 .Manufacturers
@@ -103,10 +103,6 @@
             var result = await this.manufacturerService.CreateAsync(name);
 
             // Assert
-            result
-                .Should()
-                .BeTrue();
-
             this.dbContext
                 .Manufacturers
                 .Should()

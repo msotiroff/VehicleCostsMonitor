@@ -10,7 +10,7 @@
 
         Task<IEnumerable<ManufacturerConciseListModel>> AllAsync();
 
-        Task<bool> CreateAsync(string name);
+        Task<int> CreateAsync(string name);
 
         Task<bool> UpdateAsync(int id, string name);
 

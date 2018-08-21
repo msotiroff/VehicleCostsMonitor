@@ -77,7 +77,7 @@
             => await this.db.RouteTypes.ToListAsync();
 
         public async Task<FuelEntryDeleteServiceModel> GetForDeleteAsync(int id)
-            => await this.db.CostEntries.Where(fe => fe.Id == id).ProjectTo<FuelEntryDeleteServiceModel>().FirstOrDefaultAsync();
+            => await this.db.FuelEntries.Where(fe => fe.Id == id).ProjectTo<FuelEntryDeleteServiceModel>().FirstOrDefaultAsync();
 
         public async Task<int> GetPreviousOdometerValue(int vehicleId, DateTime currentEntryDate)
         {
@@ -94,7 +94,7 @@
 
             var fuelEntries = vehicle.FuelEntries.OrderBy(fe => fe.DateCreated);
 
-            var lastOdometer = fuelEntries.LastOrDefault(fe => fe.DateCreated <= currentEntryDate)?.Odometer;
+            var lastOdometer = fuelEntries.LastOrDefault(fe => fe.DateCreated < currentEntryDate)?.Odometer;
             
             return lastOdometer ?? default(int);
         }

@@ -36,12 +36,12 @@
 
             return View(model);
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> Create(string name)
         {
-            var success = await this.manufacturers.CreateAsync(name);
-            if (!success)
+            var newManufacturerId = await this.manufacturers.CreateAsync(name);
+            if (newManufacturerId == default(int))
             {
                 this.ShowNotification(NotificationMessages.InvalidOperation);
             }
@@ -52,7 +52,7 @@
                     NotificationType.Success);
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(this.Details), new { id = newManufacturerId });
         }
 
         [HttpGet]
@@ -115,7 +115,7 @@
                     NotificationMessages.ManufacturerDeletedSuccessfull, model.Name),
                     NotificationType.Success);
             }
-            
+
             return RedirectToAction(nameof(Index));
         }
     }

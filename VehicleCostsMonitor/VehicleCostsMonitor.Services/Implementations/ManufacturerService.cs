@@ -27,7 +27,7 @@
             return all;
         }
 
-        public async Task<bool> CreateAsync(string name)
+        public async Task<int> CreateAsync(string name)
         {
             var manufacturer = new Manufacturer { Name = name };
             
@@ -38,11 +38,11 @@
                 await this.db.AddAsync(manufacturer);
                 await this.db.SaveChangesAsync();
 
-                return true;
+                return manufacturer.Id;
             }
             catch
             {
-                return false;
+                return default(int);
             }
         }
 
