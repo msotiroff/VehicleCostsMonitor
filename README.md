@@ -1,9 +1,6 @@
-# Asp.Net-Core-Projects
-Projects made using Asp.Net Core 2.0 and above
 
-------------
-### 1. [VehicleCostsMonitor](https://github.com/msotiroff/Asp.Net-Core-Projects/tree/master/VehicleCostsMonitor "JustMonitor") or [JustMonitor](https://github.com/msotiroff/Asp.Net-Core-Projects/tree/master/VehicleCostsMonitor "JustMonitor")
-The application represents a system for monitoring vehicle costs(fuel, maintenance, tax, insuranse, ect.) in which the users can register and login in order to add vehicles to their garage, for each vehicle its owner can add a picture, fuel and another cost entries. Vehicle details page show many statistics about it displayed in different charts. In the project are also implemented different user roles and areas separated in private sections for admins and regular users. Depending on its role every user can access different sections of the application and has specific permissions of what can or cannot do. Every visitor can see statistics about most economic vehicles by fuel type and export the result to Excel worksheet.
+[VehicleCostsMonitor](https://github.com/msotiroff/Asp.Net-Core-Projects/tree/master/VehicleCostsMonitor "JustMonitor") or [JustMonitor](https://github.com/msotiroff/Asp.Net-Core-Projects/tree/master/VehicleCostsMonitor "JustMonitor")
+is a system for monitoring vehicle costs(fuel, maintenance, tax, insuranse, ect.) in which the users can register and login in order to add vehicles to their garage, for each vehicle its owner can add a picture, fuel and another cost entries. Vehicle details page show many statistics about it displayed in different charts. In the project are also implemented different user roles and areas separated in private sections for admins and regular users. Depending on its role every user can access different sections of the application and has specific permissions of what can or cannot do. Every visitor can see statistics about most economic vehicles by fuel type and export the result to Excel worksheet.
 
 
 Used technologies:
@@ -29,14 +26,5 @@ Just type your server name in the ConnectionStrings section at appsettings.json 
 
 #### Enjoy :)
 
-### 2. [OnlineStore](https://github.com/msotiroff/Asp.Net-Core-Projects/tree/master/OnlineStore "OnlineStore")
-E-Commerce system, made using Asp.Net Core 2.0 and Entity Framework Core.
-
-Some features:
-- Guest users can view categories and products in them.
-- Guest users can use the shopping cart and purchase some products after fill out a form
-- Registered users can send feedback messages
-- Admin users can create/update/delete categories
-- Admin users can create/update/delete products
 
 

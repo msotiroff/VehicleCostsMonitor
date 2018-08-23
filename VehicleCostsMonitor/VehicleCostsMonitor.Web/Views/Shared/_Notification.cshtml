@@ -1,7 +1,0 @@
-﻿@if (TempData[NotificationConstants.NotificationMessageKey] != null)
-{
-    <script>
-        notifier
-            .showMessage('@TempData[NotificationConstants.NotificationMessageKey]', '@TempData[NotificationConstants.NotificationTypeKey]');
-    </script>
-}
