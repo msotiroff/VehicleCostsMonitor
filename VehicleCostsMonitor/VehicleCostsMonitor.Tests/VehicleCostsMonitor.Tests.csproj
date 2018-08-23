@@ -24,8 +24,4 @@
     <ProjectReference Include="..\VehicleCostsMonitor.Web\VehicleCostsMonitor.Web.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Web\Areas\Admin\Controllers\" />
-  </ItemGroup>
-
 </Project>

@@ -2,6 +2,8 @@
 {
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.ViewFeatures;
+    using Moq;
     using System.Security.Claims;
 
     public abstract class BaseTest
@@ -14,6 +16,11 @@
         protected void AddClaimsPrincipal(Controller controller, string username)
         {
             controller.ControllerContext = this.SetControllerContext(username);
+        }
+
+        protected void InitializeTempData(Controller controller)
+        {
+            controller.TempData = new TempDataDictionary(new DefaultHttpContext(), new Mock<ITempDataProvider>().Object);
         }
 
         private ControllerContext SetControllerContext(string username)
