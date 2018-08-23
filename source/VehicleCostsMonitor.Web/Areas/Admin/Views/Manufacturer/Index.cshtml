@@ -1,0 +1,55 @@
+﻿@model IEnumerable<ManufacturerConciseListModel>
+
+<h2 class="text-center">All manufacturers</h2>
+<hr />
+<div class="container body-content">
+    <div class="container">
+        <div class="col-md-4"></div>
+        <div class="col-md-4 form-inline">
+            <form asp-action="create" method="post">
+                <input class="form-control" name="name" type="text" placeholder="Add new manufacturer" />
+                <input type="submit" value="Create new" class="btn btn-primary" />
+            </form>
+        </div>
+    </div>
+    <br />
+    <div class="container">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th width="30%">
+                            @Html.DisplayNameFor(model => model.Name)
+                        </th>
+                        <th width="30%">
+                            @Html.DisplayNameFor(model => model.ModelsCount)
+                        </th>
+                        <th width="40%">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ModelsCount)
+                            </td>
+                            <td>
+                                <a class="btn btn-primary" asp-action="details" asp-route-id="@item.Id">Details</a>
+                                <a class="btn btn-warning" asp-action="edit" asp-route-id="@item.Id">Edit</a>
+                                <a class="btn btn-danger" asp-action="delete" asp-route-id="@item.Id">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-2"></div>
+    </div>
+</div>

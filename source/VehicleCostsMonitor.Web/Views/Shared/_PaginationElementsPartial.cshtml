@@ -1,0 +1,30 @@
+﻿@model IPaginatedList
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    var firstDisabled = Model.PageIndex == 1 ? "disabled" : "";
+    var lastDisabled = Model.TotalPages <= Model.PageIndex ? "disabled" : "";
+}
+
+<div class="text-center">
+    <a asp-route-pageIndex="1"
+       class="btn btn-default @firstDisabled">
+        First page
+    </a>
+    <a asp-route-pageIndex="@(Model.PageIndex - 1)"
+       class="btn btn-default @prevDisabled">
+        Previous
+    </a>
+    <span class="btn btn-group">
+        @Model.PageIndex
+    </span>
+    <a asp-route-pageIndex="@(Model.PageIndex + 1)"
+       class="btn btn-default @nextDisabled">
+        Next
+    </a>
+    <a asp-route-pageIndex="@(Model.TotalPages)"
+       class="btn btn-default @lastDisabled">
+        Last page
+    </a>
+</div>

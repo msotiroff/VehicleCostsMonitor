@@ -1,0 +1,91 @@
+﻿@model VehicleCreateViewModel
+
+<h2 class="text-center">Create new vehicle</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="ManufacturerId" class="control-label"></label>
+                    <select asp-for="ManufacturerId" asp-items="@Model.AllManufacturers" class="form-control">
+                        <option disabled selected>--- SELECT ---</option>
+                    </select>
+                    <span asp-validation-for="ManufacturerId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ModelName" class="control-label"></label>
+                    <select asp-for="ModelName" asp-items="@(new SelectList(string.Empty))" class="form-control"></select>
+                    <span asp-validation-for="ModelName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ExactModelname" class="control-label"></label>
+                    <input asp-for="ExactModelname" class="form-control" />
+                    <span asp-validation-for="ExactModelname" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="YearOfManufacture" class="control-label"></label>
+                    <select asp-for="YearOfManufacture" asp-items="@Model.AvailableYears" class="form-control"></select>
+                    <span asp-validation-for="YearOfManufacture" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="EngineHorsePower" class="control-label"></label>
+                    <input asp-for="EngineHorsePower" class="form-control" />
+                    <span asp-validation-for="EngineHorsePower" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="VehicleTypeId" class="control-label"></label>
+                    <select asp-for="VehicleTypeId" asp-items="@Model.AllVehicleTypes" class="form-control"></select>
+                    <span asp-validation-for="VehicleTypeId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FuelTypeId" class="control-label"></label>
+                    <select asp-for="FuelTypeId" asp-items="@Model.AllFuelTypes" class="form-control"></select>
+                    <span asp-validation-for="FuelTypeId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="GearingTypeId" class="control-label"></label>
+                    <select asp-for="GearingTypeId" asp-items="@Model.AllGearingTypes" class="form-control"></select>
+                    <span asp-validation-for="GearingTypeId" class="text-danger"></span>
+                </div>
+            </div>
+            <br />
+            <div class="form-group text-center">
+                <input type="submit" value="Create" class="btn btn-success" />
+                <a class="btn btn-default" href="/">Cancel</a>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-2"></div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var items = "<option>--- SELECT ---</option>";
+            $('#ModelName').html(items);
+        });
+    </script>
+
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $('#ManufacturerId').change(function() {
+            var url = '@Url.Content("/")' + "Vehicle/GetModelsByManufacturerId";
+            var ddlSourse = "#ManufacturerId";
+            $.getJSON(url, { manufacturerId: $(ddlSourse).val() }, function (data) {
+                var items = '';
+                $('#ModelName').empty();
+                $.each(data, function (i, vehModel) {
+                    items += "<option>" + vehModel.text + "</option>"
+                });
+                $('#ModelName').html(items);
+            });
+        });
+    });
+    </script>
+}

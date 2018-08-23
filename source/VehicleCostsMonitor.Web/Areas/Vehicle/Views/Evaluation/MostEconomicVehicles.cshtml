@@ -1,0 +1,60 @@
+﻿@model IList<VehicleStatisticServiceModel>
+
+<h2 class="text-primary">The most fuel efficient @Model.FirstOrDefault()?.FuelType vehicles</h2>
+<div>
+    <p>
+        These lists show the top @(GlobalConstants.MostEconomicVehiclesListCount) most fuel efficient vehicles. The ranking is based on the fueling entries in our database.
+    </p>
+    <p>
+        Please note that only representative entries are considered. The number of vehicles used to calculate the average consumption is given in parentheses.
+    </p>
+    <p class="text-info">
+        Data is updated daily !
+    </p>
+    <p>
+        <a asp-action="exportvehicles" asp-route-fuelType="@Model.FirstOrDefault()?.FuelType" class="btn btn-success">
+            Export to Excel&nbsp;&nbsp;<i><img src="~/images/Excel.jpg" alt="Export vehicles to excel" title="Export vehicles to Excel worksheet" class="img-miniature" /></i>
+        </a>
+    </p>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class=" col-md-6">
+            <table class="table table-responsive table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Model</th>
+                        <th>l/100 km</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int index = 0; index < Model.Count(); index++)
+                    {
+                        var vehicle = Model[index];
+                        var manufacturerId = vehicle.ManufacturerId;
+                        var modelName = vehicle.ModelName;
+                        var modelFullName = $"{vehicle.ManufacturerName} {vehicle.ModelName} ({vehicle.Count})";
+
+                        <tr>
+                            <td>@(index + 1)</td>
+                            <td>
+                                <a asp-area=""
+                                   asp-controller="search"
+                                   asp-action="result"
+                                   asp-route-manufacturerId="@manufacturerId"
+                                   asp-route-modelName="@modelName">
+                                    @modelFullName
+                                </a>
+                            </td>
+                            <td>
+                                @vehicle.Average.ToString(WebConstants.DecimalNumberFormat)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

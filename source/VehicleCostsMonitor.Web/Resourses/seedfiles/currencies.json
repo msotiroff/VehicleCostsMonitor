@@ -1,0 +1,146 @@
+[
+  {
+    "DisplayName": "Albanian Lek",
+    "Code": "ALL"
+  },
+  {
+    "DisplayName": "Euro",
+    "Code": "EUR"
+  },
+  {
+    "DisplayName": "United States Dollar",
+    "Code": "USD"
+  },
+  {
+    "DisplayName": "Hungarian Forint",
+    "Code": "HUF"
+  },
+  {
+    "DisplayName": "Australian Dollar",
+    "Code": "AUD"
+  },
+  {
+    "DisplayName": "Libyan Dinar",
+    "Code": "LYD"
+  },
+  {
+    "DisplayName": "Macedonian Denar",
+    "Code": "MKD"
+  },
+  {
+    "DisplayName": "New Zealand Dollar",
+    "Code": "NZD"
+  },
+  {
+    "DisplayName": "Serbian Dinar",
+    "Code": "RSD"
+  },
+  {
+    "DisplayName": "Swedish Krona",
+    "Code": "SEK"
+  },
+  {
+    "DisplayName": "Armenian Dram",
+    "Code": "AMD"
+  },
+  {
+    "DisplayName": "Chinese Yuan",
+    "Code": "CNY"
+  },
+  {
+    "DisplayName": "Czech Koruna",
+    "Code": "CZK"
+  },
+  {
+    "DisplayName": "Indian Rupee",
+    "Code": "INR"
+  },
+  {
+    "DisplayName": "South Korean Won",
+    "Code": "KRW"
+  },
+  {
+    "DisplayName": "Netherlands Antillean Gulden",
+    "Code": "ANG"
+  },
+  {
+    "DisplayName": "Syrian Pound",
+    "Code": "SYP"
+  },
+  {
+    "DisplayName": "Danish Krone",
+    "Code": "DKK"
+  },
+  {
+    "DisplayName": "Romanian Leu",
+    "Code": "RON"
+  },
+  {
+    "DisplayName": "Belarusian Ruble",
+    "Code": "BYR"
+  },
+  {
+    "DisplayName": "Bulgarian Lev",
+    "Code": "BGN"
+  },
+  {
+    "DisplayName": "Canadian Dollar",
+    "Code": "CAD"
+  },
+  {
+    "DisplayName": "Japanese Yen",
+    "Code": "JPY"
+  },
+  {
+    "DisplayName": "North Korean Won",
+    "Code": "KPW"
+  },
+  {
+    "DisplayName": "Latvian Lats",
+    "Code": "LVL"
+  },
+  {
+    "DisplayName": "Swiss Franc",
+    "Code": "CHF"
+  },
+  {
+    "DisplayName": "Moldovan Leu",
+    "Code": "MDL"
+  },
+  {
+    "DisplayName": "Turkish New Lira",
+    "Code": "TRY"
+  },
+  {
+    "DisplayName": "Croatian Kuna",
+    "Code": "HRK"
+  },
+  {
+    "DisplayName": "Liberian Dollar",
+    "Code": "LRD"
+  },
+  {
+    "DisplayName": "Norwegian Krone",
+    "Code": "NOK"
+  },
+  {
+    "DisplayName": "Polish Zloty",
+    "Code": "PLN"
+  },
+  {
+    "DisplayName": "Russian Ruble",
+    "Code": "RUB"
+  },
+  {
+    "DisplayName": "Ukrainian Hryvnia",
+    "Code": "UAH"
+  },
+  {
+    "DisplayName": "British Pound",
+    "Code": "GBP"
+  },
+  {
+    "DisplayName": "New Belarusian Ruble",
+    "Code": "BYN"
+  }
+]

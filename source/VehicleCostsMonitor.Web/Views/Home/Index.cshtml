@@ -1,0 +1,105 @@
+﻿@model IndexViewModel
+
+<br>
+<h4 class="text-center text-primary">
+    Fuel and Cost Calculator and Tracker
+</h4>
+<div class="container">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+        <div class="well">
+            <p>
+                <b>JustMonitor.com</b> calculates your car's gas mileage and helps to manage the vehicle's costs.
+            </p>
+            <p>
+                After a <a asp-area="identity" asp-page="/account/register" class="text-success">free registration</a>, you will be able to use all functions,
+                e.g. include an image to your vehicles, analyse costs or enter fuelings.
+            </p>
+            <p>
+                <b>JustMonitor.com</b> helps you to calculate and track your fuel economy and vehicle-related costs.
+            </p>
+            <p>
+                <b>JustMonitor.com</b> contains real-world MPG data of thousands of vehicles.
+            </p>
+        </div>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+<hr />
+<div class="container">
+    <p>
+        Does your mileage vary?
+    </p>
+    <p class="text-primary">
+        Browse real MPG data
+    </p>
+    <div class="row">
+        <form method="get" asp-controller="search" asp-action="result">
+            <div class="form-group-sm col-sm-2">
+                <label asp-for="AllManufacturers" class="control-label"></label>
+                <select asp-for="ManufacturerId" asp-items="@Model.AllManufacturers" class="form-control">
+                    <option disabled selected>--- SELECT ---</option>
+                </select>
+            </div>
+            <div class="form-group-sm col-sm-2">
+                <label asp-for="ModelName" class="control-label"></label>
+                <select asp-for="ModelName" asp-items="@(new SelectList(string.Empty))" class="form-control"></select>
+            </div>
+            <div class="form-group-sm col-sm-6">
+                <br />
+                <input type="submit" value="Search" class="btn btn-info" />
+                <span>
+                    ...or go to <a asp-controller="search" asp-action="index" class="text-primary">Advanced search options</a>
+                </span>
+            </div>
+        </form>
+    </div>
+</div>
+<hr />
+<h5>See also:</h5>
+<p>
+    <a asp-area="vehicle" asp-controller="evaluation" asp-action="mosteconomicvehicles" asp-route-fuelType="diesel">
+        Most economic diesel vehicles
+    </a>
+</p>
+<p>
+    <a asp-area="vehicle" asp-controller="evaluation" asp-action="mosteconomicvehicles" asp-route-fuelType="gasoline">
+        Most economic gasoline vehicles
+    </a>
+</p>
+<p>
+    <a asp-area="vehicle" asp-controller="evaluation" asp-action="mosteconomicvehicles" asp-route-fuelType="lpg">
+        Most economic LPG vehicles
+    </a>
+</p>
+<p>
+    <a asp-area="vehicle" asp-controller="evaluation" asp-action="mosteconomicvehicles" asp-route-fuelType="cng">
+        Most economic CNG vehicles
+    </a>
+</p>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var items = "<option>-All-</option>";
+            $('#ModelName').html(items);
+        });
+    </script>
+
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $('#ManufacturerId').change(function() {
+            var url = '@Url.Content("~/")' + "Vehicle/GetModelsByManufacturerId";
+            var ddlSourse = "#ManufacturerId";
+            $.getJSON(url, { manufacturerId: $(ddlSourse).val() }, function (data) {
+                var items = "<option>-All-</option>";
+                $('#ModelName').empty();
+                $.each(data, function (i, vehModel) {
+                    items += "<option>" + vehModel.text + "</option>"
+                });
+                $('#ModelName').html(items);
+            });
+        });
+    });
+    </script>
+}

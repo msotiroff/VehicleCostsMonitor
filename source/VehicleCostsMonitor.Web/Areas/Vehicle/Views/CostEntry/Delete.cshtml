@@ -1,0 +1,51 @@
+﻿@model CostEntryDeleteServiceModel
+
+<h3 class="text-center text-danger">Are you sure you want to delete this cost entry?</h3>
+<hr />
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <form asp-action="delete">
+
+            <input asp-for="Id" hidden="hidden" />
+            <input asp-for="VehicleId" hidden="hidden" />
+
+            <div class="form-group">
+                <label asp-for="DateCreated" class="control-label"></label>
+                <input type="date" asp-for="DateCreated" class="form-control" readonly="readonly" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Odometer" class="control-label"></label>
+                <input asp-for="Odometer" class="form-control" readonly="readonly" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" readonly="readonly" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CostEntryTypeName" class="control-label"></label>
+                <input asp-for="CostEntryTypeName" class="form-control" readonly="readonly" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="VehicleFullName" class="control-label"></label>
+                <input asp-for="VehicleFullName" class="form-control" readonly="readonly" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Note" class="control-label"></label>
+                <textarea asp-for="Note" rows="4" class="form-control" readonly="readonly"></textarea>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Delete" class="btn btn-danger" />
+                <a asp-area="vehicle" asp-controller="vehicle" asp-action="details" asp-route-id="@Model.VehicleId" class="btn btn-default">Cancel</a>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-4"></div>
+</div>

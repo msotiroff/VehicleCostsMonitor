@@ -1,0 +1,105 @@
+﻿@model UserListingViewModel
+
+<h2>All users</h2>
+
+<div class="form-inline">
+    <form asp-action="index" method="get">
+        <input type="text" name="searchTerm" class="form-control" />
+        <button type="submit" class="btn btn-default"><span class="fa fa-search"></span></button>
+    </form>
+</div>
+
+<table class="table table-responsive table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Roles</th>
+            <th>Add to role</th>
+            <th>Remove from role</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td>
+                    <a asp-area="user" 
+                       asp-controller="profile" 
+                       asp-action="index" 
+                       asp-route-id="@user.Id" 
+                       asp-route-userName="@user.UserName">
+                        @Html.DisplayFor(modelItem => user.Email)
+                    </a>
+                </td>
+                <td>
+                    @(user.CurrentRoles.Any() ? string.Join(", ", user.CurrentRoles) : "None")
+                </td>
+                <td>
+                    <div class="form-inline">
+                        <form asp-action="addtorole" method="post">
+                            <input type="submit" class="btn btn-warning" value="Add to role" />
+                            <input type="hidden" name="userEmail" value="@user.Email" />
+                            <select name="role" asp-items="@(new SelectList(user.NonCurrentRoles))" class="form-control">
+                                <option disabled selected>--- Select ---</option>
+                            </select>
+                        </form>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-inline">
+                        <form asp-action="removefromrole" method="post">
+                            <input type="submit" class="btn btn-warning" value="Remove from role" />
+                            <input type="hidden" name="userEmail" value="@user.Email" />
+                            <select name="role" asp-items="@(new SelectList(user.CurrentRoles))" class="form-control">
+                                <option disabled selected>--- Select ---</option>
+                            </select>
+                        </form>
+                    </div>
+                </td>
+                <td>
+                    <a asp-area="user"
+                       asp-controller="profile"
+                       asp-action="index"
+                       asp-route-id="@user.Id"
+                       asp-route-userName="@user.UserName"
+                       class="btn btn-info">
+                        Details
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.Users.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Users.HasNextPage ? "disabled" : "";
+    var firstDisabled = Model.Users.PageIndex == 1 ? "disabled" : "";
+    var lastDisabled = Model.Users.TotalPages <= Model.Users.PageIndex ? "disabled" : "";
+}
+<div class="text-center">
+    <a asp-route-page="1"
+       asp-route-searchTerm="@Model.SearchTerm"
+       class="btn btn-default @firstDisabled">
+        First page
+    </a>
+    <a asp-route-page="@(Model.Users.PageIndex - 1)"
+       asp-route-searchTerm="@Model.SearchTerm"
+       class="btn btn-default @prevDisabled">
+        Previous
+    </a>
+    <span class="btn btn-group">
+        @Model.Users.PageIndex
+    </span>
+    <a asp-route-page="@(Model.Users.PageIndex + 1)"
+       asp-route-searchTerm="@Model.SearchTerm"
+       class="btn btn-default @nextDisabled">
+        Next
+    </a>
+    <a asp-route-page="@(Model.Users.TotalPages)"
+       asp-route-searchTerm="@Model.SearchTerm"
+       class="btn btn-default @lastDisabled">
+        Last page
+    </a>
+</div>

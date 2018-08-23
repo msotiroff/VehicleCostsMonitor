@@ -1,0 +1,40 @@
+﻿@model UserProfileServiceModel
+
+<div class="container">
+    <div class="col-md-2"></div>
+    <h2 class="text-center well col-md-8">User: @Model.UserName</h2>
+    <div class="col-md-2"></div>
+</div>
+
+<h3 class="text-center">Vehicles:</h3>
+<hr />
+
+@if (this.User.Identity.Name == Model.UserName)
+{
+    <div class="text-center">
+        <a class="btn btn-success" asp-area="vehicle" asp-controller="vehicle" asp-action="create">Create new vehicle</a>
+    </div>
+}
+
+    <div class="container">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <table class="table table-responsive table-striped">
+                <thead>
+                    <tr>
+                        <th>Picture</th>
+                        <th>Vehicle</th>
+                        <th>Consumption</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var vehicle in Model.Vehicles)
+                    {
+                        @await Html.PartialAsync(@"../Shared/_UserProfileVehicleView.cshtml", vehicle);
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-2"></div>
+    </div>

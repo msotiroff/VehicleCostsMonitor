@@ -1,0 +1,26 @@
+﻿@model FuelEntryDetailsModel
+
+<td>@Model.DateCreated.ToShortDateString()</td>
+<td>@Model.Odometer.ToString()</td>
+<td>@Model.TripOdometer</td>
+<td>@Model.FuelQuantity</td>
+<td>@Model.FuelTypeName</td>
+<td>@Model.Price.ToString(WebConstants.DecimalNumberFormat)</td>
+<td class="text-center">
+    @if (Model.Average != 0)
+    {
+        @Model.Average?.ToString(WebConstants.DecimalNumberFormat)
+    }
+    else
+    {
+        <img class="img-miniature" src="~/images/PartlyFull.jpg" alt="Partly full" title="Not full" />
+    }
+</td>
+<td>@Model.FuelEntryTypeName</td>
+<td>
+    @if (Model.Owner == this.User.Identity.Name)
+    {
+        <a asp-controller="fuelentry" asp-action="edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+        <a asp-controller="fuelentry" asp-action="delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+    }
+</td>

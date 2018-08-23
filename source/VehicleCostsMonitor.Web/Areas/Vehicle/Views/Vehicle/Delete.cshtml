@@ -1,0 +1,73 @@
+﻿@model VehicleDetailsServiceModel
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this vehicle?</h3>
+<div>
+    <hr />
+    <div class="container">
+        <div class="col-md-8">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.FullModelName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.FullModelName)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.YearOfManufacture)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.YearOfManufacture)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.EngineHorsePower)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.EngineHorsePower)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.VehicleTypeName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.VehicleTypeName)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.FuelTypeName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.FuelTypeName)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.GearingTypeName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.GearingTypeName)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.OwnerUserName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.OwnerUserName)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.FuelConsumption)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.FuelConsumption)
+                </dd>
+            </dl>
+        </div>
+        <div class="col-md-4">
+            <div class="pull-right">
+                <img src="@Model.PicturePath" class="img-tiny" />
+            </div>
+        </div>
+    </div>
+    
+    
+    <form asp-action="Delete" method="post">
+        <input type="submit" value="Delete" class="btn btn-danger" />
+        <a asp-action="details" asp-route-id="@Model.Id" class="btn btn-default">Cancel</a>
+    </form>
+</div>

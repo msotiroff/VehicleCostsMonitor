@@ -1,0 +1,29 @@
+﻿@model VehicleSearchServiceModel
+
+<tr>
+    <td>
+        <img src="@Model.PicturePath" alt="@Model.FullModelName" class="img-icon" />
+    </td>
+    <td>
+        <a asp-area="vehicle" asp-controller="vehicle" asp-action="details" asp-route-id="@Model.Id">
+            <i class="fa fa-link" aria-hidden="true"></i>&ensp;@Model.FullModelName
+        </a>
+    </td>
+    <td>
+        @Model.FuelConsumption.ToString(WebConstants.DecimalNumberFormat)
+    </td>
+    <td>
+        <a asp-area="user" 
+           asp-controller="profile" 
+           asp-action="index" 
+           asp-route-id="@Model.OwnerId" 
+           asp-route-userName="@Model.OwnerUserName">
+            @Model.OwnerUserName
+        </a>
+    </td>
+    <td>
+        <a asp-area="vehicle" asp-controller="vehicle" asp-action="details" asp-route-id="@Model.Id" class="btn btn-info">
+            Details
+        </a>
+    </td>
+</tr>

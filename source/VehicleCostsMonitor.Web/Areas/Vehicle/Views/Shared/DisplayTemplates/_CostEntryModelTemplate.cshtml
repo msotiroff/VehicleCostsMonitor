@@ -1,0 +1,17 @@
+﻿@model CostEntryDetailsModel
+
+<td>@Model.DateCreated.ToShortDateString()</td>
+<td>@(Model.Odometer != null ? Model.Odometer.ToString() : string.Empty)</td>
+<td></td>
+<td></td>
+<td></td>
+<td>@Model.Price.ToString(WebConstants.DecimalNumberFormat)</td>
+<td></td>
+<td>@Model.CostEntryTypeName</td>
+<td>
+    @if (Model.Owner == this.User.Identity.Name)
+    {
+        <a asp-controller="costentry" asp-action="edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+        <a asp-controller="costentry" asp-action="delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+    }
+</td>

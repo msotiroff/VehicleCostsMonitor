@@ -1,0 +1,72 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <UserSecretsId>aspnet-VehicleCostsMonitor.Web-F039A0BB-A84C-494F-AC6D-AE9A30DB6A07</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="Resourses\seedfiles\cost-entry-types.json" />
+    <Content Remove="Resourses\seedfiles\extra-fuel-consumers.json" />
+    <Content Remove="Resourses\seedfiles\fuel-entry-types.json" />
+    <Content Remove="Resourses\seedfiles\fuel-types.json" />
+    <Content Remove="Resourses\seedfiles\gearing-types.json" />
+    <Content Remove="Resourses\seedfiles\route-types.json" />
+    <Content Remove="Resourses\seedfiles\vehicle-types.json" />
+    <Content Remove="Resourses\seedfiles\vehicles-list.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Resourses\seedfiles\cost-entry-types.json" />
+    <None Include="Resourses\seedfiles\extra-fuel-consumers.json" />
+    <None Include="Resourses\seedfiles\fuel-entry-types.json" />
+    <None Include="Resourses\seedfiles\fuel-types.json" />
+    <None Include="Resourses\seedfiles\gearing-types.json" />
+    <None Include="Resourses\seedfiles\route-types.json" />
+    <None Include="Resourses\seedfiles\vehicle-types.json" />
+    <None Include="Resourses\seedfiles\vehicles-list.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="4.0.1" />
+    <PackageReference Include="EPPlus" Version="4.5.2.1" />
+    <PackageReference Include="FontAwesome" Version="4.7.0" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" PrivateAssets="All" />
+    <PackageReference Include="SendGrid" Version="9.9.0" />
+    <PackageReference Include="System.Drawing.Common" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VehicleCostsMonitor.Common\VehicleCostsMonitor.Common.csproj" />
+    <ProjectReference Include="..\VehicleCostsMonitor.Data\VehicleCostsMonitor.Data.csproj" />
+    <ProjectReference Include="..\VehicleCostsMonitor.Models\VehicleCostsMonitor.Models.csproj" />
+    <ProjectReference Include="..\VehicleCostsMonitor.Services\VehicleCostsMonitor.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\User\Models\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Areas\Admin\Views\_ViewImports.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Admin\Views\_ViewStart.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\User\Views\_ViewImports.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\User\Views\_ViewStart.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Vehicle\Views\_ViewImports.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Areas\Vehicle\Views\_ViewStart.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
+
+</Project>
