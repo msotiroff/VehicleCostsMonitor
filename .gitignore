@@ -330,3 +330,4 @@ ASALocalRun/
 .mfractor/
 /VehicleCostsMonitor/VehicleCostsMonitor.Web/secrets.json
 /OnlineStore/OnlineStore.Web/wwwroot/images/Products
+/source/VehicleCostsMonitor.Web/secrets.json
