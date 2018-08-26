@@ -63,7 +63,8 @@
     </div>
 </div>
 
-<script type="text/javascript">
+@section Scripts{
+    <script type="text/javascript">
     $(document).ready(function () {
         var url = '@Url.Content("/")' + "Vehicle/GetModelsByManufacturerId";
             var ddlSourse = "#ManufacturerId";
@@ -78,9 +79,9 @@
                 $('#ModelName').html(items);
             });
     });
-</script>
+    </script>
 
-<script type="text/javascript">
+    <script type="text/javascript">
     $(document).ready(function () {
         $('#ManufacturerId').change(function() {
             var url = '@Url.Content("/")' + "Vehicle/GetModelsByManufacturerId";
@@ -95,5 +96,5 @@
             });
         });
     });
-</script>
-
+    </script>
+}

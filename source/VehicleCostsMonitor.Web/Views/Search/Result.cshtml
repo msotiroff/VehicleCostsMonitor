@@ -118,10 +118,20 @@
 
 @section Scripts{
     <script type="text/javascript">
-        $(document).ready(function () {
-            var items = "<option>-All-</option>";
-            $('#ModelName').html(items);
-        });
+    $(document).ready(function () {
+        var url = '@Url.Content("/")' + "Vehicle/GetModelsByManufacturerId";
+            var ddlSourse = "#ManufacturerId";
+            $.getJSON(url, { manufacturerId: $(ddlSourse).val() }, function (data) {
+                var items = '';
+                $('#ModelName').empty();
+                $.each(data, function (i, vehModel) {
+                    let vehicleCurrentModel = '@Model.ModelName';
+                    let selected = vehicleCurrentModel === vehModel.text ? " selected" : "";
+                    items += "<option" + selected + ">" + vehModel.text + "</option>";
+                });
+                $('#ModelName').html(items);
+            });
+    });
     </script>
 
     <script type="text/javascript">
