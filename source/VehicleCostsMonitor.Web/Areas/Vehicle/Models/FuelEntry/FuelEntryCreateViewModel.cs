@@ -16,7 +16,6 @@
         [Required]
         [Display(Name = "Date")]
         [DataType(DataType.DateTime)]
-        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}")]
         public DateTime DateCreated { get; set; }
 
         [Required]
