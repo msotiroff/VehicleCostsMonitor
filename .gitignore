@@ -328,6 +328,4 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
-/VehicleCostsMonitor/VehicleCostsMonitor.Web/secrets.json
-/OnlineStore/OnlineStore.Web/wwwroot/images/Products
 /source/VehicleCostsMonitor.Web/secrets.json
