@@ -13,7 +13,7 @@
 
         protected JustMonitorDbContext db;
 
-        public BaseService(JustMonitorDbContext db)
+        protected BaseService(JustMonitorDbContext db)
         {
             this.db = db;
         }

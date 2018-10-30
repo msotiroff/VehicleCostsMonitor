@@ -19,7 +19,7 @@
         
         private readonly ICurrencyService currencyService;
 
-        public BaseEntryController(
+        protected BaseEntryController(
             IDistributedCache cache,
             ICurrencyService currencyService)
         {
